@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.PaySureDao">
+	<insert id="savePaySure" parameterType="com.meetsun.meetsun.entity.PaySure">
+		insert into pay_sure(sys_id,order_id,pay_money,pay_type,is_pay_web,is_pay_pc,pay_remark,status,create_time,update_time)
+			values(#{sysId},#{orderId},#{payMoney},#{payType},#{isPayWeb},#{isPayPc},#{payRemark},#{status},now(),now())
+	</insert>
+	<select id="getPaySureList" parameterType="com.meetsun.meetsun.entity.PaySure" resultType="com.meetsun.meetsun.entity.PaySure">
+		select * from pay_sure where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="orderId != '' and orderId != null">
+			and order_id = #{orderId}
+		</if> 
+		<if test="isPayPc != '' and isPayPc != null">
+			and is_pay_pc = #{isPayPc}
+		</if> 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if> 
+		order by create_time desc
+	</select>
+	<update id="updatePaySure" parameterType="com.meetsun.meetsun.entity.PaySure">
+		update pay_sure set 
+		<if test="isPayWeb != '' and isPayWeb != null">
+			is_pay_web = #{isPayWeb},
+		</if>
+		<if test="isPayPc != '' and isPayPc != null">
+			is_pay_pc = #{isPayPc},
+		</if>
+		<if test="status != '' and status != null">
+			status = #{status},
+		</if>
+		update_time = now() where 1=1 
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="orderId != '' and orderId != null">
+			and order_id = #{orderId}
+		</if> 
+	</update>
+	<delete id="deletePaySure" parameterType="com.meetsun.meetsun.entity.PaySure">
+		delete from pay_sure where sys_id = #{sysId}
+	</delete>
+</mapper>

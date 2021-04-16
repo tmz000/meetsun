@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<link href="css/sweetalert.css" rel="stylesheet">
+<link href="css/application.css" rel="stylesheet">
+<style>
+i{
+	font-style:normal;
+}
+</style>
+<title>订单详情</title>
+</head>
+<body>
+  <header>
+    <div class="headerbar">
+      <h1>订单详情</h1>
+      <a class="navbar-toggle" onclick="javascript:history.go(-1)">
+        <span class="icon-m_goback"></span>
+      </a>
+    </div>
+  </header>
+<section class="wrapper cart">
+  	<div class="shelves" id="showOrderProject">
+	   	<div class="shop-title">
+	    	<a>商品信息</a>
+	   	</div>
+	</div>
+	<div class="shelves">
+	    <div class="shop-title">
+	    	<a>订单信息</a>
+	   	</div>
+	    <div class="order" id="showOrder">
+	    </div>
+	    <div class="shop-title">
+	    	<a>收货信息</a>
+	   	</div>
+	    <div class="order" id="showAddress"></div>
+	    <div class="order" id="showComment">
+	    	<div id="showDf" style="display:none">
+				<div id="xin" style="width:20%;height:10%;float:left;">请打分：</div>
+				<div style="width:55%;;float:left;height:10%;display:inline-block;" id="test"></div>
+				<div id="xinSm" style="width:25%;height:10%;float:left;"></div>
+	    	</div>
+	    </div>
+	</div>
+</section>
+<input type="hidden" id="starLv">
+<footer>
+	<div class="footheight"></div>
+	<div class="footbar paybtn text-center clearfix" id="payFor"></div>
+</footer>
+
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/swipeSlide.min.js" type="text/javascript"></script>
+<script src="js/sweetalert.min.js" type="text/javascript"></script>
+<script src="js/jquery.mmenu.min.js" type="text/javascript"></script>
+<script src="js/icheck.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+<script src="js/application.js" type="text/javascript"></script>
+<script src="appPublic.js" type="text/javascript"></script>
+<script type="text/javascript">
+var locationUrl = location.search;
+$(function(){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsOrderList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({sysId:locationUrl.split("=")[1]}),
+		success:function(res){
+			if(res.status=="01"){
+				if(res.rows.length > 0){
+					for(var i=0;i<res.rows.length;i++){
+						if(res.rows[i].status == "1"){
+							if(res.rows[i].payType == null || res.rows[i].payType == ''){
+								$("#showOrder").append(
+									'<p>订单号：'+res.rows[i].orderNo+'</p>'+
+									'<p>下单时间：'+res.rows[i].createTime+'</p>'+
+									'<p class="orange">应付金额：￥'+res.rows[i].trueMoney+'</p>'+
+									'<p class="orange">订单状态：'+returnStatus(res.rows[i].status,res.rows[i].isSend,res.rows[i].isShouhuo,res.rows[i].isUse,res.rows[i].isPayPc)+'</p>'
+								)
+							}else{
+								$("#showOrder").append(
+									'<p>订单号：'+res.rows[i].orderNo+'</p>'+
+									'<p>下单时间：'+res.rows[i].createTime+'</p>'+
+									'<p class="orange">应付金额：￥'+res.rows[i].payMoney+'</p>'+
+									'<p class="orange">订单状态：'+returnStatus(res.rows[i].status,res.rows[i].isSend,res.rows[i].isShouhuo,res.rows[i].isUse,res.rows[i].isPayPc)+'</p>'
+								)
+							}
+						}else{
+							if(res.rows[i].payType == "0"){
+								$("#showOrder").append(
+									'<p>订单号：'+res.rows[i].orderNo+'</p>'+
+									'<p>下单时间：'+res.rows[i].createTime+'</p>'+
+									'<p class="orange">应付金额：￥'+res.rows[i].amount+'</p>'+
+									'<p class="orange">会员折扣：'+res.rows[i].discount+'</p>'+
+									'<p class="orange">折扣优惠：'+res.rows[i].freeMoney+'</p>'+
+									'<p class="orange">使用积分：'+res.rows[i].integral+'</p>'+
+									'<p class="orange">支付方式：'+loadPayType(res.rows[i].payType)+'</p>'+
+									'<p class="orange">实际支付：￥'+res.rows[i].trueMoney+'</p>'+
+									'<p class="orange">订单状态：'+returnStatus(res.rows[i].status,res.rows[i].isSend,res.rows[i].isShouhuo,res.rows[i].isUse,res.rows[i].isPayPc)+'</p>'
+								)
+							}else{
+								$("#showOrder").append(
+									'<p>订单号：'+res.rows[i].orderNo+'</p>'+
+									'<p>下单时间：'+res.rows[i].createTime+'</p>'+
+									'<p class="orange">应付金额：￥'+res.rows[i].amount+'</p>'+
+									'<p class="orange">支付方式：'+loadPayType(res.rows[i].payType)+'</p>'+
+									'<p class="orange">实际支付：￥'+res.rows[i].payMoney+'</p>'+
+									'<p class="orange">订单状态：'+returnStatus(res.rows[i].status,res.rows[i].isSend,res.rows[i].isShouhuo,res.rows[i].isUse,res.rows[i].isPayPc)+'</p>'
+								)
+							}
+						}
+						showStatus(res.rows[i].status,res.rows[i].sysId)
+						if(res.rows[i].isSend == "1"){
+							$("#showAddress").append("该产品支持到店体验，暂无收货信息！")
+						}else{
+							$.ajax({
+								type:"post",
+								url:"/frontEnd/frontEndGetMsOrderAddressList?opendId="+localStorage.getItem("opendId"),
+								contentType:'application/json',
+								data:JSON.stringify({sysId:res.rows[i].addressId}),
+								success:function(ress){
+									if(ress.status == "01"){
+										if(ress.rows.length > 0){
+											for(var i=0;i<ress.rows.length;i++){
+												$("#showAddress").append(
+													'<p>姓名：'+ress.rows[i].name+'</p>'+
+													'<p>手机：'+ress.rows[i].mobile+'</p>'+
+													'<p>邮编：'+ress.rows[i].postCode+'</p>'+
+													'<p>地址：'+ress.rows[i].address+'</p>'
+												)
+											}
+										}
+									}
+								}
+							})
+						}
+						var projectSysId = res.rows[i].projectSysId.split(",")
+						$.ajax({
+							type:"post",
+							url:"/frontEnd/frontEndGetMsCartListBySpId",
+							contentType:'application/json',
+							data:JSON.stringify({checkSysId:projectSysId,orderId:locationUrl.split("=")[1]}),
+							success:function(resss){
+								if(resss.status == "01"){
+									if(resss.rows.length > 0){
+										for(var i=0;i<resss.rows.length;i++){
+											$("#showOrderProject").append(
+												'<div class="order">'+
+												'<p>商品名称：'+resss.rows[i].spName+'</p>'+
+											    '<p>购买数量：'+resss.rows[i].count+'</p>'+
+											    '<p>商品单价：'+resss.rows[i].price+'</p>'+
+											    '<p class="orange">总金额：￥'+resss.rows[i].amount+'</p>'+
+											    '<p class="orange">状态：'+loadOrderStatus(resss.rows[i].orderSp.status,resss.rows[i].orderSp.type)+'</p>'+
+											   	'</div>'
+											)
+										}
+									}
+								}else{
+									$("#showOrderProject").append(
+										'<div class="order">'+
+										'<p style="text-align:center">该订单已完成交易，暂无商品信息！</p>'+
+									   	'</div>'
+									)
+								}
+							}
+						})
+						if(res.rows[i].isPl == "0"){
+							if(res.rows[i].isShouhuo == "1" || res.rows[i].isUse == "1"){
+								$("#showDf").show()
+								$("#showComment").append(
+									'<textarea rows="5" placeholder="输入评论" id="comment"></textarea>'+
+									'<br />'+
+									'<div class="buttonzone">'+
+									'<button class="btn btn-block" data-dismiss="popbox" onclick="addComment(\''+res.rows[i].sysId+'\')">提交</button>'+
+									'</div>'	
+								)
+							}
+						}
+					}
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+})
+
+function loadPayType(payType){
+	if(payType=='0'){
+		return '会员余额';
+	}else if(payType=='1'){
+		return '微信';
+	}else if(payType=='2'){
+		return '支付宝';
+	}else{
+		return '其他方式';
+	}
+}
+function loadOrderStatus(status,type){
+	if(status == "0"){
+		if(type == "0"){
+			return "待收货"
+		}
+		return "待使用"
+	}else if(status == "1"){
+		return "<span style='color:#00008B'>已收货</span>"
+	}else{
+		return "<span style='color:#00008B'>已使用</span>"
+	}
+}
+
+function returnStatus(status,isSend,isShouhuo,isUse,isPayPc){
+	if(status=='0'){
+		if(isPayPc == "1"){
+			if(isSend == "1"){
+				if(isUse == "1"){
+					return '<span style="color:#00ff00">已完成</span>';
+				}else{
+					return '<span style="color:red">未使用</span>';
+				}
+			}else if(isSend == "0"){
+				if(isShouhuo == "1"){
+					return '<span style="color:#00ff00">已完成</span>';
+				}else{
+					return '<span style="color:red">未收货</span>';
+				}
+			}else{
+				if(isShouhuo == "1" &&  isUse == "0"){
+					return '<span style="color:red">未使用</span>';
+				}else if(isShouhuo == "0" &&  isUse == "1"){
+					return '<span style="color:red">未收货</span>';
+				}else if(isShouhuo == "1" &&  isUse == "1"){
+					return '<span style="color:#00ff00">已完成</span>';
+				}else{
+					return '<span style="color:red">未使用</span>';
+				}
+			}
+		}else{
+			return '<span style="color:red">待确认</span>';
+		}
+		
+	}else{
+		return '<span style="color:red">待支付</span>';
+	}
+}
+function showStatus(status,sysId){
+	if(status=='0'){
+		$("#payFor").html("")
+		/* $("#payFor").append(
+			<a class="btn gray" >取消订单</a>
+		  	<!--<a class="btn pull-right">马上付款</a>-->
+		) */
+	}else{
+		$("#payFor").append(
+		  	'<a class="btn gray" href="/frontEndPay?sysId='+sysId+'">马上付款</a>'
+		)
+	}
+}
+function addComment(sysId){
+	var starLv=$("#starLv").val();
+	var content=$("#comment").val();
+	if(starLv == ""){
+		alert("请给订单打个分哦！")
+	}else if(content == ""){
+		alert("请输入评论！")
+	}else{
+		$.ajax({
+			type:"post",
+			url:"/frontEnd/frontEndupdateMsOrderByIsPl?opendId="+localStorage.getItem("opendId"),
+			contentType:'application/json',
+			data:JSON.stringify({sysId:sysId,content:content,starLv:starLv}),
+			success:function(resss){
+				if(resss.status == "01"){
+					alert("评论成功")
+					window.location.reload()
+				}
+			}
+		})
+	}
+}
+</script>
+<script>
+//给div添加五颗星
+for (var i = 0; i < 5; i++){
+	$("#test").append("<i><img id='star"+i+"' src='img/stargray.png'></i>&nbsp;")
+	$("#test i").css("font-size","40px")
+}
+var s = $("#test i img");//获取所有的i标签
+//循环
+for (var i = 0; i < s.length; i++) {
+    s[i].tabIndex =""+i+""//添加索引值
+    s[i].onclick = function () {//给i标签添加点击事件
+        var tabIndex = this.tabIndex;//获取当前的索引值
+        for (var j = 0; j < s.length; j++) {
+            if (j < tabIndex) {
+            	$("#star"+j).attr("src","img/star.png");
+            } else if (j == tabIndex) {
+                if ($("#star"+tabIndex).attr("src") == 'img/stargray.png') {
+                	$("#star"+tabIndex).attr("src","img/star.png");
+                }
+                else {
+                	$("#star"+tabIndex).attr("src","img/stargray.png");
+                }
+            } else {
+            	$("#star"+j).attr("src","img/stargray.png");
+            }
+        }
+        addyans(tabIndex, s.length);//s.length i标签的条数
+    }
+}
+function addyans(index,length){
+	var num=0;
+	for(var i=0;i<length;i++){
+		if($("#star"+i).attr("src") == "img/star.png"){
+			num = num/1 + 1;
+		}
+	}
+	$("#xinSm").html(getStarLv(num))
+	if(num == 0){
+		$("#starLv").val("")
+	}else{
+		$("#starLv").val(num)
+	}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.MsVisitDao">
+	<insert id="saveMsVisit" parameterType="com.meetsun.meetsun.entity.MsVisit">
+		insert into ms_visit(visit_no,sys_id,name,phone,remark,real_name,type,create_time,update_time)
+			values(#{visitNo},#{sysId},#{name},#{phone},#{remark},#{realName},#{type},now(),now())
+	</insert>
+	<select id="getMsVisitList" parameterType="com.meetsun.meetsun.entity.MsVisit" resultType="com.meetsun.meetsun.entity.MsVisit">
+		select * from ms_visit where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="phone != '' and phone != null">
+			and phone = #{phone}
+		</if> 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if> 
+		order by type desc
+	</select>
+	<update id="updateMsVisit" parameterType="com.meetsun.meetsun.entity.MsVisit">
+		update ms_visit set 
+		<if test="name != '' and name != null">
+			name = #{name},
+		</if> 
+		<if test="remark != '' and remark != null">
+			remark = #{remark},
+		</if> 
+		<if test="type != '' and type != null">
+			type = #{type},
+		</if> 
+		<if test="status != '' and status != null">
+			status = #{status},
+		</if> 
+		update_time = now() where sys_id = #{sysId}
+	</update>
+	<delete id="deleteMsVisit" parameterType="com.meetsun.meetsun.entity.MsVisit">
+		delete from ms_visit where sys_id = #{sysId}
+	</delete>
+</mapper>

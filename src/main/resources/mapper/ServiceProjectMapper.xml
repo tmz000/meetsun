@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.ServiceProjectDao">
+	<insert id="saveServiceProject" parameterType="com.meetsun.meetsun.entity.ServiceProject">
+		insert into service_project(sys_id,name,remark,status,type_name,create_time,update_time,price,amount,user_name,photo_adrr,hand_photo,discount)
+			values(#{sysId},#{name},#{remark},#{status},#{typeName},now(),now(),#{price},#{amount},#{userName},#{photoAdrr},#{handPhoto},#{discount})
+	</insert>
+	<select id="getServiceProjectList" parameterType="com.meetsun.meetsun.entity.ServiceProject" resultType="com.meetsun.meetsun.entity.ServiceProject">
+		select * from service_project where 1=1 
+		<if test="typeName != '' and typeName != null">
+			and type_name = #{typeName}
+		</if>
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		<if test="name != '' and name != null">
+			and name = #{name}
+		</if>
+		 order by status asc,
+		<if test="clickNum == 0">
+			 cast(click_num as UNSIGNED INTEGER) desc,
+		</if>
+		 create_time desc
+	</select>
+	<select id="getServiceProjectListByTypeName" parameterType="com.meetsun.meetsun.entity.ServiceProject" resultType="com.meetsun.meetsun.entity.ServiceProject">
+		<!-- select * from (select sys_id,name,remark,status,hand_photo,photo_adrr,is_join,type_name,price,amount,click_num,user_name,create_time,ROW_NUMBER() over(partition by type_name order by create_time desc) as new_index  
+		from service_project) a where a.new_index=1 -->
+		SELECT * FROM service_project WHERE create_time IN (SELECT MAX(create_time) FROM service_project GROUP BY type_name)
+	</select>
+	<update id="updateServiceProject" parameterType="com.meetsun.meetsun.entity.ServiceProject">
+		update service_project set status = #{status},name = #{name},type_name = #{typeName},remark = #{remark},price = #{price},amount = #{amount},discount = #{discount},update_time = now() where sys_id = #{sysId}
+	</update>
+	<update id="updateServiceProjectBySysId" parameterType="com.meetsun.meetsun.entity.ServiceProject">
+		update service_project set 
+		<if test="amount != '' and amount != null">
+			amount = #{amount},
+		</if>
+		<if test="discount != '' and discount != null">
+			discount = #{discount},
+		</if>
+		<if test="isJoin != '' and isJoin != null">
+			is_join = #{isJoin},
+		</if>
+		<if test="buyNum != '' and buyNum != null">
+			buy_num = buy_num+#{buyNum},
+		</if>
+		update_time = now() where sys_id = #{sysId}
+	</update>
+	<update id="updateServiceProjectClickNumBySysId" parameterType="com.meetsun.meetsun.entity.ServiceProject">
+		update service_project set click_num = click_num+1 where sys_id = #{sysId}
+	</update>
+	<delete id="deleteServiceProject" parameterType="com.meetsun.meetsun.entity.ServiceProject">
+		delete from service_project where sys_id = #{sysId}
+	</delete>
+</mapper>

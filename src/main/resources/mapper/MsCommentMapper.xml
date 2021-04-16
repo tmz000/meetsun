@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.MsCommentDao">
+	<insert id="saveMsComment" parameterType="com.meetsun.meetsun.entity.MsComment">
+		insert into ms_comment(sys_id,user_name,content,project_sys_id,star_lv,create_time,update_time,to_examine,user_tx,custom_sys_id)
+			values(#{sysId},#{userName},#{content},#{projectSysId},#{starLv},now(),now(),#{toExamine},#{userTx},#{customSysId})
+	</insert>
+	<select id="getMsCommentList" parameterType="com.meetsun.meetsun.entity.MsComment" resultType="com.meetsun.meetsun.entity.MsComment">
+		select * from ms_comment where 1=1 
+		<if test="userName != '' and userName != null">
+			and user_name = #{userName}
+		</if>
+		<if test="projectSysId != '' and projectSysId != null">
+			and project_sys_id = #{projectSysId}
+		</if>
+		<if test="toExamine != '' and toExamine != null">
+			and to_examine = #{toExamine}
+		</if>
+		<if test="starLv != '' and starLv != null">
+			and star_lv = #{starLv}
+		</if>
+		 order by create_time desc
+	</select>
+	<select id="getMsCommentListByStarLv" parameterType="com.meetsun.meetsun.entity.MsComment" resultType="com.meetsun.meetsun.entity.MsComment">
+		select star_lv,count(*) as count from ms_comment where 1=1 
+		<if test="projectSysId != '' and projectSysId != null">
+			and project_sys_id = #{projectSysId}
+		</if>
+		<if test="toExamine != '' and toExamine != null">
+			and to_examine = #{toExamine} 
+		</if>
+		group by star_lv
+	</select>
+	<update id="updateMsComment" parameterType="com.meetsun.meetsun.entity.MsComment">
+		update ms_comment set 
+			<if test="adminName != null and adminName !=''">
+				admin_name =#{adminName},
+			</if>
+			<if test="toExamine != null and toExamine !=''">
+				to_examine =#{toExamine},
+			</if>
+			<if test="content != null and content !=''">
+				content =#{content},
+			</if>
+			<if test="starLv != null and starLv !=''">
+				star_lv =#{starLv},
+			</if>
+			<if test="userTx != null and userTx !=''">
+				user_tx =#{userTx},
+			</if>
+			update_time = now() where 1=1
+			<if test="sysId != null and sysId !=''">
+				and sys_id =#{sysId}
+			</if>
+			<if test="customSysId != null and customSysId !=''">
+				and custom_sys_id =#{customSysId}
+			</if>
+	</update>
+	<delete id="deleteMsComment" parameterType="com.meetsun.meetsun.entity.MsComment">
+		delete from ms_comment where sys_id = #{sysId}
+	</delete>
+</mapper>

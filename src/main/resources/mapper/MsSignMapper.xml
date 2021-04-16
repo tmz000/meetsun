@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.MsSignDao">
+	<insert id="saveMsSign" parameterType="com.meetsun.meetsun.entity.MsSign">
+		insert into ms_sign(sys_id,user_id,sign_date,count,continue_sign,jf_count,integral,create_time,update_time)
+			values(#{sysId},#{userId},#{signDate},#{count},#{continueSign},#{jfCount},#{integral},now(),now())
+	</insert>
+	<select id="getMsSignList" parameterType="com.meetsun.meetsun.entity.MsSign" resultType="com.meetsun.meetsun.entity.MsSign">
+		select * from ms_sign where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="userId != '' and userId != null">
+			and user_id = #{userId}
+		</if> 
+		<if test="signDate != '' and signDate != null">
+			and sign_date = #{signDate}
+		</if> 
+		order by create_time desc
+	</select>
+	<update id="updateMsSign" parameterType="com.meetsun.meetsun.entity.MsSign">
+		update ms_sign set 
+		<if test="signDate != '' and signDate != null">
+			sign_date = #{signDate},
+		</if> 
+		update_time = now() where sys_id = #{sysId}
+	</update>
+	<delete id="deleteMsSign" parameterType="com.meetsun.meetsun.entity.MsSign">
+		delete from ms_sign where sys_id = #{sysId}
+	</delete>
+</mapper>

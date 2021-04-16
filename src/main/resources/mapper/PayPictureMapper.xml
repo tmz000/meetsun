@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.PayPictureDao">
+	<insert id="savePayPicture" parameterType="com.meetsun.meetsun.entity.PayPicture">
+		insert into pay_picture(sys_id,pay_account,pay_name,pay_pic,pay_type,status,remark,create_time,update_time)
+			values(#{sysId},#{payAccount},#{payName},#{payPic},#{payType},#{status},#{remark},now(),now())
+	</insert>
+	<select id="getPayPictureList" parameterType="com.meetsun.meetsun.entity.PayPicture" resultType="com.meetsun.meetsun.entity.PayPicture">
+		select * from pay_picture where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if> 
+		<if test="payType != '' and payType != null">
+			and pay_type = #{payType}
+		</if> 
+		order by create_time desc
+	</select>
+	<update id="updatePayPicture" parameterType="com.meetsun.meetsun.entity.PayPicture">
+		update pay_picture set status = #{status},update_time = now() where sys_id = #{sysId}
+	</update>
+	<delete id="deletePayPicture" parameterType="com.meetsun.meetsun.entity.PayPicture">
+		delete from pay_picture where sys_id = #{sysId}
+	</delete>
+</mapper>

@@ -1,0 +1,55 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+ 	<meta charset="UTF-8">
+ 	<title>Document</title>
+ 	<link rel="stylesheet" href="css/select.css">
+ 	<style type="text/css">
+	
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+ 	</style>
+ </head>
+ <body>
+	<div class=" selectPickerWrapper showYear" data-checks="1,2,3" data-model="全选" > 
+		<select class="hidden"></select>
+	</div>
+	<!-- <div>
+		<div style="height:100px;width:100px;border:20px solid #FFFAFA;border-radius:50%;background:red;float:left;text-align:center;line-height:55px">吕</div>
+		<div style="height:100px;width:100px;border:20px solid #FFFAFA;border-radius:50%;background:#79CDCD;float:left;text-align:center;line-height:55px">祥</div>
+		<div style="height:100px;width:100px;border:20px solid #FFFAFA;border-radius:50%;background:#696969;float:left;text-align:center;line-height:55px">虎</div>
+	</div> -->
+<script src="../js/jquery-3.5.1.min.js"></script> 
+<script src="js/select2.js"></script>
+<script>
+$(function() {
+	$.ajax({
+		type:"POST",
+		url:"/aMenu/getAMenuList?token="+localStorage.getItem("token"),
+		contentType:'application/json',
+		data:JSON.stringify({sysId:''}),
+		success:function(res){
+			if(res.status=="01"){
+				var map = []
+				for(var i=0;i<res.rows.length;i++){
+					map.push({"text":res.rows[i].menuName,"val":res.rows[i].sysId})
+				}
+				$(".showYear").data("init",JSON.stringify(map));
+				$(".showYear").mySelect({
+					showCancel:true,
+					showSearch:true,
+					multiple:true
+				});
+				console.log(JSON.stringify(map));
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+});
+</script> 
+ </body>
+ </html>

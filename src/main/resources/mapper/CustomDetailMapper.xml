@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.CustomDetailDao">
+	<insert id="saveCustomDetail" parameterType="com.meetsun.meetsun.entity.CustomDetail">
+		insert into custom_detail(sys_id,user_name,sp_name,card_no,card_money,pay_money,pay_type,create_time,update_time,admin_name,flag,integral)
+			values(#{sysId},#{userName},#{spName},#{cardNo},#{cardMoney},#{payMoney},#{payType},now(),now(),#{adminName},#{flag},#{integral})
+	</insert>
+	<select id="getCustomDetailList" parameterType="com.meetsun.meetsun.entity.CustomDetail" resultType="com.meetsun.meetsun.entity.CustomDetail">
+		select * from custom_detail where 1=1 
+		<if test="flag != '' and flag != null">
+			and flag = #{flag}
+		</if>
+		<if test="userName != '' and userName != null">
+			and user_name = #{userName}
+		</if>
+		<if test="createTime != '' and createTime != null">
+			and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(#{createTime},'%Y-%m')
+		</if>
+		<if test="payType != '' and payType != null">
+			and pay_type =#{payType}
+		</if>
+		 order by create_time desc
+	</select>
+	<select id="getCustomDetailListByMonth" parameterType="com.meetsun.meetsun.entity.CustomDetail" resultType="com.meetsun.meetsun.entity.CustomDetail">
+		select user_name,ROUND(sum(card_money)) as card_money,sum(integral) as integral,create_time from
+		(  
+			select user_name,sum(card_money) as card_money,sum(integral) as integral,CONCAT(DATE_FORMAT(create_time,'%Y-%m')) AS create_time  from custom_detail where 1=1 
+			<if test="userName != '' and userName != null">
+				and user_name = #{userName}
+			</if> 
+			<if test="payType != '' and payType != null">
+				and pay_type =#{payType}
+			</if>
+			group by user_name,create_time
+		) as c  
+		group by user_name, create_time order by create_time desc
+	</select>
+	<update id="updateCustomDetail" parameterType="com.meetsun.meetsun.entity.CustomDetail">
+		update custom_detail set 
+		<if test="payType != '' and payType != null">
+			pay_type =#{payType},
+		</if>
+		update_time = now() where sys_id = #{sysId}
+	</update>
+	<delete id="deleteCustomDetail" parameterType="com.meetsun.meetsun.entity.CustomDetail">
+		delete from custom_detail where sys_id = #{sysId}
+	</delete>
+</mapper>

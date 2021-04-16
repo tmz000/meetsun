@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.MsCartDao">
+	<insert id="saveMsCart" parameterType="com.meetsun.meetsun.entity.MsCart">
+		insert into ms_cart(sys_id,custom_name,count,opend_id,project_sys_id,price,amount,sp_name,hand_photo,create_time,update_time,type,type_name)
+			values(#{sysId},#{customName},#{count},#{opendId},#{projectSysId},#{price},#{amount},#{spName},#{handPhoto},now(),now(),#{type},#{typeName})
+	</insert>
+	<select id="getMsCartList" parameterType="com.meetsun.meetsun.entity.MsCart" resultType="com.meetsun.meetsun.entity.MsCart">
+		select * from ms_cart where 1=1 
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if>
+		 order by create_time desc
+	</select>
+	<select id="getMsCartListBySpId" parameterType="com.meetsun.meetsun.entity.MsCart" resultType="com.meetsun.meetsun.entity.MsCart">
+		select * from ms_cart where 1=1 
+		<if test="projectSysId != '' and projectSysId != null">
+			and project_sys_id = #{projectSysId}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+	</select>
+	<select id="getMsCartListByOpendId" parameterType="com.meetsun.meetsun.entity.MsCart" resultType="com.meetsun.meetsun.entity.MsCart">
+		select * from ms_cart where 1=1 
+		<if test="opendId != '' and opendId != null">
+			and opend_id = #{opendId}
+		</if>
+		and status = '0' order by create_time desc
+	</select>
+	<update id="updateMsCart" parameterType="com.meetsun.meetsun.entity.MsCart">
+		update ms_cart set count = #{count},price = #{price},amount = #{amount},update_time = now() where sys_id = #{sysId}
+	</update>
+	<update id="updateMsCartByStatus" parameterType="com.meetsun.meetsun.entity.MsCart">
+		update ms_cart set status = '1',update_time = now() where sys_id = #{sysId}
+	</update>
+	<delete id="deleteMsCart" parameterType="com.meetsun.meetsun.entity.MsCart">
+		delete from ms_cart where sys_id = #{sysId}
+	</delete>
+</mapper>

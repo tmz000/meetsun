@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.IncomePayDao">
+	<insert id="saveIncomePay" parameterType="com.meetsun.meetsun.entity.IncomePay">
+		insert into income_pay(sys_id,sp_name,status,create_time,update_time,price,discount,amount,type,user_name,free_money,true_money,input_type,pay_type)
+			values(#{sysId},#{spName},#{status},now(),now(),#{price},#{discount},#{amount},#{type},#{userName},#{freeMoney},#{trueMoney},#{inputType},#{payType})
+	</insert>
+	<select id="getIncomePayList" parameterType="com.meetsun.meetsun.entity.IncomePay" resultType="com.meetsun.meetsun.entity.IncomePay">
+		select * from income_pay where 1=1 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if> 
+		<if test="flag == 'byDay'">
+			and to_days(create_time) = to_days(now())
+		</if> 
+		<if test="flag == 'byMonth'">
+			and DATE_FORMAT(create_time,'%Y%m') = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+		</if> 
+		<if test="flag == 'byYear'">
+			and YEAR(create_time) = YEAR( now())
+		</if>
+		order by create_time desc
+	</select>
+	<update id="updateIncomePay" parameterType="com.meetsun.meetsun.entity.IncomePay">
+		update income_pay set sp_name = #{spName},price = #{price},discount = #{discount},amount = #{amount},update_time = now() where sys_id = #{sysId}	
+	</update>
+	<delete id="deleteIncomePay" parameterType="com.meetsun.meetsun.entity.IncomePay">
+		delete from income_pay where sys_id = #{sysId}
+	</delete>
+	<select id="getIncomePayListByStatus" parameterType="com.meetsun.meetsun.entity.IncomePay" resultType="com.meetsun.meetsun.entity.IncomePay">
+		<!-- select sp_name,count( sp_name) as count, round(sum(),2) as amount from income_pay where 1=1 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if> 
+		group by sp_name -->
+		select month,count,sum from (SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `month`,count(*) as count,round(sum(true_money),2) as sum from income_pay where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 0 MONTH), '%Y-%m') and status=#{status} UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(true_money),2) as sum from income_pay where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') and status=#{status} UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(true_money),2) as sum from income_pay where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') and status=#{status} UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(true_money),2) as sum from income_pay where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') and status=#{status} UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(true_money),2) as sum from income_pay where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') and status=#{status} UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(true_money),2) as sum from income_pay where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') and status=#{status} UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(true_money),2) as sum from income_pay where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') and status=#{status} UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(true_money),2) as sum from income_pay where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') and status=#{status} UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(true_money),2) as sum from income_pay where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') and status=#{status} UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(true_money),2) as sum from income_pay where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') and status=#{status} UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(true_money),2) as sum from income_pay where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') and status=#{status} UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(true_money),2) as sum from income_pay where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') and status=#{status}) as newTable order by month asc
+	</select>
+	<select id="getIncomePayListByCreateTime" parameterType="com.meetsun.meetsun.entity.IncomePay" resultType="com.meetsun.meetsun.entity.IncomePay">
+		select count(*) as count,sum(true_money) as sum from income_pay where 1=1
+		<if test="flag == 'byDay'">
+			and to_days(create_time) = to_days(now())
+		</if> 
+		<if test="flag == 'byMonth'">
+			and DATE_FORMAT(create_time,'%Y%m') = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+		</if> 
+		<if test="flag == 'byYear'">
+			and YEAR(create_time) = YEAR( now())
+		</if>
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if>
+		and pay_type &lt;&gt; 0  
+	</select>
+</mapper>

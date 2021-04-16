@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.MsOrderDao">
+	<insert id="saveMsOrder" parameterType="com.meetsun.meetsun.entity.MsOrder">
+		insert into ms_order(sys_id,order_no,sp_name,status,create_time,update_time,price,discount,amount,user_name,free_money,type,count,opend_id,custom_name,sp_id,remark,is_send,type_name,true_money,address_id,project_sys_id,hand_photo,cart_sys_id)
+			values(#{sysId},#{orderNo},#{spName},#{status},now(),now(),#{price},#{discount},#{amount},#{userName},#{freeMoney},#{type},#{count},#{opendId},#{customName},#{spId},#{remark},#{isSend},#{typeName},#{trueMoney},#{addressId},#{projectSysId},#{handPhoto},#{cartSysId})
+	</insert>
+	<select id="getMsOrderList" parameterType="com.meetsun.meetsun.entity.MsOrder" resultType="com.meetsun.meetsun.entity.MsOrder">
+		select * from ms_order where 1=1 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if>
+		<if test="flag != '' and flag != null">
+			and flag = #{flag}
+		</if>
+		<if test="opendId != '' and opendId != null">
+			and opend_id = #{opendId}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		<if test="isDel != '' and isDel != null">
+			and is_del = #{isDel}
+		</if>
+		<if test="isPl != '' and isPl != null">
+			and is_pl = #{isPl}
+		</if>
+		<if test="(isUse != '' and isUse != null) or (isShouhuo != '' and isShouhuo != null)">
+			and (is_use = #{isUse}
+			or is_shouhuo = #{isShouhuo})
+		</if>
+		<if test="isSend != '' and isSend != null">
+			and (is_send = #{isSend} or is_send = '2')
+		</if>
+		<if test="orderNo != '' and orderNo != null">
+			and order_no like "%"#{orderNo}"%"
+		</if>
+		<if test="createTime != '' and createTime != null">
+			and to_days(create_time) &lt;= to_days(now())
+		</if> 
+		 order by create_time desc
+	</select>
+	<update id="updateMsOrder" parameterType="com.meetsun.meetsun.entity.MsOrder">
+		update ms_order set 
+		<if test="spName != '' and spName != null">
+			sp_name = #{spName},
+		</if>
+		<if test="status != '' and status != null">
+			status = #{status},
+		</if>
+		<if test="price != '' and price != null">
+			price = #{price},
+		</if>
+		<if test="isFh != '' and isFh != null">
+			is_fh = #{isFh},
+		</if>
+		<if test="discount != '' and discount != null">
+			discount = #{discount},
+		</if>
+		<if test="amount != '' and amount != null">
+			amount = #{amount},
+		</if>
+		<if test="count != '' and count != null">
+			count=#{count},
+		</if>
+		<if test="isShouhuo != '' and isShouhuo != null">
+			is_shouhuo=#{isShouhuo},
+		</if>
+		<if test="isUse != '' and isUse != null">
+			is_use=#{isUse},
+		</if>
+		<if test="isSend != '' and isSend != null">
+			is_send=#{isSend},
+		</if>
+		<if test="trueMoney != '' and trueMoney != null">
+			true_money=#{trueMoney},
+		</if>
+		<if test="addressId != '' and addressId != null">
+			address_id=#{addressId},
+		</if>
+		update_time = now() where sys_id = #{sysId}	
+	</update>
+	<update id="updateMsOrderByFlag" parameterType="com.meetsun.meetsun.entity.MsOrder">
+		update ms_order set flag = #{flag},update_time = now() where sys_id = #{sysId}	
+	</update>
+	<update id="updateMsOrderByIsUse" parameterType="com.meetsun.meetsun.entity.MsOrder">
+		update ms_order set is_use = #{isUse}
+		<if test="isSend != null and isSend != ''">
+			,is_send = #{isSend}
+		</if>
+		where sys_id = #{sysId}	
+	</update>
+	<update id="updateMsOrderByJf" parameterType="com.meetsun.meetsun.entity.MsOrder">
+		update ms_order set integral = #{integral},true_money=#{trueMoney} where sys_id = #{sysId}	
+	</update>
+	<!-- APP端删除 -->
+	<update id="updateMsOrderByIsDel" parameterType="com.meetsun.meetsun.entity.MsOrder">
+		update ms_order set is_del = '1' where sys_id = #{sysId}	
+	</update>
+	<!-- APP端确认收货 -->
+	<update id="updateMsOrderByIsShouhuo" parameterType="com.meetsun.meetsun.entity.MsOrder">
+		update ms_order set is_shouhuo = '1'
+		<if test="isSend != null and isSend != ''">
+			,is_send = #{isSend}
+		</if>
+		where sys_id = #{sysId}	
+	</update>
+	<!-- APP端支付 -->
+	<update id="updateMsOrderByStatus" parameterType="com.meetsun.meetsun.entity.MsOrder">
+		update ms_order set update_time = now()
+		<if test="status != null and status != ''">
+			,status = #{status}
+		</if>
+		<if test="payType != null and payType != ''">
+			,pay_type = #{payType}
+		</if>
+		<if test="payMoney != null and payMoney != ''">
+			,pay_money = #{payMoney}
+		</if>
+		<if test="freeMoney != null and freeMoney != ''">
+			,free_money = #{freeMoney}
+		</if>
+		<if test="discount != null and discount != ''">
+			,discount = #{discount}
+		</if>
+		 where sys_id = #{sysId}	
+	</update>
+	<!-- APP端评论 -->
+	<update id="updateMsOrderByIsPl" parameterType="com.meetsun.meetsun.entity.MsOrder">
+		update ms_order set is_pl = '1' where sys_id = #{sysId}	
+	</update>
+	<delete id="deleteMsOrder" parameterType="com.meetsun.meetsun.entity.MsOrder">
+		delete from ms_order where sys_id = #{sysId}
+	</delete>
+	<select id="getMsOrderListByMonth" parameterType="com.meetsun.meetsun.entity.MsOrder" resultType="com.meetsun.meetsun.entity.MsOrder">
+		select month,count,sum from (SELECT DATE_FORMAT(CURDATE(), '%Y-%m') AS `month`,count(*) as count,round(sum(amount),2) as sum from ms_order where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 0 MONTH), '%Y-%m') and status='0'
+		UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(amount),2) as sum from ms_order where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 1 MONTH), '%Y-%m') and status='0'
+		UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(amount),2) as sum from ms_order where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 2 MONTH), '%Y-%m') and status='0'
+		UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(amount),2) as sum from ms_order where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 3 MONTH), '%Y-%m') and status='0'
+		UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(amount),2) as sum from ms_order where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 4 MONTH), '%Y-%m') and status='0'
+		UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(amount),2) as sum from ms_order where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 5 MONTH), '%Y-%m') and status='0'
+		UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(amount),2) as sum from ms_order where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 6 MONTH), '%Y-%m') and status='0'
+		UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(amount),2) as sum from ms_order where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 7 MONTH), '%Y-%m') and status='0'
+		UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(amount),2) as sum from ms_order where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 8 MONTH), '%Y-%m') and status='0'
+		UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(amount),2) as sum from ms_order where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 9 MONTH), '%Y-%m') and status='0'
+		UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(amount),2) as sum from ms_order where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 10 MONTH), '%Y-%m') and status='0'
+		UNION SELECT DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(amount),2) as sum from ms_order where DATE_FORMAT(create_time,'%Y-%m')=DATE_FORMAT((CURDATE() - INTERVAL 11 MONTH), '%Y-%m')  and status='0') as newTable order by month asc
+	</select>
+</mapper>

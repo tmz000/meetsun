@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.PmValidateDao">
+	<insert id="savePmValidat" parameterType="com.meetsun.meetsun.vo.PmValidateVo">
+		insert into pm_validate(sys_id,user_id,email,reset_token,type,create_time,update_time)
+			values(#{sysId},#{userId},#{email},#{resetToken},#{type},now(),now())
+	</insert>
+	<select id="getPmValidateList" parameterType="com.meetsun.meetsun.vo.PmValidateVo" resultType="com.meetsun.meetsun.entity.PmValidate">
+		select * from pm_validate where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="email != '' and email != null">
+			and email = #{email}
+		</if> 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if> 
+		<if test="userId != '' and userId != null">
+			and user_id = #{userId}
+		</if> 
+		<if test="resetToken != '' and resetToken != null">
+			and reset_token = #{resetToken}
+		</if> 
+		order by create_time desc
+	</select>
+	<update id="updatePmValidat" parameterType="com.meetsun.meetsun.vo.PmValidateVo">
+		update pm_validate set status = #{status},update_time = now() where sys_id = #{sysId}
+	</update>
+</mapper>

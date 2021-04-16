@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.VipCardDao">
+	<insert id="saveVipCard" parameterType="com.meetsun.meetsun.entity.VipCard">
+		insert into vip_card(sys_id,card_no,card_money,discount,create_time,update_time,user_name)
+			values(#{sysId},#{cardNo},#{cardMoney},#{discount},now(),now(),#{userName})
+	</insert>
+	<select id="getVipCardList" parameterType="com.meetsun.meetsun.entity.VipCard" resultType="com.meetsun.meetsun.entity.VipCard">
+		select * from vip_card where 1=1 
+		<if test="flag != '' and flag != null">
+			and flag = #{flag}
+		</if>
+		<if test="cardNo != '' and cardNo != null">
+			and card_no = #{cardNo}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		 order by create_time desc
+	</select>
+	<update id="updateVipCard" parameterType="com.meetsun.meetsun.entity.VipCard">
+		update vip_card set 
+		<if test="flag != '' and flag != null">
+			flag = #{flag},
+		</if>
+		<if test="discount != '' and discount != null">
+			discount = #{discount},
+		</if>
+		<if test="cardMoney != '' and cardMoney != null">
+			card_money = #{cardMoney},
+		</if>
+		update_time = now() where 1=1
+		<if test="cardNo != '' and cardNo != null">
+			and card_no = #{cardNo}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+	</update>
+	<delete id="deleteVipCard" parameterType="com.meetsun.meetsun.entity.VipCard">
+		delete from vip_card where 1=1 
+		<if test="cardNo != '' and cardNo != null">
+			and card_no = #{cardNo}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+	</delete>
+</mapper>

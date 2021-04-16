@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<link href="css/sweetalert.css" rel="stylesheet">
+<link href="css/application.css" rel="stylesheet">
+<title>付款</title>
+<style type="text/css">
+.tx{
+	height:40px;width:20%;float:left;border-radius:50%;
+}
+</style>
+</head>
+<body>
+<header>
+	<div class="headerbar">
+		<h1>在线付款</h1>
+		<a class="navbar-toggle" onclick="javascript:history.go(-1)">
+	    	<span class="icon-m_goback"></span>
+	    </a>
+	</div>
+</header>
+<section class="wrapper cart">
+	<div class="row celltel">
+		<div class="col-4 text-right">
+			<span class="icon-chengnuo"></span>
+		</div>
+		<div class="col-8">
+			<span class="purple">订单提交成功！马上付款~</span><br/>
+			请尽快完成支付
+		</div>
+	</div>
+	<div class="shelves">
+		<div class="row" style="padding:1rem 1rem; line-height:1.6rem;" id="showDetail"></div>
+		<p class="tips tipssmall">请选择支付方式</p>
+		<div>
+			<div class="pay"  id="card"><i class="payz" ><img src="img/logo.jpg" style="height:100%;width:100%;border-radius:50%"/></i>会员卡支付
+				<a class="fulldom"  data-type="popbox" data-href="cardpay"></a>
+			</div>
+		</div>
+		<div>
+			<div class="pay"><i class="payz"></i>支付宝支付
+				<a class="fulldom"  data-type="popbox" data-href="alipay"></a>
+			</div>
+		</div>
+		<div>
+			<div class="pay"><i class="payu"></i>微信支付
+				<a class="fulldom"   data-type="popbox" data-href="weichat"></a>
+			</div>
+		</div>
+	</div>
+</section>
+<input type="hidden" id="sysId">
+<input type="hidden" id="orderId">
+<!--会员卡弹出框-->
+<section class="popbox" id="cardpay">
+	<div class="fx_dl">
+			<div class="fwsm_t">会员卡支付</div>
+			<div class="text-center paybox">
+				<div class="thumbnail">
+					<section>
+						<p style="height:10px"></p>
+					  	<div  class="profile" style="height:185px;border-radius:10px;" id="showCard">
+					  		<div style="height:185px;width:50%;float:left">
+					  			<div style="height:20px;width:100%;float:left"></div>
+					  			<div style="height:50px;width:10px;float:left"></div>
+					  			<div class="tx">
+					  				<img src="img/logo.jpg" style="height:100%;width:100%;border-radius:50%"/>
+					  			</div>
+					  			<div style="height:50px;width:10px;float:left"></div>
+					  			<div style="height:50px;width:50%;float:left;color:white;font-weight:600">
+						  			Meet-Sun<br>会员卡
+					  			</div>
+					  			<div style="height:30px;width:100%;float:left"></div>
+					  			<div style="height:50px;width:100%;float:left">
+					  				&nbsp;&nbsp;&nbsp;&nbsp;<span id="cardNo" style="color:#ccc;text-shadow: 1px 1px 1px #000,-1px -1px 1px #fff;font-size:18px"></span>
+					  			</div>
+					  			<div style="height:30px;width:100%;float:left;color:#ccc">（<span id="discount"></span>&nbsp;折卡）</div>
+					  		</div>
+					  		<div style="height:185px;width:50%;float:left;">
+						  		<img src="vip/1607668640.png" style="height:100%;width:100%;border-top-right-radius:10px;border-bottom-right-radius:10px"/>
+					  		</div>
+						</div>
+					</section>
+					<!-- <div style="height: 100px;display: table-cell;vertical-align:middle;text-align:center"> --> 
+					<div style="height: 100px;line-height:100px;color:#BEBEBE;font-size:17px;"> 
+					（积分抵扣的金额不享受会员折扣）
+					</div>
+					<span class="tipssmall" id="cm"></span>
+				</div>
+			</div>
+			<div class="buttonzone">
+				<button class="btn btn-block" data-dismiss="" onclick="payFor(0)">支付</button>
+			</div>
+	</div>
+</section>
+<!--支付宝弹出框-->
+<section class="popbox" id="alipay">
+	<div class="fx_dl" id="num2">
+			<div class="fwsm_t">支付宝支付</div>
+			<div class="text-center paybox">
+				<p>支付宝账号：29409020402000</p>
+				<div class="thumbnail">
+					<img style="width:320px;height:320px;" src="http://fakeimg.pl/320x320/ccc/fff/?text=Qrcode" />
+				</div>
+				<span class="tipssmall">请先截图保存二维码付款再点击支付确认<br/>(长按或截图保存)</span>
+			</div>
+			<div class="buttonzone">
+				<button class="btn btn-block" data-dismiss="" onclick="payFor(2)">支付确认</button>
+			</div>
+	</div>
+</section>
+<!--微信弹出框-->
+<section class="popbox" id="weichat">
+	<div class="fx_dl" id="num1">
+			<div class="fwsm_t">微信支付</div>
+			<div class="text-center paybox">
+				<p>微信账号：29409020402000</p>
+				<div class="thumbnail">
+					<img style="width:320px;height:320px;" src="http://fakeimg.pl/320x320/ccc/fff/?text=Qrcode" />
+				</div>
+				<span class="tipssmall">请先截图保存二维码付款再点击支付确认<br/>(长按或截图保存)</span>
+			</div>
+			<div class="buttonzone">
+				<!-- <button class="btn btn-block" data-dismiss="popbox" onclick="payFor(2)">支付确认</button> -->
+				<button class="btn btn-block" data-dismiss="" onclick="payFor(1)">支付确认</button>
+			</div>
+	</div>
+</section>
+
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/swipeSlide.min.js" type="text/javascript"></script>
+<script src="js/sweetalert.min.js" type="text/javascript"></script>
+<script src="js/jquery.mmenu.min.js" type="text/javascript"></script>
+<script src="js/icheck.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+<script src="js/application.js" type="text/javascript"></script>
+<script>
+$(function(){
+	var locationUrl = location.search;
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsOrderList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({sysId:locationUrl.split("=")[1]}),
+		success:function(res){
+			if(res.status == "01"){
+				if(res.rows.length > 0){
+					for(var i=0;i<res.rows.length;i++){
+						if(res.rows[i].payType != null && res.rows[i].payType != ""){
+							$("#showDetail").append(
+								'<label class="col-3 text-right">应付金额：</label><div class="col-9">￥<span class="vipcolor">'+res.rows[i].payMoney+'</span></div>'
+							)
+						}else{
+							$("#showDetail").append(
+								'<label class="col-3 text-right">应付金额：</label><div class="col-9">￥<span class="vipcolor">'+res.rows[i].trueMoney+'</span></div>'
+							)
+							
+						}
+						/* if(res.rows[i].isSend != "0"){
+							$("#showDetail").append(
+								'<label class="col-3 text-right">收货信息：</label><div class="col-9">此商品仅支持到店使用</div>'
+							)
+						}else{
+							$.ajax({
+								type:"post",
+								url:"/frontEnd/frontEndGetMsOrderAddressList?opendId="+localStorage.getItem("opendId"),
+								contentType:'application/json',
+								data:JSON.stringify({sysId:res.rows[i].addressId}),
+								success:function(ress){
+									if(ress.status == "01"){
+										if(ress.rows.length > 0){
+											var adr = ress.rows[0].address.split(" ")[0]+" "+ress.rows[0].address.split(" ")[1]+" "+ress.rows[0].address.split(" ")[2];
+											var xxadr = ress.rows[0].address.split(" ")[3];
+											for(var i=0;i<ress.rows.length;i++){
+												$("#showDetail").append(
+													'<label class="col-3 text-right">收货信息：</label><div class="col-9">'+adr+'<br/>'+xxadr+'<br/>'+ress.rows[i].mobile+'</div>'
+												)
+											}
+										}
+									}
+								}
+							})
+						} */
+					}
+				}
+			}
+		}
+	})
+})
+</script>
+<script type="text/javascript">
+var locationUrl = location.search;
+var isJoin = localStorage.getItem("isJoin");
+$(function(){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsCustomList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({}),
+		success:function(res){
+			if(res.status == "01"){
+				if(res.rows.length > 0){
+					$("#sysId").val(res.rows[0].sysId)
+					if(res.rows[0].cardNo == null || res.rows[0].cardNo == ""){
+						$("#showCard").html("<section class='waitingwrapper'><div class='text-center purple' style='font-size:5rem'><span class='icon-order'></span></div><p class='text-center' >暂无会员卡信息</p></section>")
+					}else{
+						$("#cardNo").html(res.rows[0].cardNo)
+						$("#cm").html("可用金额：￥<span id='useye'>"+res.rows[0].cardMoney+"</span>&nbsp;&nbsp;可用积分：<span id='usejf'>"+res.rows[0].integral+"</span>")
+						$.ajax({
+							type:"post",
+							url:"/frontEnd/frontEndGetVipCardList",
+							contentType:'application/json',
+							data:JSON.stringify({cardNo:res.rows[0].cardNo}),
+							success:function(ress){
+								if(ress.status == "01"){
+									if(ress.rows.length > 0){
+										$("#discount").html(ress.rows[0].discount)
+									}
+								}
+							}
+						})
+					}
+				}
+			}
+		}
+	})
+	showAccount()
+})
+function payFor(type){
+	var cardMoney = $(".vipcolor").html();
+	var useye = $("#useye").html();
+	var usejf = $("#usejf").html();
+	var locationUr = location.search;
+	var discount = $("#discount").html();
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsOrderList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({sysId:locationUrl.split("=")[1]}),
+		success:function(res){
+			if(res.status == "01"){
+				if(res.rows.length > 0){
+					if(res.rows[0].status == "0"){
+						alert("该订单已支付！")
+						window.location.href="/frontEndMyOrder"
+					}else{
+						if(type==0){
+							if(cardMoney/1-usejf/1<useye/1){
+								var integralTrue = 0;
+								if(cardMoney/1-usejf/1 > 0){
+									integralTrue = cardMoney/1-usejf/1;
+								}
+								$.ajax({
+									type:"post",
+									url:"/frontEnd/frontEndUpdateMsCustomByCardMoney?opendId="+localStorage.getItem("opendId"),
+									contentType:'application/json',
+									data:JSON.stringify({sysId:$("#sysId").val(),cardMoney:cardMoney,integral:usejf,isUseJf:true,flag:"1",integralFlag:"1",integralTrue:integralTrue,cardNo:$("#cardNo").html(),spId:res.rows[0].projectSysId,orderSysId:locationUrl.split("=")[1],payType:type,isJoin:isJoin}),
+									success:function(res){
+										if(res.status="01"){
+											$.ajax({
+												type:"post",
+												url:"/frontEnd/frontEndUpdateMsOrderByStatus?opendId="+localStorage.getItem("opendId"),
+												contentType:'application/json',
+												data:JSON.stringify({sysId:locationUr.split("=")[1],payType:type,payMoney:"0",integral:usejf,trueMoney:cardMoney,discount:discount,status:"0"}),
+												success:function(ress){
+													if(ress.status="01"){
+														alert("支付成功！")
+														//window.location.href="/frontEndMyOrder"
+														savePaySure(type,cardMoney,discount,integralTrue)
+													}
+												}
+											})
+										}
+									}
+								})
+							}else{
+								swal({
+									title: "确认",
+									text: "可用余额不足;请选择其他支付方式！",
+									confirmButtonText: "确定",
+									cancelButtonText: "取消",
+									showCancelButton: true,
+								},function(){
+									$("#closeTb").trigger('click');
+								})
+							}
+						}else{
+							swal({
+								title: "确认",
+								text: "确认已支付？",
+								confirmButtonText: "确定",
+								cancelButtonText: "取消",
+								showCancelButton: true,
+							},function(isConfirm){
+								if(isConfirm){
+									$.ajax({
+										type:"post",
+										url:"/frontEnd/frontEndUpdateMsCustomByCardMoney?opendId="+localStorage.getItem("opendId"),
+										contentType:'application/json',
+										data:JSON.stringify({sysId:$("#sysId").val(),cardMoney:cardMoney,integral:usejf,isUseJf:true,flag:"1",integralFlag:"1",integralTrue:integralTrue,cardNo:$("#cardNo").html(),spId:res.rows[0].projectSysId,orderSysId:locationUrl.split("=")[1],payType:type,isJoin:isJoin}),
+										success:function(res){
+											if(res.status="01"){
+												$.ajax({
+													type:"post",
+													url:"/frontEnd/frontEndUpdateMsOrderByStatus?opendId="+localStorage.getItem("opendId"),
+													contentType:'application/json',
+													data:JSON.stringify({sysId:locationUr.split("=")[1],payType:type,payMoney:cardMoney,status:"0"}),
+													success:function(ress){
+														if(ress.status="01"){
+															savePaySure(type,cardMoney,"","")
+														}
+													}
+												})
+											}
+										}
+									})
+								}
+							})
+						}
+						localStorage.removeItem('isJoin');
+					}
+				}
+			}
+		}
+	})
+}
+function savePaySure(type,cardMoney,discount,integralTrue){
+	var isPayPc=0;
+	if(type == 0){
+		isPayPc = 1;
+	}
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndSavePaySure?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({opendId:localStorage.getItem("opendId"),payType:type,payMoney:cardMoney,orderId:locationUrl.split("=")[1],isPayWeb:"1",isPayPc:isPayPc,discount:discount,integralTrue:integralTrue}),
+		success:function(res){
+			if(res.status == "01"){
+				window.location.href="/frontEndMyOrder"
+			}
+		}
+	})
+}
+function showAccount(){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetPayPictureList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({status:"0"}),
+		success:function(res){
+			if(res.status == "01"){
+				if(res.rows.length > 0){
+					for(var i=0;i<res.rows.length;i++){
+						if(res.rows[i].payType == "1"){
+							$("#num"+res.rows[i].payType+" p").html("微信账号："+res.rows[i].payAccount+"("+formatStr(res.rows[i].payName)+")")
+							$("#num"+res.rows[i].payType+" img").attr("src",res.rows[i].payPic)
+						}else{
+							$("#num"+res.rows[i].payType+" p").html("微信账号："+res.rows[i].payAccount+"("+formatStr(res.rows[i].payName)+")")
+							$("#num"+res.rows[i].payType+" img").attr("src",res.rows[i].payPic)
+						}
+					}
+				}
+			}
+		}
+	})
+}
+function formatStr(str) {
+	return str.substring(0,1) + new Array(str.length).join('*')
+}
+</script>
+</body>
+</html>

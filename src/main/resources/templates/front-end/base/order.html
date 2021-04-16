@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta content="telephone=no"name="format-detection"  />
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<link href="css/sweetalert.css" rel="stylesheet">
+<link href="css/application.css" rel="stylesheet">
+<title>商品订单</title>
+</head>
+<body>
+<header>
+	<div class="headerbar">
+		<h1>商品订单</h1>
+		<a class="navbar-toggle" onclick="javascript:history.go(-1)">
+			<span class="icon-m_goback"></span>
+		</a>
+	</div>
+</header>
+<div id="showOrder">
+	<div class="address">
+		<div class="text-center" style="display:none" id="addAddress">
+			<a class="addnew">+  添加新的收货地址</a>
+		</div>
+		<div id="addresss"></div>
+		<a class="fulldom" onclick="popaddress()"></a>
+	</div>
+	<section class="describe cart">
+		<div class="shelves" id="shopDetail"></div>
+	</section>
+	<footer>
+		<div class="footheight"></div>
+		<div class="row footbar btnfull">
+			<div class="clearfix">
+				<label style="margin:0.5rem 1rem; float:left;">实付款：<span class="prices" id="truePay"></span></label>
+				<a class="pull-right btn btn-orange" id="buy" >提交订单</a>
+			</div>
+		</div>
+	</footer>
+</div>
+<div class="addresslists fixedpage" style=" top:4rem; z-index:10001; padding-bottom:0; overflow-y:scroll; display:none;" id="chooseAddress">
+</div>
+<div class="addressadd">
+</div>
+
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/swipeSlide.min.js" type="text/javascript"></script>
+<script src="js/sweetalert.min.js" type="text/javascript"></script>
+<script src="js/jquery.mmenu.min.js" type="text/javascript"></script>
+<script src="js/icheck.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+<script src="js/application.js" type="text/javascript"></script>
+<script type="text/javascript">
+var projectSysId=[]
+var sumCount=null,sumAmount=null;
+var locationUrl = location.search;
+var addressLength = 0;
+$(function(){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsCartList",
+		contentType:'application/json',
+		data:JSON.stringify({status:"0",checkSysId:locationUrl.split("=")[1].split(",")}),
+		success:function(res){
+			var type="1";
+			if(res.status == "01"){
+				if(res.rows.length > 0){
+					for(var i=0;i<res.rows.length;i++){
+						if(res.rows[i].type == "0"){
+							type = "0"
+							break;
+						}
+					}
+					if(type == "1"){
+						$(".address").html("<span style='color:red'>提示：该产品请到店体验</span>")
+					}
+					for(var i=0;i<res.rows.length;i++){
+						projectSysId.push(res.rows[i].projectSysId)
+						$("#shopDetail").append(
+							'<div class="shop-title">'+res.rows[i].typeName+
+							'</div>'+
+							'<div class="media clearfix">'+
+							'<div class="media-left">'+
+							'<img src="'+res.rows[i].handPhoto+'" />'+
+							'</div>'+
+							'<div class="media-body">'+
+							'<h2>'+res.rows[i].spName+'</h2>'+
+							'<p>数量：'+res.rows[i].count+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单价：￥'+res.rows[i].price+'</p>'+
+							'<div class="vipcolor">'+
+							'<span>￥'+res.rows[i].amount+'</span>'+
+							'</div>'+
+							'</div>'+
+							'</div>'
+						)
+						if(res.rows[i].type =="0"){
+							$("#shopDetail").append(
+								'<div>配送费用<p class="pull-right">卖家承担</p>'+
+								'</div>'
+							)
+						}
+						if(sumCount == null){
+							sumCount = res.rows[i].count
+							sumAmount = res.rows[i].amount
+						}else{
+							sumCount = sumCount/1+res.rows[i].count/1
+							sumAmount = sumAmount/1+res.rows[i].amount/1
+						}
+					}
+					$("#shopDetail").append(
+						'<p class="tips">用户留言</p>'+
+						'<div style="padding-top:0;">'+
+						'<textarea rows="2" placeholder="输入用户留言" id="remark"></textarea>'+
+						'</div>'+
+						'<div class="clearfix">'+
+						'<p class="pull-right">共计 <span>'+sumCount+'</span> 件商品 合计 <span class="vipcolor">￥'+sumAmount+'</span></p>'+
+						'</div>'
+					)
+					$("#truePay").html("￥"+sumAmount)
+				}
+			}else{
+				$("#showOrder").html("")
+				$("#showOrder").html("<section class='waitingwrapper'><div class='text-center purple' style='font-size:5rem'><span class='icon-order'></span></div><p class='text-center' >暂无订单信息</p></section>")
+			}
+		}
+	})
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsOrderAddressList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({sysId:null}),
+		success:function(res){
+			if(res.status == "01"){
+				if(res.rows.length > 0){
+					$("#addAddress").hide();
+					var adid = null;
+					for(var i=0;i<res.rows.length;i++){
+						$("#chooseAddress").append(
+							'<div id="'+res.rows[i].sysId+'" onclick="addActive(\''+res.rows[i].sysId+'\')">'+
+							'<ul style="transform: translateX(0px);">'+
+							'<li><label>姓名：</label>'+res.rows[i].name+'</li>'+
+							'<li>'+
+							'<label>手机：</label>'+res.rows[i].mobile+
+							'<label class="postcode">邮编：</label>'+res.rows[i].postCode+
+							'</li>'+
+							'<li><label>地址：</label>'+res.rows[i].address+'</li>'+
+							'</ul>'+
+							'</div>'	
+						)
+						if(res.rows[i].isUse == "1"){
+							adid = res.rows[i].sysId;
+						}
+					}
+					addActive(adid)
+					$("#chooseAddress").append(
+						'<section class="abssection clearfix" style="bottom:54px; z-index:10001;">'+
+						'<div class="text-center">'+
+						'<a class="addnew" onclick="window.location.href=\'/frontEndOrderAddress?flag='+window.location.pathname+'\'">+  添加收货地址</a>'+
+						'</div>'+
+						'</section>'+
+						'<section><br /><br /><br /><br /><br /></section>'
+					)
+				}else{
+					$("#addAddress").show();
+				}
+			}
+		}
+	})
+	getAddressInfo("1");
+})
+var addressSysId=null
+function addActive(id){
+	if(id == null){
+		$(".addresslists").hide()
+		$("#addAddress").show()
+	}else{
+		addressSysId=id;
+		$("#chooseAddress div ul").removeClass("active")
+		$("#"+id+" ul").addClass("active")
+		$(".addresslists").hide();
+		getAddressInfo(id)
+	}
+}
+function getAddressInfo(id){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsOrderAddressList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({sysId:id}),
+		success:function(res){
+			if(res.status == "01"){
+				addressLength = res.rows.length
+				if(res.rows.length > 0){
+					$("#addAddress").hide();
+					$("#addresss").html("")
+					for(var i=0;i<res.rows.length;i++){
+						$("#addresss").append(
+							'<ul>'+
+							'<li><label>姓名：</label>'+res.rows[i].name+'</li>'+
+							'<li>'+
+							'<label>手机：</label>'+res.rows[i].mobile+
+							'<label class="postcode">邮编：</label>'+res.rows[i].postCode+
+							'</li>'+
+							'<li><label>地址：</label>'+res.rows[i].address+'</li>'+
+							'</ul>'
+						)
+					}
+				}
+			}
+		}
+	})
+}
+function popaddress(){
+	if(addressLength == 0){
+		window.location.href='/frontEndOrderAddress?flag='+window.location.pathname
+	}else{
+		$(".addresslists").show();
+	}
+}
+$(function(){
+	//swal("成功", "这个窗口成功弹出");
+	//swal("失败", "这个窗口成功弹出", "error");
+	$("#buy").on('click',function(){
+		swal({
+			title: "请确认无误购买？",
+			text: "仅商品类支持发货，其余类别请持订单号到店消费！",
+			confirmButtonText: "确定",
+			cancelButtonText: "取消",
+			showCancelButton: true,
+		},function(){
+			//swal("失败", "这个窗口弹出", "error");
+			$.ajax({
+				type:"post",
+				url:"/frontEnd/frontEndUpdateMsCartByStatus?opendId="+localStorage.getItem("opendId"),
+				contentType:'application/json',
+				data:JSON.stringify({projectSys:projectSysId,sumCount:sumCount,sumMoney:sumAmount,remark:$("#remark").val(),addressId:addressSysId,checkSysId:locationUrl.split("=")[1].split(",")}),
+				success:function(res){
+					if(res.status="01"){
+						window.location.href='/frontEndPay?sysId='+res.rows
+					}
+				}
+			})
+		})
+	})
+	$('.spinners').spinner();
+})
+</script>
+</body>
+</html>

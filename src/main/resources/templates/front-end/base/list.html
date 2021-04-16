@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<link href="css/sweetalert.css" rel="stylesheet">
+<link href="css/application.css" rel="stylesheet">
+<title>列表</title>
+</head>
+<body>
+	<header>
+		<div class="headerbar">
+			<h1 id="listTable"></h1>
+			<a class="navbar-toggle" onclick="javascript:history.go(-1)">
+				<span class="icon-m_goback"></span>
+			</a>
+		</div>
+	</header>
+	<section>
+		<div class="cathead">
+		</div>
+	</section>
+	<section class="sectionlist">
+		<div class="category">
+		</div>
+	</section>
+	<br />
+	<script src="js/jquery.js" type="text/javascript"></script>
+	<script src="js/swipeSlide.min.js" type="text/javascript"></script>
+	<script src="js/sweetalert.min.js" type="text/javascript"></script>
+	<script src="js/jquery.mmenu.min.js" type="text/javascript"></script>
+	<script src="js/icheck.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+	<script src="js/application.js" type="text/javascript"></script>
+
+</body>
+<script type="text/javascript">
+var locationUrl = location.search;
+$(function(){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetServiceProjectListByTypeNameList",
+		contentType:'application/json',
+		data:JSON.stringify({status:"0",typeName:decodeURI(locationUrl.split("=")[1])}),
+		success:function(res){
+			if(res.status=="01"){
+				if(res.rows.length > 0){
+					for(var i=0;i<res.rows.length;i++){
+						$(".category").append(
+							'<div class="thumbnail"><a href="/frontEndDetail?sysId='+res.rows[i].sysId+'"><img style="width:388.41px;height:182.07px;" src="'+res.rows[i].handPhoto.split(",")[0]+'"><div class="caption">'+
+							'<h3>'+res.rows[i].name+'</h3><p style="width:85.5%;height:40px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;overflow: hidden;">'+res.rows[i].remark+'</p><div class="price">'+res.rows[i].price+'<i>元</i></div></div></a></div>'	
+						)
+					}
+				}else{
+					$("body").append(
+						'<section class="waitingwrapper">'+
+						'<div class="text-center purple" style="font-size:5rem">'+
+						'<span class="icon-order"></span>'+
+						'</div>'+
+						'<p class="text-center" style="padding:0.5rem; color:#B768A5;">没有找到匹配的记录</p>'+
+						'</section>'
+					)
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsProjectTypeListByName",
+		contentType:'application/json',
+		data:JSON.stringify({name:decodeURI(locationUrl.split("=")[1])}),
+		success:function(res){
+			if(res.status=="01"){
+				$("#listTable").html(res.rows[0].name+"列表")
+				$(".cathead").html('<h3>'+res.rows[0].name+'</h3><p>'+res.rows[0].remark+'</p>')
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+})
+</script>
+</html>

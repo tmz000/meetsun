@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Matrix Admin</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" href="css/jquery.gritter.css" />
+<link rel="stylesheet" href="css/matrix-style2.css" />
+<link rel="stylesheet" href="css/matrix-media.css" />
+<link href="font-awesome/css/font-awesome.css" rel="stylesheet" />
+<script src="echarts/echarts.min.js"></script>
+<style type="text/css">
+.adContent{
+	width:100%;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	word-break:keep-all;
+}
+</style>
+</head>
+<body>
+
+<div id="content">
+  <div  class="quick-actions_homepage">
+    <ul class="quick-actions" style="overflow:auto;height:240px;" id="showProject"></ul>
+  </div>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span6">
+        <div class="widget-box">
+          <div class="widget-title bg_ly" data-toggle="collapse" href="#collapseG2"><span class="icon"><i class="icon-chevron-down"></i></span>
+            <h5>最新活动</h5>
+          </div>
+          <div class="widget-content nopadding collapse in" id="collapseG2"style="height:300px;">
+          </div>
+        </div>
+        <div class="widget-box">
+          <div class="widget-title" data-toggle="collapse" href="#collapseG4" > <span class="icon"> <i class="icon-chevron-down"></i> </span>
+            <h5>订单金额统计</h5>
+          </div>
+          <div class="widget-content nopadding collapse in"  id="collapseG4">
+            <div id="main1" style="width: 100%;height:400px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="span6">
+        <div class="widget-box">
+          <div class="widget-title" data-toggle="collapse" href="#collapseG5" > <span class="icon"> <i class="icon-chevron-down"></i> </span>
+            <h5>点击次数</h5>
+          </div>
+          <div class="widget-content nopadding collapse in" id="collapseG5">
+            <ul class="unstyled" id="showClickNum" style="overflow:auto;height:290px;"></ul>
+          </div>
+        </div>
+        <div class="widget-box">
+          <div class="widget-title bg_lo"  data-toggle="collapse" href="#collapseG3" > <span class="icon"> <i class="icon-chevron-down"></i> </span>
+            <h5>订单数量统计</h5>
+          </div>
+          <div class="widget-content nopadding updates collapse in" id="collapseG3">
+            <div id="main" style="width: 100%;height:400px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/excanvas.min.js"></script> 
+<script src="js/jquery.min.js"></script> 
+<script src="js/jquery.ui.custom.js"></script> 
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/jquery.flot.min.js"></script> 
+<script src="js/jquery.flot.resize.min.js"></script> 
+<script src="js/jquery.peity.min.js"></script> 
+<script src="js/jquery.gritter.min.js"></script> 
+<script src="js/matrix.js"></script> 
+<script src="js/matrix.chat.js"></script> 
+<script src="js/jquery.validate.js"></script> 
+<script src="js/matrix.form_validation.js"></script> 
+<script src="js/jquery.wizard.js"></script> 
+<script src="js/jquery.uniform.js"></script> 
+<script src="js/select2.min.js"></script> 
+<script src="js/matrix.popover.js"></script> 
+<script src="js/jquery.dataTables.min.js"></script> 
+<script src="js/matrix.tables.js"></script> 
+<script type="text/javascript">
+$(function(){
+	showData()
+})
+//setInterval("showData()",2000);
+function showData(){
+	$.ajax({
+		type:"post",
+		url:"/serviceProject/getServiceProjectList?token="+localStorage.getItem("token"),
+		contentType:'application/json',
+		data:JSON.stringify({clickNum:"0"}),
+		success:function(res){
+			if(res.status=="01"){
+				if(res.rows.length > 0){
+					var count = 0;
+					for(var i=0;i<res.rows.length;i++){
+						count = count + res.rows[i].clickNum/1
+					}
+					$("#showProject").html("")
+					$("#showClickNum").html("")
+					for(var i=0;i<res.rows.length;i++){
+						var num1 = 0;
+						if(count != 0){
+							num1 = res.rows[i].clickNum/1/count
+						}
+						var num = new Number(num1*100);
+						$("#showProject").append(
+							'<li style="background:rgb('+rnd(0,256)+','+rnd(0,256)+','+rnd(0,256)+')"> <a href="/detail?sysId='+res.rows[i].sysId+'&token='+localStorage.getItem("token")+'"> <i class="icon-dashboard"></i>'+res.rows[i].name+'</a> </li>'
+						)
+						$("#showClickNum").append(
+							'<li> <span class="icon24 icomoon-icon-arrow-up-2 red" style="color:#0e73af">'+ res.rows[i].name +'</span><span class="pull-right strong" style="color:#0e73af">'+res.rows[i].clickNum+'次</span>'+
+			                '<div class="progress progress-warning progress-striped " >'+
+			                '<div style="width:'+num.toFixed(2)+'%" class="bar">'+num.toFixed(2)+'%</div></div></li>'
+						)
+					}
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+	$.ajax({
+		type:"post",
+		url:"/msAdvert/getMsAdvertList?token="+localStorage.getItem("token"),
+		contentType:'application/json',
+		data:JSON.stringify({status:"0"}),
+		success:function(res){
+			if(res.status=="01"){
+				$("#collapseG2").html("")
+				for(var i=0;i<res.rows.length;i++){
+					$("#collapseG2").append(
+						'<div class="new-update clearfix"><i class="icon-ok-sign" ></i><div class="update-done"><a title="" href="/detail?sysId='+res.rows[i].sysId+'&token='+localStorage.getItem("token")+'"><strong>'+res.rows[i].adName+'</strong></a><span class="adContent">'+res.rows[i].adContent+
+						'</span> </div><div class="update-date"><span class="update-day">'+res.rows[i].createTime.substr(8,2)+'</span>'+res.rows[i].createTime.substr(5,2)+'月</div></div>'
+					)
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+}
+function rnd(m,n){
+    return parseInt(Math.random()*(n-m)+m);
+};
+</script>
+<script type="text/javascript">
+var month=[];//定义两个数组
+var count=[];
+var sum=[];
+$.ajax({
+	type:"POST",
+	url:"/msOrder/getMsOrderListByMonth?token="+localStorage.getItem("token"),
+	contentType:'application/json',
+	async: false,
+	data:JSON.stringify({status:''}),
+	success:function(res){
+		if(res.status=="01"){
+			for(var i=0;i<res.rows.length;i++){
+				month.push(res.rows[i].month);
+				count.push(res.rows[i].count);
+				sum.push(res.rows[i].sum);
+			}
+		}else{
+			alert(res.message)
+		}
+	}
+})
+// 基于准备好的dom，初始化echarts实例
+var myChart = echarts.init(document.getElementById('main'));
+myChart.setOption({
+    title : {
+        text: '订单数据统计',
+        subtext: '统计近12个月份订单数据'
+    },
+    tooltip : {
+        trigger: 'axis'
+    },
+    /* legend: {
+        data:['订单数']
+    }, */
+    toolbox: {
+        show : true,
+        feature : {
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            data : month
+        }
+    ],
+    yAxis : [
+   	 {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'订单数',
+            type:'bar',
+            itemStyle: {
+                normal: {
+                    color: function(params) { 
+                        var colorList = ['#FC8D52','#5D9CEC','#64BD3D','#EE9201','#29AAE3', '#B74AE5','#0AAF9F','#E89589','#16A085','#4A235A','#C39BD3 ','#F9E79F','#BA4A00','#ECF0F1','#616A6B','#EAF2F8','#4A235A','#3498DB' ]; 
+                        return colorList[params.dataIndex] 
+                    },
+	                label: {
+	                	show: true, 
+	                	position: 'top', //在上方显示
+						textStyle: { //数值样式
+							color: '#64BD3D',
+							fontSize: 16
+						}
+	                }
+                },
+            },
+            data:count,
+            /* markPoint : {
+                data : [
+                    {type : 'max', name: '最大值'},
+                    {type : 'min', name: '最小值'}
+                ]
+            }, */
+            markLine : {
+                data : [
+                    {type : 'average', name: '平均值'}
+                ]
+            }
+        }
+    ]
+});
+
+//基于准备好的dom，初始化echarts实例
+var myChart1 = echarts.init(document.getElementById('main1'));
+myChart1.setOption({
+    title : {
+        text: '订单金额统计',
+        subtext: '统计近12个月份金额数据'
+    },
+    tooltip : {
+        trigger: 'axis'
+    },
+    /* legend: {
+        data:['金额数']
+    }, */
+    toolbox: {
+        show : true,
+        feature : {
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            data : month
+        }
+    ],
+    yAxis : [
+   	 {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'金额数',
+            type:'bar',
+            data:sum,
+            itemStyle: {
+                normal: {
+                    color: function(params) { 
+                        var colorList = ['#FC8D52','#5D9CEC','#64BD3D','#EE9201','#29AAE3', '#B74AE5','#0AAF9F','#E89589','#16A085','#4A235A','#C39BD3 ','#F9E79F','#BA4A00','#ECF0F1','#616A6B','#EAF2F8','#4A235A','#3498DB' ]; 
+                        return colorList[params.dataIndex] 
+                    },
+	                label: {
+	                	show: true, 
+	                	position: 'top', //在上方显示
+						textStyle: { //数值样式
+							color: '#64BD3D',
+							fontSize: 16
+						}
+	                }
+                },
+            },
+            /* markPoint : {
+            	data : [
+                    {type : 'max', name: '最大值'},
+                    {type : 'min', name: '最小值'}
+                ]
+            }, */
+            markLine : {
+                data : [
+                    {type : 'average', name : '平均值'}
+                ]
+            }
+        }
+    ]
+});
+</script>
+<script src="getMsUser.js"></script>
+</body>
+</html>

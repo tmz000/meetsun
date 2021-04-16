@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<link href="css/sweetalert.css" rel="stylesheet">
+<link href="css/application.css" rel="stylesheet">
+<title>我的订单</title>
+</head>
+<body>
+<header>
+	<div class="headerbar">
+		<h1>待付款</h1>
+		<a class="navbar-toggle" onclick="javascript:history.go(-1)">
+			<span class="icon-m_goback"></span>
+		</a>
+	</div>
+</header>
+<div id="showOrder"></div>
+<footer>
+	<div class="footheight"></div>
+	<div class="row footbar">
+		<a class="col-3 text-center" href="/frontEndIndex" ><span class="icon-home"></span>首页</a>
+		<a class="col-3 text-center" href="/frontEndMsVideo" ><span class="icon-signature2"></span>视频专区</a>
+		<a class="col-3 text-center" href="/frontEndCart" ><span class="icon-cart2"></span>购物车</a>
+		<a class="col-3 text-center active" href="/frontEndMyIndex" ><span class="icon-user2"></span>我的</a>
+	</div>
+</footer>
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/swipeSlide.min.js" type="text/javascript"></script>
+<script src="js/sweetalert.min.js" type="text/javascript"></script>
+<script src="js/jquery.mmenu.min.js" type="text/javascript"></script>
+<script src="js/icheck.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+<script src="js/application.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	$.ajax({
+		type:"POST",
+		url:"/frontEnd/frontEndGetMsOrderList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({status:"1"}),
+		success:function(res){
+			if(res.status=="01"){
+				if(res.rows.length > 0){
+					$("#showOrder").html("")
+					for(var i=0;i<res.rows.length;i++){
+						if(res.rows[i].payType != null && res.rows[i].payType != ""){
+							$("#showOrder").append(
+								'<div class="describe cart">'+
+								'<div class="shelves">'+
+								'<div class="shop-title clearfix">'+
+								'<span class="pull-left">'+res.rows[i].orderNo+'</span>'+
+								'<span class="pull-right">'+res.rows[i].createTime.substring(0,10)+'</span></div>'+
+								'<div class="media clearfix">'+
+								'<div class="media-left">'+
+								'<img src="'+res.rows[i].handPhoto+'" /></div>'+
+								'<div class="media-body media-order">'+
+								'<p>订单编号：'+res.rows[i].orderNo+'</p>'+
+								'<p>订单金额：￥'+res.rows[i].payMoney+'</p>'+
+								'<p>订单状态：<span>'+returnStatus(res.rows[i].status)+'</span></p></div><a class="fulldom cleararrow" href="/frontEndMyOrderDetail?sysId='+res.rows[i].sysId+'"></a>'+
+								'<a class="fulldom cleararrow" href="/frontEndMyOrderDetail?sysId='+res.rows[i].sysId+'"></a></div>'+
+								'<div class="clearfix" >'+
+								'<a class="pull-right btn btn-white btn-small" id="'+res.rows[i].sysId+'">删除</a>'+
+								'</div></div></div>'			
+							)
+						}else{
+							$("#showOrder").append(
+								'<div class="describe cart">'+
+								'<div class="shelves">'+
+								'<div class="shop-title clearfix">'+
+								'<span class="pull-left">'+res.rows[i].orderNo+'</span>'+
+								'<span class="pull-right">'+res.rows[i].createTime.substring(0,10)+'</span></div>'+
+								'<div class="media clearfix">'+
+								'<div class="media-left">'+
+								'<img src="'+res.rows[i].handPhoto+'" /></div>'+
+								'<div class="media-body media-order">'+
+								'<p>订单编号：'+res.rows[i].orderNo+'</p>'+
+								'<p>订单金额：￥'+res.rows[i].trueMoney+'</p>'+
+								'<p>订单状态：<span>'+returnStatus(res.rows[i].status)+'</span></p></div><a class="fulldom cleararrow" href="/frontEndMyOrderDetail?sysId='+res.rows[i].sysId+'"></a>'+
+								'<a class="fulldom cleararrow" href="/frontEndMyOrderDetail?sysId='+res.rows[i].sysId+'"></a></div>'+
+								'<div class="clearfix" >'+
+								'<a class="pull-right btn btn-white btn-small" id="'+res.rows[i].sysId+'">删除</a>'+
+								'</div></div></div>'			
+							)
+						}
+						loadButton(res.rows[i].status,res.rows[i].sysId);
+					}
+				}else{
+					$("#showOrder").html("<section class='waitingwrapper'><div class='text-center purple' style='font-size:5rem'><span class='icon-order'></span></div><p class='text-center' >暂无订单信息</p></section>")
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+})
+function returnStatus(status,sysId){
+	if(status=='0'){
+		return '<span style="color:#00ff00">已支付</span>';
+	}else{
+		return '<span class="red">未支付</span>';
+	}
+}
+function loadButton(status,sysId){
+	if(status=='0'){
+		$("#"+sysId).removeClass("pull-right btn btn-small")
+		$("#"+sysId).addClass("pull-right btn btn-white btn-small")
+		$("#"+sysId).html("删除")
+		$("#"+sysId).click(function(){
+			$.ajax({
+				type:"POST",
+				url:"/frontEnd/frontEndUpdateMsOrderByIsDel",
+				contentType:'application/json',
+				data:JSON.stringify({sysId:sysId}),
+				success:function(res){
+					if(res.status=="01"){
+						loadData();
+						alert(res.message);
+					}else{
+						alert(res.message)
+					}
+				}
+			})
+		})
+	}else{
+		$("#"+sysId).removeClass("pull-right btn btn-white btn-small")
+		$("#"+sysId).addClass("pull-right btn btn-small")
+		$("#"+sysId).html("去支付")
+		$("#"+sysId).attr("href","/frontEndPay?sysId="+sysId)
+	}
+}
+</script>
+</body>
+</html>

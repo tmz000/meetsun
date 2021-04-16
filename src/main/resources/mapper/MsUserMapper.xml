@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.MsUserDao">
+	<insert id="saveMsUser" parameterType="com.meetsun.meetsun.entity.MsUser">
+		insert into ms_user(sys_id,user_name,pass_word,email,status,real_name,mobile,create_time,update_time,role_id,login_word)
+			values(#{sysId},#{userName},#{passWord},#{email},#{status},#{realName},#{mobile},now(),now(),#{roleId},#{loginWord})
+	</insert>
+	<select id="getMsUser" parameterType="com.meetsun.meetsun.entity.MsUser" resultType="com.meetsun.meetsun.entity.MsUser">
+		select * from ms_user where 1=1 
+		<if test="userName != '' and userName != null">
+			and user_name = #{userName}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		<if test="roleId != '' and roleId != null">
+			and role_id = #{roleId}
+		</if>
+		<if test="email != '' and email != null">
+			and email = #{email}
+		</if>
+		<if test="isCustomer != '' and isCustomer != null">
+			and is_customer = #{isCustomer}
+		</if>
+	</select>
+	<select id="getMsUserList" parameterType="com.meetsun.meetsun.entity.MsUser" resultType="com.meetsun.meetsun.entity.MsUser">
+		select * from ms_user where 1=1 
+		<if test="isCustomer != '' and isCustomer != null">
+			and is_customer = #{isCustomer}
+		</if>
+	</select>
+	<select id="getMsUserBySysId" parameterType="com.meetsun.meetsun.entity.MsUser" resultType="com.meetsun.meetsun.entity.MsUser">
+		select * from ms_user where sys_id = #{sysId}
+	</select>
+	<select id="getAllMsUser" parameterType="com.meetsun.meetsun.entity.MsUser" resultType="com.meetsun.meetsun.entity.MsUser">
+		select * from ms_user order by create_time desc
+	</select>
+	<update id="updateMsUserBySysId" parameterType="com.meetsun.meetsun.entity.MsUser">
+		update ms_user set update_time = now()
+		<if test="status != '' and status != null">
+			,status = #{status}
+		</if>
+		<if test="realName != '' and realName != null">
+			,real_name = #{realName}
+		</if>
+		<if test="roleId != '' and roleId != null">
+			,role_id = #{roleId}
+		</if>
+		<if test="loginWord != '' and loginWord != null">
+			,login_word = #{loginWord}
+		</if>
+		<if test="passWord != '' and passWord != null">
+			,pass_word = #{passWord}
+		</if>
+		<if test="email != '' and email != null">
+			,email = #{email}
+		</if>
+		<if test="isCustomer != '' and isCustomer != null">
+			,is_customer = #{isCustomer}
+		</if>
+		<if test="mobile != '' and mobile != null">
+			,mobile = #{mobile}
+		</if>
+		 where 1=1
+		 <if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		<if test="userName != '' and userName != null">
+			and user_name = #{userName}
+		</if>
+	</update>
+	<delete id="deleteMsUserBySysId" parameterType="com.meetsun.meetsun.entity.MsUser">
+		delete from ms_user where sys_id = #{sysId}
+	</delete>
+</mapper>

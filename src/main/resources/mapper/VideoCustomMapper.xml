@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.VideoCustomDao">
+	<insert id="saveVideoCustom" parameterType="com.meetsun.meetsun.entity.VideoCustom">
+		insert into video_custom(sys_id,custom_sys_id,video_sys_id,create_time,update_time)
+			values(#{sysId},#{customSysId},#{videoSysId},now(),now())
+	</insert>
+	<select id="getVideoCustomList" parameterType="com.meetsun.meetsun.entity.VideoCustom" resultType="com.meetsun.meetsun.entity.VideoCustom">
+		select * from video_custom where 1=1 
+		<if test="customSysId != '' and customSysId != null">
+			and custom_sys_id = #{customSysId}
+		</if>
+		<if test="videoSysId != '' and videoSysId != null">
+			and video_sys_id = #{videoSysId}
+		</if>
+	</select>
+	<update id="updateVideoCustom" parameterType="com.meetsun.meetsun.entity.VideoCustom">
+		update video_custom set update_time = now() where sys_id = #{sysId}
+	</update>
+	<delete id="deleteVideoCustom" parameterType="com.meetsun.meetsun.entity.VideoCustom">
+		delete from video_custom where sys_id = #{sysId}
+	</delete>
+</mapper>

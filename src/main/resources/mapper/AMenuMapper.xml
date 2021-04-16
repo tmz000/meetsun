@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.AMenuDao">
+	<insert id="saveAMenu" parameterType="com.meetsun.meetsun.entity.AMenu">
+		insert into a_menu(sys_id,parent_id,menu_name,menu_icon,menu_link,menu_remark,menu_num,create_time,update_time)
+			values(#{sysId},#{parentId},#{menuName},#{menuIcon},#{menuLink},#{menuRemark},#{menuNum},now(),now())
+	</insert>
+	<select id="getAMenuList" parameterType="com.meetsun.meetsun.entity.AMenu" resultType="com.meetsun.meetsun.entity.AMenu">
+		select * from a_menu where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="parentId != '' and parentId != null">
+			and parent_id = #{parentId}
+		</if> 
+		<if test="menuName != '' and menuName != null">
+			and menu_name = #{menuName}
+		</if> 
+		order by menu_num asc,parent_id asc
+	</select>
+	<update id="updateAMenu" parameterType="com.meetsun.meetsun.entity.AMenu">
+		update a_menu set parent_id = #{parentId},menu_num=#{menuNum},menu_name = #{menuName},menu_icon = #{menuIcon},menu_link = #{menuLink},menu_remark = #{menuRemark},update_time = now() where sys_id = #{sysId}
+	</update>
+	<delete id="deleteAMenu" parameterType="com.meetsun.meetsun.entity.AMenu">
+		delete from a_menu where sys_id = #{sysId}
+	</delete>
+</mapper>

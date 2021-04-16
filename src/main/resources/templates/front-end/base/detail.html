@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<link href="css/sweetalert.css" rel="stylesheet">
+<link href="css/application.css" rel="stylesheet">
+<title>详情</title>
+<style type="text/css">
+#lbtp li img{
+	width:640px;
+	height:300px;
+}
+.pingjia{
+	float:left;
+	background:#f4cccc;
+	border-radius:5px;
+	height:2.1rem;
+	line-height:2.2rem;
+}
+.pingjia1{
+	float:left;
+}
+#tablist div{
+	margin-top:7px;
+}
+#tablist{
+    height:auto;width:100%;
+    padding-top:8px;
+}
+/*评论类型的自适应高度*/
+.clearfloat{clear:both;height:0;font-size: 1px;line-height: 0px;}
+</style>
+</head>
+<body>
+<header>
+	<div class="headerbar">
+		<h1>产品详情</h1>
+		<a class="navbar-toggle" onclick="javascript:history.go(-1)">
+			<span class="icon-m_goback"></span>
+		</a>
+	</div>
+</header>
+<div class="slide popslides">
+	<ul id="lbtp">
+		<li id="lbtp0"><img src="" /></li>
+		<li id="lbtp1"><img src="" /></li>
+	</ul>
+	<div class="dot">
+		<span></span>
+		<span></span>
+	</div>
+</div>
+<section class="dividezone">
+		<div class="row clearfix">
+			<div class="col-9">
+				<p><span id="price1" style="text-decoration:line-through"></span></p>
+				<p><span class="prices" id="price"></span></p>
+				<h2 id="remark"></h2>
+			</div>
+			<div class="col-3 pull-right">
+				<a class="thumbnail thumbnailhome" href="/frontEndIndex"><span class="icon-home"></span>首页</a>
+			</div>
+		</div>
+		<div class="shelvestip"  data-type="popbox" data-href="servicedetail" id="showIssd">
+			<span><span class="icon-chengnuo"></span>七天无忧退换</span>
+			<span><span class="icon-chengnuo"></span>先行赔付</span>
+			<span><span class="icon-chengnuo"></span>超时赔偿</span>
+			<span class="arrowicon"></span>
+		</div>
+</section>
+<section class="standard-list">
+	<!-- <div class="shelvestip">
+		<a class="arrowicon standardtext" data-type="popbox" data-href="category">已选择："XL","蓝色"</a>
+	</div> -->
+	<div class="shelvestip">
+		<a class="arrowicon" onClick="evaluatepage()" id="plq"><span id="ts"></span></a>
+	</div>
+</section>
+<section class="describe">
+	<div class="thumbnail" id="carDetail"></div>
+</section>
+<a class="backToTop icon-gotop" title="返回顶部"></a>
+
+<!--商品评价-->
+<div class="fixedpage evaluationpage">
+	<div class="headerbar">
+		<h1>评价</h1>
+		<a class="navbar-toggle" onClick="evaluatepage()">
+			<span class="icon-m_goback"></span>
+		</a>
+	</div>
+	<div class="evalute" id="tablist">
+		<div class="pingjia" id="star0">&nbsp;&nbsp;全部<span id="cc"></span>&nbsp;&nbsp;</div>
+	</div>
+	<div class="lists"></div>
+</div>
+
+
+<!--购物车弹出框-->
+<section class="popbox prebuy" id="shoppingcar">
+	<a class="close" data-dismiss="popbox">×</a>
+	<div class="shelves">
+		<div class="media clearfix">
+			<div class="media-left">
+				<img id="carImage" src="" />
+			</div>
+			<div class="media-body">
+				<h2 class="prices" id="carPrice"></h2>
+				<p id="carRemark"></p>
+			</div>
+		</div>
+		<div class="number clearfix">
+			购买数量：
+			<input id="count" type="text" class="spinners" data-min="1" data-max="24"  maxlength="40">
+		</div>
+		<div class="buttonzone">
+			<button class="btn btn-block" onClick="addcart()" data-dismiss="popbox" >确定</button>
+		</div>
+	</div>
+</section>
+
+<!--服务说明弹出框-->
+<section class="popbox" id="servicedetail">
+	<div class="fx_dl">
+			<div class="fwsm_t">服务说明</div>
+			<ul class="fwsm_d">
+				<li><div><span class="icon-chengnuo"></span><span class="f_t">7天无忧退换</span></div><div><span class="f_d">实物破损、不符、质量问题，退换货商家承担往返运费。</span></div></li>
+				<li><div><span class="icon-chengnuo"></span><span class="f_t">先行赔付</span></div><div><span class="f_d">争议可申诉，申诉成功，立即退款。</span></div></li>
+				<li><div><span class="icon-chengnuo"></span><span class="f_t">超时赔偿</span></div><div><span class="f_d">未按承诺时间发货，系统自动赔付（赔款金额为订单商品金额的30%，上限500元）。</span></div></li>
+				<li><div><span class="icon-chengnuo"></span><span class="f_t">顺丰包邮</span></div><div><span class="f_d">运费由商家承担</span></div></li>
+			</ul>
+			<br />
+			<div class="buttonzone">
+				<button class="btn btn-block" data-dismiss="popbox" >关闭</button>
+			</div>
+	</div>
+</section>
+<footer>
+	<div class="footheight"></div>
+	<div class="row footbar">
+		<div class="col-12 text-center">
+			<div class="square" id="customer">
+				<!-- <a href="tel:13522532417"><span class="icon-phone"></span>客服</a> -->
+			</div>
+			<div class="square">
+				<a  href="/frontEndCart"><span class="icon-cart"></span>购物车<i class="numberpro"></i></a>
+			</div>
+			<div class="btn-group">
+				<a class="btn btn-fade" data-type="popbox" data-href="shoppingcar">加入购物车</a>
+				<a class="btn" id="buynow" onclick="buyNow()">&nbsp;立即购买&nbsp;</a>
+			</div>
+		</div>
+	</div>
+</footer>
+<input type="hidden" id="sysId">
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/swipeSlide.min.js" type="text/javascript"></script>
+<script src="js/sweetalert.min.js" type="text/javascript"></script>
+<script src="js/jquery.mmenu.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+<script src="js/application.js" type="text/javascript"></script>
+<script src="appPublic.js" type="text/javascript"></script>
+<script type="text/javascript">
+var locationUrl = location.search;
+$(function(){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetServiceProjectListBySysId",
+		contentType:'application/json',
+		data:JSON.stringify({sysId:locationUrl.split("=")[1]}),
+		success:function(res){
+			if(res.status=="01"){
+				if(res.rows[0].typeName != '商品类'){
+					$("#showIssd").hide()
+				}
+				if(res.rows[0].isJoin == "1"){
+					$("#price1").html("￥"+res.rows[0].price)
+					$("#price").html("￥"+res.rows[0].amount)
+					$("#carPrice").html("￥"+res.rows[0].amount)
+				}else{
+					$("#price").html("￥"+res.rows[0].price)
+					$("#carPrice").html("￥"+res.rows[0].price)
+				}
+				$("#sysId").val(res.rows[0].sysId)
+				var lbtp = res.rows[0].handPhoto.split(",")
+				for(var i=0;i<lbtp.length;i++){
+					$("#lbtp"+i+" img").attr("src",lbtp[i])
+					$("#carImage").attr("src",lbtp[i])
+				}
+				$("#remark").html(res.rows[0].remark)
+				$("#carRemark").html(res.rows[0].remark)
+				$("#carDetail").html('<img style="height:100%;width:100%;" src="'+res.rows[0].photoAdrr+'">')
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+	showCount(null)
+	showStarLv()
+	getNumber()
+	$("#star0").css("background","red");
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsUserList",
+		contentType:'application/json',
+		data:JSON.stringify({"isCustomer":"1"}),
+		success:function(res){
+			if(res.status=="01"){
+				if(res.rows.length > 0){
+					//设置随机显示客服电话
+					second = new Date().getSeconds();
+					for(var i=0;i<res.rows.length;i++){
+				    	if((second % res.rows.length) == 0){
+							$("#customer").append(
+								'<a href="tel:'+res.rows[0].mobile+'"><span class="icon-phone"></span>客服</a>'
+							)
+							break;
+						}else if((second % res.rows.length) == 1) {
+							$("#customer").append(
+								'<a href="tel:'+res.rows[1].mobile+'"><span class="icon-phone"></span>客服</a>'
+							)
+							break;
+						}else if((second % res.rows.length) == 2)  {
+							$("#customer").append(
+								'<a href="tel:'+res.rows[2].mobile+'"><span class="icon-phone"></span>客服</a>'
+							)
+							break;
+						}
+				    }
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+})
+function showStarLv(){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsCommentListByStarLv",
+		contentType:'application/json',
+		data:JSON.stringify({projectSysId:locationUrl.split("=")[1],toExamine:"1"}),
+		success:function(res){
+			if(res.status=="01"){
+				var count = 0;
+				for(var i=0;i<res.rows.length;i++){
+					count = count/1 + res.rows[i].count/1
+					$("#tablist").append(
+						'<div class="pingjia1">&nbsp;&nbsp;</div><div class="pingjia" id="star'+res.rows[i].starLv+'" onclick="starLv('+res.rows[i].starLv+')">&nbsp;&nbsp;'+getStarLv(res.rows[i].starLv)+'('+res.rows[i].count+')&nbsp;&nbsp;</div>'
+					)
+				}
+				$("#tablist").append(
+					'<div class="clearfloat"></div>'
+				)
+				$("#cc").html("("+count+")");
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+}
+$("#star0").click(function(){
+	showCount(null)
+	$("#tablist .pingjia").css("background","#f4cccc");
+	$(this).css("background","red");
+})
+function starLv(f){
+	showCount(f)
+	$("#tablist .pingjia").css("background","#f4cccc");
+	$("#star"+f).css("background","red");
+}
+function showCount(starLv){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsCommentList",
+		contentType:'application/json',
+		data:JSON.stringify({projectSysId:locationUrl.split("=")[1],toExamine:"1",starLv:starLv}),
+		success:function(res){
+			if(res.status=="01"){
+				if(res.rows.length > 0){
+					$(".lists").html("")
+					$("#ts").html("商品评价("+res.rows.length+")");
+					var starLv = null
+					for(var i=0;i<res.rows.length;i++){
+						$(".lists").append(
+							'<div class="evalute">'+
+							'<div class="tags">'+
+							'<span class="tagsheadimg"><span><img src="'+res.rows[i].userTx+'" width="35px" height="35px" style="border-radius:50%"></span><i>'+getMobile(res.rows[i].userName)+'</i>评价</span>'+
+							'<span class="time">'+res.rows[i].createTime+'</span>'+
+							'<div class="rates">'+
+							'<div style="width:100%;float:left;height:6%;display:inline-block;" id="test'+i+'"></div>'+
+							'</div></div>'+
+							'<p style="margin-top:25px;">'+res.rows[i].content+'</p>'+
+							'</div>'		
+						)
+						for(var j = 0; j < res.rows.length; j++){
+							if(i == j){
+								for(var k = 0; k < 5; k++){
+									if(k+1 > res.rows[i].starLv){
+									    $("#test"+i).append("<i><img src='img/stargray.png' style='height:15px;width:15px'></i>");
+									}else{
+									    $("#test"+i).append("<i><img src='img/star.png' style='height:15px;width:15px'></i>");
+									}
+								}
+							}
+						}
+					}
+				}else{
+					$("#ts").html("暂无评价");
+					$("#plq").removeAttr("onclick");
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+}
+
+function getMobile(s){
+	var pre =  s.substr(0,3),next = s.substr(7,4);
+	  return pre + "****" + next;
+}
+function buyNow(){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndSaveMsCart?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({projectSysId:$("#sysId").val()}),
+		success:function(res){
+			if(res.status=="01"){
+				window.location.href="/frontEndOrder?checkSysId="+res.rows
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+	
+}
+</script>
+<script>
+//选择尺码分类
+var standard = function(){
+	var standard1 = $(":radio[name=standard][checked]").val();
+	var standard2 = $(":radio[name=standard2][checked]").val();
+	$(".standardtext").html("已选择：'" + standard1 + "','" + standard2 + "'")
+}
+
+//购物车数量增加
+var addcart = function(){
+	var data=JSON.stringify({
+		"projectSysId":$("#sysId").val(),
+		"count":$("#count").val()
+	})
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndSaveMsCart?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:data,
+		success:function(res){
+			if(res.status=="01"){
+				getNumber()
+				alert("加入成功！")
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+}
+function getNumber(){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsCartListByOpendId?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({status:""}),
+		success:function(res){
+			if(res.status=="01"){
+				if(res.rows.length > 0){
+					$(".numberpro").addClass("number");
+					$(".numberpro").text(res.rows.length)
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+}
+
+//评价
+function evaluatepage(){
+	if($(".evaluationpage").hasClass("active"))
+	{
+		$(".evaluationpage").removeClass("active");
+		$(".evaluationpage").removeAttr("style");
+	}else{
+		$(".evaluationpage").addClass("active");
+		$(".evaluationpage").css({
+			"display":"block",
+			"width":"100%",
+			"z-index":"101",
+			"height":$(window).height()+'px',
+			"top":"0"
+		});
+		$("body").css({"overflow":"hidden","height":$(window).height()+'px'});
+	}
+}
+
+
+$(function(){
+	$('.spinners').spinner({max:5});
+})
+</script>
+</body>
+</html>

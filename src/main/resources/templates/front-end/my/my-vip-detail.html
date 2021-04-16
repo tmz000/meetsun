@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<link href="css/sweetalert.css" rel="stylesheet">
+<link href="css/application.css" rel="stylesheet">
+<style type="text/css">
+.cart .shelves>div.c-list {
+    font-size: 1.4rem;
+    line-height: 2.3rem;
+    padding: 0.5rem 1rem;
+    height: 8.2rem;
+}
+</style>
+<title>会员明细</title>
+</head>
+<body>
+<header>
+	<div class="headerbar">
+		<h1>会员明细</h1>
+		<a class="navbar-toggle" onclick="history.go(-1)">
+			<span class="icon-m_goback"></span>
+		</a>
+	</div>
+</header>
+<form class="form-phone">
+<section class="wrapper cart">
+	<div class="shelves" id="showDetail"></div>
+</section>
+</form>
+
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/swipeSlide.min.js" type="text/javascript"></script>
+<script src="js/sweetalert.min.js" type="text/javascript"></script>
+<script src="js/jquery.mmenu.min.js" type="text/javascript"></script>
+<script src="js/icheck.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+<script src="js/application.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	var locationUrl = location.search;
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetCustomDetailList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({createTime:locationUrl.split("=")[1],payType:"0"}),
+		success:function(res){
+			if(res.status == "01"){
+				if(res.rows.length > 0){
+					for(var i=0;i<res.rows.length;i++){
+						$("#showDetail").append(
+							'<div class="c-list">'+
+							'<p><span style="font-weight: 600;">'+reuruFlag(res.rows[i].flag)+'</span><span class="c-time">'+res.rows[i].createTime+'</span></p>'+
+							'<p><span class="c-left">项目：'+res.rows[i].spName+'</span></p>'+
+							'<p><span class="c-left">金额：'+returnStatus(res.rows[i].cardMoney)+'</span> <span class="c-bold">积分：'+returnStatus(res.rows[i].integral)+'</span></p>'+
+							'</div>'
+						)
+					}
+				}
+			}
+		}
+	})
+})
+function reuruFlag(flag){
+	if(flag == "0"){
+		return "充值"
+	}else if(flag == "1"){
+		return "消费"
+	}else if(flag == "2"){
+		return "绑卡"
+	}else if(flag == "3"){
+		return "活动"
+	}
+}
+function returnStatus(s){
+	if(s.split(".")[1] == "0"){
+		s = s.split(".")[0]
+	}
+	if(s > 0){
+		return '<span style="color:#00ff00">+'+s+'</span>';
+	}else if(s == 0){
+		return s;
+	}else{
+		return '<span style="color:red">'+s+'</span>';
+	}
+}
+</script>
+</body>
+</html>

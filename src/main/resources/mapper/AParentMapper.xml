@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.AParentMenuDao">
+	<insert id="saveAParentMenu" parameterType="com.meetsun.meetsun.entity.AParentMenu">
+		insert into a_parent_menu(sys_id,menu_name,menu_icon,menu_link,menu_remark,menu_num,create_time,update_time)
+			values(#{sysId},#{menuName},#{menuIcon},#{menuLink},#{menuRemark},#{menuNum},now(),now())
+	</insert>
+	<select id="getAParentMenuList" parameterType="com.meetsun.meetsun.entity.AParentMenu" resultType="com.meetsun.meetsun.entity.AParentMenu">
+		select * from a_parent_menu where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="menuName != '' and menuName != null">
+			and menu_name = #{menuName}
+		</if> 
+		order by menu_num asc
+	</select>
+	<update id="updateAParentMenu" parameterType="com.meetsun.meetsun.entity.AParentMenu">
+		update a_parent_menu set menu_name = #{menuName},menu_num=#{menuNum},menu_icon = #{menuIcon},menu_link = #{menuLink},menu_remark = #{menuRemark},update_time = now() where sys_id = #{sysId}
+	</update>
+	<delete id="deleteAParentMenu" parameterType="com.meetsun.meetsun.entity.AParentMenu">
+		delete from a_parent_menu where sys_id = #{sysId}
+	</delete>
+</mapper>

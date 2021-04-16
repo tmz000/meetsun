@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.MsCustomDao">
+	<insert id="saveMsCustom" parameterType="com.meetsun.meetsun.entity.MsCustom">
+		insert into ms_custom(sys_id,user_name,pass_word,email,status,id_card,card_no,card_money,opend_id,real_name,create_time,update_time,picture)
+			values(#{sysId},#{userName},#{passWord},#{email},#{status},#{idCard},#{cardNo},#{cardMoney},#{opendId},#{realName},now(),now(),#{picture})
+	</insert>
+	<select id="getMsCustomList" parameterType="com.meetsun.meetsun.entity.MsCustom" resultType="com.meetsun.meetsun.entity.MsCustom">
+		select * from ms_custom where 1=1 
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		<if test="cardNo != '' and cardNo != null">
+			and card_no = #{cardNo}
+		</if>
+		<if test="userName != '' and userName != null">
+			and user_name = #{userName}
+		</if>
+		<if test="passWord != '' and passWord != null">
+			and pass_word = #{passWord}
+		</if>
+		<if test="idCard != '' and idCard != null">
+			and id_card = #{idCard}
+		</if>
+		<if test="opendId != '' and opendId != null">
+			and opend_id = #{opendId}
+		</if>
+		 order by create_time desc
+	</select>
+	<select id="getMsCustomByName" parameterType="com.meetsun.meetsun.entity.MsCustom" resultType="com.meetsun.meetsun.entity.MsCustom">
+		select * from ms_custom where 1=1 
+		<if test="userName != '' and userName != null">
+			and user_name = #{userName}
+		</if>
+		<if test="passWord != '' and passWord != null">
+			and pass_word = #{passWord}
+		</if>
+	</select>
+	<select id="getMsCustomByOpendId" parameterType="com.meetsun.meetsun.entity.MsCustom" resultType="com.meetsun.meetsun.entity.MsCustom">
+		select * from ms_custom where 1=1 
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		<if test="opendId != '' and opendId != null">
+			and opend_id = #{opendId}
+		</if>
+	</select>
+	<update id="updateMsCustom" parameterType="com.meetsun.meetsun.entity.MsCustom">
+		update ms_custom set id_card = #{idCard},card_no = #{cardNo},card_money = #{cardMoney},update_time = now(),status = #{status} where sys_id = #{sysId}
+	</update>
+	<update id="updateMsCustomByCardMoney" parameterType="com.meetsun.meetsun.entity.MsCustom">
+		update ms_custom set card_money = round(card_money+#{cardMoney},2),integral = round(integral+#{integral}),update_time = now() where sys_id = #{sysId}
+	</update>
+	<update id="updateMsCustomByOpendId" parameterType="com.meetsun.meetsun.entity.MsCustom">
+		update ms_custom set opend_id = #{opendId} where sys_id = #{sysId}
+	</update>
+	<update id="updateMsCustomBySysId" parameterType="com.meetsun.meetsun.entity.MsCustom">
+		update ms_custom 
+			<trim prefix="SET" suffixOverrides=",">
+				<if test="null != passWord and '' != passWord">
+					pass_word = #{passWord},
+				</if>
+				<if test="userName != null and '' != userName">
+					user_name = #{userName},
+				</if>
+				<if test="realName != null and '' != realName">
+					real_name = #{realName},
+				</if>
+				<if test="null != picture and '' != picture">
+					picture = #{picture},
+				</if>
+				<if test="null != email and '' != email">
+					email = #{email}
+				</if>
+				<if test="null != integral and '' != integral">
+					integral = #{integral}
+				</if>
+			</trim>
+			where sys_id = #{sysId}
+	</update>
+	<update id="updateMsCustomByIntegralFlag" parameterType="com.meetsun.meetsun.entity.MsCustom">
+		update ms_custom set integral_flag = #{integralFlag}
+	</update>
+	<!-- <delete id="deleteMsCustom" parameterType="com.meetsun.meetsun.entity.MsCustom">
+		delete from ms_custom where sys_id = #{sysId}
+	</delete> -->
+</mapper>

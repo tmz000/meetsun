@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Meet-Sun</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" href="css/matrix-style.css" />
+<link rel="stylesheet" href="css/matrix-media.css" />
+<link href="font-awesome/css/font-awesome.css" rel="stylesheet" />
+
+<script src="js/excanvas.min.js"></script> 
+<script src="js/jquery.min.js"></script> 
+<script src="js/jquery.ui.custom.js"></script> 
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/nicescroll/jquery.nicescroll.min.js"></script> 
+<script src="js/matrix.js"></script>
+<script src="js/jquery.messager.js"></script>
+</head>
+<body>
+<!--Header-part-->
+<div id="header">
+  <h1><a href="/index"><img src="assets/img/logo.png" alt="logo" /> Meet-Sun系统</a></h1>
+</div>
+<!--close-Header-part--> 
+
+<!--top-Header-menu-->
+<!-- <div id="user-nav" class="navbar navbar-inverse"> -->
+<div id="search" class="navbar navbar-inverse">
+    <ul class="nav">
+        <li  class="dropdown" id="profile-messages" >
+            <!-- <a title="" href="#" data-toggle="dropdown" data-target="#profile-messages" class="dropdown-toggle"> -->
+            <a title="" href="#" class="dropdown-toggle">
+                <i class="icon icon-user"></i>&nbsp;
+               	 欢迎您,【<span class="text" id="admin"></span>】
+            </a>
+        </li>
+        <li class=""><a title="" href="outLogin"><i class="icon icon-share-alt"></i> <span class="text">&nbsp;退出系统</span></a></li>
+    </ul>
+</div>
+<!--close-top-Header-menu-->
+<div id="sidebar" style="OVERFLOW-Y: auto; OVERFLOW-X:hidden;">
+    <ul>
+        <li class="submenu active">
+            <a class="menu_a" link="/home"><i class="icon icon-home"></i> <span>首页</span></a> 
+        </li>
+        <li class="submenu" id="到访管理" style="display:none"> 
+            <a href="#">
+                <i class="icon-user-md"></i> 
+                <span>到访管理</span> 
+            </a>
+            <ul>
+                <li id="visit" style="display:none"><a class="menu_a" link="/visit"><i class="icon icon-road"></i>到访信息</a></li>
+                <!-- <li><a class="menu_a" link="/order"><i class="icon icon-table"></i>到访统计</a></li> -->
+            </ul>
+        </li>
+        <li class="submenu" id="基础数据" style="display:none"> 
+            <a href="#">
+                <i class="icon icon-globe"></i> 
+                <span>基础数据</span> 
+            </a>
+            <ul>
+                <li id="advert" style="display:none"><a class="menu_a" link="/advert"><i class="icon icon-signin"></i>活动</a></li>
+                <li id="msCustom" style="display:none"><a class="menu_a" link="/msCustom"><i class="icon icon-user"></i>客户</a></li>
+                <li id="msBroadcast" style="display:none"><a class="menu_a" link="/msBroadcast"><i class="icon icon-list-ol"></i>轮播</a></li>
+                <li id="msVideo" style="display:none"><a class="menu_a" link="/msVideo"><i class="icon icon-facetime-video"></i>视频</a></li>
+                <li id="vipCard" style="display:none"><a class="menu_a" link="/vipCard"><i class="icon icon-suitcase"></i>会员卡</a></li>
+                <li id="question" style="display:none"><a class="menu_a" link="/question"><i class="icon icon-question-sign"></i>问题反馈</a></li>
+                <li id="test" style="display:none"><a class="menu_a" link="/test"><i class="icon icon-caret-right"></i>测试</a></li>
+            </ul>
+        </li>
+        <li class="submenu" id="订单管理" style="display:none"> 
+            <a href="#">
+                <i class="icon icon-file-alt"></i> 
+                <span>订单管理</span> 
+            </a>
+            <ul>
+                <li id="orderSure" style="display:none"><a class="menu_a" link="/orderSure"><i class="icon icon-table"></i>订单确认</a></li>
+                <li id="order" style="display:none"><a class="menu_a" link="/order"><i class="icon icon-table"></i>订单信息</a></li>
+                <li id="orderWl" style="display:none"><a class="menu_a" link="/orderWl"><i class="icon icon-truck"></i>订单物流</a></li>
+                <li id="orderLog" style="display:none"><a class="menu_a" link="/orderLog"><i class="icon icon-certificate"></i>订单日志</a></li>
+            </ul>
+        </li>
+        <li class="submenu" id="产品分类" style="display:none"> 
+            <a href="#">
+                <i class="icon icon-table"></i> 
+                <span>产品分类</span> 
+            </a>
+            <ul>
+                <li id="project" style="display:none"><a class="menu_a" link="/project"><i class="icon icon-eye-open"></i>产品管理</a></li>
+                <li id="projectType" style="display:none"><a class="menu_a" link="/projectType"><i class="icon icon-trophy"></i>分类管理</a></li>
+                <li id="msComment" style="display:none"><a class="menu_a" link="/msComment"><i class="icon icon-copy"></i>产品评论</a></li>
+            </ul>
+        </li>
+        <li class="submenu" id="财务收支" style="display:none">
+			<a href="#">
+                <i class="icon-money"></i> 
+                <span>财务收支</span> 
+            </a>
+			<ul>
+                <li id="incomePay"" style="display:none"><a class="menu_a" link="/incomePay"><i class="icon icon-pinterest-sign"></i>收支概览</a></li>
+                <li id="income" style="display:none"><a class="menu_a" link="/income"><i class="icon icon-pinterest-sign"></i>收入报表</a></li>
+                <li id="pay" style="display:none"><a class="menu_a" link="/pay"><i class="icon icon-pinterest"></i>支出报表</a></li>
+                <li id="customDetail" style="display:none"><a class="menu_a" link="/customDetail"><i class="icon icon-edit"></i>会员记录</a></li>
+            </ul>
+        </li>
+        <li class="submenu" id="常用工具" style="display:none"> 
+            <a href="#">
+                <i class="icon icon-cogs"></i> 
+                <span>常用工具</span> 
+            </a>
+            <ul>
+                <li id="dateBill" style="display:none"><a class="menu_a" link="/dateBill"><i class="icon-save"></i>日录账单(主)</a></li>
+                <li id="dateBillVice" style="display:none"><a class="menu_a" link="/dateBillVice"><i class="icon-save"></i>日录账单(副)</a></li>
+            </ul>
+        </li>
+        <li class="submenu" id="系统设置" style="display:none"> 
+            <a href="#">
+                <i class="icon icon-cog"></i> 
+                <span>系统设置</span> 
+            </a>
+            <ul>
+                <li id="oneDetail" style="display:none"><a class="menu_a" link="/oneDetail"><i class="icon-user"></i>个人资料</a></li>
+                <li id="msUser" style="display:none"><a class="menu_a" link="/msUser"><i class="icon-folder-open"></i>用户管理</a></li>
+                <li id="menu" style="display:none"><a class="menu_a" link="/menu"><i class="icon icon-sitemap"></i>菜单管理</a></li>
+                <li id="role" style="display:none"><a class="menu_a" link="/role"><i class="icon icon-dashboard"></i>角色管理</a></li>
+                <li id="roleMenu" style="display:none"><a class="menu_a" link="/roleMenu"><i class="icon icon-dashboard"></i>角色权限</a></li>
+                <li id="payPicture" style="display:none"><a class="menu_a" link="/payPicture"><i class="icon icon-fullscreen"></i>支付管理</a></li>
+                <li id="logInfo" style="display:none"><a class="menu_a" link="/logInfo"><i class="icon icon-paste"></i>日志查看</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<!--sidebar-menu-->
+
+<!--main-container-part-->
+<div id="content">
+    <!--breadcrumbs-->
+    <div id="content-header">
+      <div id="breadcrumb"> <a href="" onclick="index()" title="主页" class="tip-bottom"><i class="icon-home"></i> Home</a></div>
+    </div>
+    <!--End-breadcrumbs-->
+    <iframe src="home" id="iframe-main" frameborder='0' style="width:100%;"></iframe>
+</div>
+<!--end-main-container-part-->
+<script type="text/javascript">
+function index(){
+	window.location.href='/index?token='+localStorage.getItem("token")
+}
+//初始化相关元素高度
+function init(){
+    $("body").height($(window).height()-80);
+    $("#iframe-main").height($(window).height()-90);
+    $("#sidebar").height($(window).height()-50);
+}
+
+$(function(){
+    init();
+    $(window).resize(function(){
+        init();
+    });
+   	$.ajax({
+		type:'POST',
+		url:'/msUser/getMsUser?token='+localStorage.getItem("token"),
+		contentType:'application/json',
+		success:function(res){
+			if(res.status == '01'){
+				$("#admin").html(res.rows.userName)
+				//展示菜单
+				$.ajax({
+					type:'POST',
+					url:'/aRoleMenu/getARoleMenuList?token='+localStorage.getItem("token"),
+					contentType:'application/json',
+					data:JSON.stringify({roleId:res.rows.roleId}),
+					success:function(ress){
+						if(res.status == '01'){
+							$.ajax({
+								type:'POST',
+								url:'/aMenu/getAMenuList?token='+localStorage.getItem("token"),
+								contentType:'application/json',
+								data:JSON.stringify({sysId:ress.rows[0].menuId}),
+								success:function(resss){
+									if(res.status == '01'){
+										for(var i=0;i<resss.rows.length;i++){
+											$("#"+resss.rows[i].menuLink.replace("/","")).show()
+											$("#"+resss.rows[i].menuLink.replace("/","")+" a").html("").append('<i class="'+resss.rows[i].menuIcon+'"></i>'+resss.rows[i].menuName)
+											$("#"+resss.rows[i].parentMenuName).show()
+										}
+									}else{
+										if(res.message == undefined || res.message == "undefined"){
+											
+										}else{
+											alert(res.message)
+										}
+									}
+								}
+							})
+						}
+					}
+				})
+			}else{
+				if(res.message == undefined || res.message == "undefined"){
+					
+				}else{
+					alert(res.message)
+				}
+			}
+		}
+	})
+	checkNewOrder();
+    window.setInterval("checkNewOrder()",300000);//5分钟刷新1次
+});
+//检查是否有待确认订单付款
+function checkNewOrder(){
+	$.ajax({
+		type:'POST',
+		url:'/paySure/getPaySureList?token='+localStorage.getItem("token"),
+		contentType:'application/json',
+		data:JSON.stringify({status:'0'}),
+		success:function(res){
+			if(res.status == '01'){
+				if(res.rows.length > 0){
+					for(var i=0;i<res.rows.length;i++){
+					}
+					(function(i) {
+						//10秒循环执行一次
+				        setTimeout(function() {
+							$.messager.lays(300, 200);
+							$.messager.show('消息提示', '您有新的支付订单'+res.rows[i].orderNo+'，<br/>请点击订单管理->订单确认->是否到账', 9000);
+							speckText('您有新的支付确认订单，单号为：'+res.rows[i].orderNo+'，<br/>请确认')
+				        }, (i + 1) * 10000);
+				    })(i)
+				}
+			}else{
+				if(res.message == undefined || res.message == "undefined"){
+					
+				}else{
+					alert(res.message)
+				}
+			}
+		}
+	})
+}
+//百度语音播放
+function speckText(str){
+	var url = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&text=" + encodeURI(str);        // baidu
+　	var n = new Audio(url);
+ 	n.src = url;
+ 	n.play();
+}
+</script>
+<script src="getMsUser.js"></script> 
+</body>
+</html>

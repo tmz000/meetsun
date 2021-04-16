@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.MsVideoDao">
+	<insert id="saveMsVideo" parameterType="com.meetsun.meetsun.entity.MsVideo">
+		insert into ms_video(sys_id,user_name,name,remark,sp_id,sp_name,create_time,update_time,video_addr)
+			values(#{sysId},#{userName},#{name},#{remark},#{spId},#{spName},now(),now(),#{videoAddr})
+	</insert>
+	<select id="getMsVideoList" parameterType="com.meetsun.meetsun.entity.MsVideo" resultType="com.meetsun.meetsun.entity.MsVideo">
+		select * from ms_video where 1=1 
+		<if test="userName != '' and userName != null">
+			and user_name = #{userName}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		 order by create_time desc
+	</select>
+	<update id="updateMsVideo" parameterType="com.meetsun.meetsun.entity.MsVideo">
+		update ms_video set click_number = #{clickNumber} where sys_id = #{sysId}
+	</update>
+	<delete id="deleteMsVideo" parameterType="com.meetsun.meetsun.entity.MsVideo">
+		delete from ms_video where sys_id = #{sysId}
+	</delete>
+</mapper>

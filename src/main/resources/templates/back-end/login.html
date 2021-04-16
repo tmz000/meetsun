@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<title>Meet-Sun用户登录</title>
+<link href="bootstrap/css/bootstrap-3.3.7.min.css" rel="stylesheet" type="text/css"/>
+<link href="assets/css/main.css" rel="stylesheet" type="text/css" />
+<link href="assets/css/plugins.css" rel="stylesheet" type="text/css" />
+<link href="assets/css/responsive.css" rel="stylesheet" type="text/css"/>
+<link href="assets/css/icons.css" rel="stylesheet" type="text/css" />
+<link href="assets/css/login.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="assets/css/fontawesome/font-awesome.min.css">
+<!--[if IE 7]>
+  <link rel="stylesheet" href="assets/css/fontawesome/font-awesome-ie7.min.css">
+<![endif]-->
+<!--[if IE 8]>
+  <link href="assets/css/ie8.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+<script type="text/javascript" src="assets/js/libs/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="assets/js/libs/lodash.compat.min.js"></script>
+<!--[if lt IE 9]>
+  <script src="assets/js/libs/html5shiv.js">
+  </script>
+<![endif]-->
+<script type="text/javascript" src="plugins/uniform/jquery.uniform.min.js"></script>
+<script type="text/javascript" src="plugins/validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="plugins/nprogress/nprogress.js"></script>
+<script type="text/javascript" src="assets/js/login.js"></script>
+<script type="text/javascript" src="js/jquery.cookie.js"></script>
+<script>
+  $(document).ready(function() {
+    Login.init()
+  });
+</script>
+</head>
+<body class="login">
+  <div class="logo">
+    <img src="assets/img/logo.png" alt="logo" />
+    <strong>
+      Meet-Sun系统登录
+    </strong></div>
+  <div class="box">
+    <div class="content">
+      <form class="form-vertical login-form" action="" method="post">
+        <h3 class="form-title">登录</h3>
+        <div class="alert fade in alert-danger" style="display: none;">
+        	<i class="icon-remove close" data-dismiss="alert"></i>请输入用户名、密码、口令进行登录
+        </div>
+        <div class="form-group">
+          <div class="input-icon">
+            <i class="icon-user"></i>
+            <input type="text" name="username" id="username" class="form-control" placeholder="请输入用户名" autofocus="autofocus" data-rule-required="true" data-msg-required="请输入用户名."/>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-icon">
+            <i class="icon-lock"></i>
+            <input type="password" name="password" id="password" class="form-control" placeholder="请输入密码" data-rule-required="true" data-msg-required="请输入密码." />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-icon">
+            <i class="icon-lock"></i>
+            <input type="text" id="loginWord" name="loginWord" autocomplete="off" class="form-control" placeholder="请输入登录口令" data-rule-required="true" data-msg-required="请输入登录口令." />
+          </div>
+        </div>
+        <div class="form-actions">
+          <label class="checkbox pull-left"><input type="checkbox" class="uniform" name="remember" id="remeber">记住密码</label>
+          <button type="submit" class="submit btn btn-primary pull-right" id="loginIn">登录&nbsp;<i class="icon-angle-right"></i></button>
+        </div>
+      </form>
+      <form class="form-vertical register-form" action="" method="post" style="display: none;">
+        <h3 class="form-title">免费注册</h3>
+        <div class="form-group">
+          <div class="input-icon">
+            <i class="icon-user"></i>
+            <input type="text" name="userName" class="form-control" placeholder="请输入用户名" autofocus="autofocus" data-rule-required="true" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-icon">
+            <i class="icon-lock"></i>
+            <input type="text" name="passWord" class="form-control" placeholder="请输入密码" id="register_password" data-rule-required="true" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-icon">
+            <i class="icon-ok"></i>
+            <input type="text" name="passwordConfirm" class="form-control" placeholder="请再次确认密码" data-rule-required="true" data-rule-equalTo="#register_password" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-icon">
+            <i class="icon-envelope"></i>
+            <input type="text" name="email" class="form-control" placeholder="请输入邮箱地址" data-rule-required="true" data-rule-email="true" />
+          </div>
+        </div>
+        <div class="form-group spacing-top">
+          <label class="checkbox">
+            <input type="checkbox" class="uniform" name="remember" checked data-rule-required="true" data-msg-required="请同意条款">
+ 			我同意<a href="javascript:void(0);">服务条款</a>
+          </label>
+          <label for="remember" class="has-error help-block" generated="true" style="display:none;">
+          </label>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="back btn btn-default pull-left"><i class="icon-angle-left"></i>返回</button>
+          <button type="submit" class="submit btn btn-primary pull-right">注册<i class="icon-angle-right"></i></button>
+        </div>
+      </form>
+    </div>
+    <div class="inner-box">
+      <div class="content">
+        <i class="icon-remove close hide-default" id="resetI"></i>
+        <a href="#" class="forgot-password-link" id="resetA"> 忘记密码?</a>
+        <form class="form-vertical forgot-password-form hide-default" action="" method="post" id="resetForm">
+          <div class="form-group">
+            <div class="input-icon">
+              <i class="icon-envelope"></i>
+              <input type="text" name="email" id="email" class="form-control" placeholder="请输入邮箱地址" data-rule-required="true" data-rule-email="true" data-msg-required="请输入邮箱."/>
+            </div>
+          </div>
+          <button type="submit" class="submit btn btn-default btn-block" id="passwordReset">密码重置</button>
+        </form>
+        <div class="forgot-password-done hide-default" id="showMessage">
+          <i class="icon-ok success-icon"></i>
+          <span>密码重置已发送至邮箱，请前往邮箱进行修改！</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <a href="#" class="sign-up">还没有帐号？<strong>注册</strong></a>
+  </div>
+</body>
+<script type="text/javascript">
+$(function () {  
+	var yhm = $.cookie('username');
+ 　　	var mm = $.cookie('password');
+ 	//页面加载的时候从cookie中取出用户名和密码填充对应的输入框
+   	$('#username').val(yhm);  　　　　 
+   	$("#password").val(mm)
+   	//选中保存秘密的复选框　
+　　　if(yhm != null && yhm != '' && mm != null && mm != ''){
+  		$("#remeber").attr('checked',true);
+  		$(".checkbox span").attr('class',"checked");
+	}
+});
+$("#remeber").click(function(){
+  	var username = $("#username").val();
+  	var password = $("#password").val();
+  	//判断复选框的选择状态添加cookie
+ 	if ($("#remeber").is(":checked")) { 
+  　　　　	//存储一个带7天期限的cookie
+  　　　　	$.cookie("username", username, { expires: 7 });
+  　　　　	$.cookie("password", password, { expires: 7 });
+  　　	}else {  　　　　
+  　　　　	$.cookie("username", "", { expires: -1 });
+  　　　　	$.cookie("password", "", { expires: -1 });
+  　　	}
+})
+</script>
+</html>

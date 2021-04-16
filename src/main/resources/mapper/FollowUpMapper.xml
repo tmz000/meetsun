@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.FollowUpDao">
+	<insert id="saveFollowUp" parameterType="com.meetsun.meetsun.entity.FollowUp">
+		insert into follow_up(sys_id,real_name,visit_id,remark,create_time,update_time)
+			values(#{sysId},#{realName},#{visitId},#{remark},now(),now())
+	</insert>
+	<select id="getFollowUpList" parameterType="com.meetsun.meetsun.entity.FollowUp" resultType="com.meetsun.meetsun.entity.FollowUp">
+		select * from follow_up where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="visitId != '' and visitId != null">
+			and visit_id = #{visitId}
+		</if> 
+		order by create_time desc
+	</select>
+	<update id="updateFollowUp" parameterType="com.meetsun.meetsun.entity.FollowUp">
+		update follow_up set update_time = now() where sys_id = #{sysId}
+	</update>
+	<delete id="deleteFollowUp" parameterType="com.meetsun.meetsun.entity.FollowUp">
+		delete from follow_up where sys_id = #{sysId}
+	</delete>
+</mapper>

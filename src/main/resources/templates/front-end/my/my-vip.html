@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<link href="css/sweetalert.css" rel="stylesheet">
+<link href="css/application.css" rel="stylesheet">
+<style type="text/css">
+.cart .shelves>div.c-list {
+    font-size: 1.4rem;
+    line-height: 3.3rem;
+    padding: 0.5rem 1rem;
+    height: 8rem;
+}
+.c-bold{
+	font-size: 1.2rem !important;
+}
+.je{
+	color:white;font-weight: 600; float:left;width:50%;height:50%;font-size:1.3rem;text-align:center
+}
+.dh{
+	color:white;font-weight: 600; width:100%;height:40%;
+}
+.cm{
+	color:red;font-weight: 600;width:100%;margin-top:-10px;
+}
+.ym{
+	text-align:center;width:100%;border-radius:10px;height:30px;line-height:30px;background:#DCDCDC
+}
+#ljcz,#ljxf,#jflj,#jfxf{
+	text-align:center
+}
+</style>
+<title>会员记录</title>
+</head>
+<body>
+<header>
+	<div class="headerbar">
+		<h1>会员记录</h1>
+		<a class="navbar-toggle" onclick="history.go(-1)">
+			<span class="icon-m_goback"></span>
+		</a>
+	</div>
+</header>
+<section class="profile">
+  	<div class="headimg" style="width:70%;height:185px;">
+  		<div class="dh">
+  			<div class="je"><div>累计充值：</div><div id="ljcz"></div></div>
+  			<div class="je"><div>累计消费：</div><div id="ljxf"></div></div>
+  		</div>
+  		<div class="dh">
+  			<div class="je"><div>积分累计：</div><div id="jflj"></div></div>
+  			<div class="je"><div>积分抵扣：</div><div id="jfxf"></div></div>
+  		</div>
+  		<div class="cm">
+  			<div class="je" style="color:red;"><div>可用金额：</div><div id="dleft"></div></div>
+  			<div class="je" style="color:red;"><div>可用积分：</div><div id="dright"></div></div>
+  		</div>
+	</div>
+</section>
+<form class="form-phone">
+<section class="wrapper cart">
+	<div class="shelves" id="showDetail"></div>
+</section>
+</form>
+
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/swipeSlide.min.js" type="text/javascript"></script>
+<script src="js/sweetalert.min.js" type="text/javascript"></script>
+<script src="js/jquery.mmenu.min.js" type="text/javascript"></script>
+<script src="js/icheck.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+<script src="js/application.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetCustomDetailListByMonth?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({payType:"0"}),
+		success:function(res){
+			if(res.status == "01"){
+				var year = null;
+				var yearMonth = null;
+				if(res.rows.length > 0){
+					for(var i=0;i<res.rows.length;i++){
+						if(i == 0){
+							year = res.rows[0].createTime.substring(0,4);
+							$("#showDetail").append(
+								'<p class="ym">'+res.rows[i].createTime.substring(0,4)+'年</p><div class="c-list" onclick="customDetail(\''+res.rows[i].createTime+'-01\')">'+
+								'<p><span style="font-weight: 600;">'+res.rows[i].createTime.substring(5)+'月份记录</span><span class="c-time">'+res.rows[i].createTime+'</span></p>'+
+								'<p><span class="c-left">金额：'+returnStatus(res.rows[i].cardMoney)+'</span>&nbsp;<span class="c-left">积分：'+returnStatus(res.rows[i].integral)+'</span><span class="c-bold"><img src="img/arrow.png"/></span></p>'+
+								'</div>'
+							)
+						}else{
+							if(res.rows[i].createTime.substring(0,4) != year){
+								year = res.rows[i].createTime.substring(0,4);
+								$("#showDetail").append(
+									'<p class="ym">'+res.rows[i].createTime.substring(0,4)+'年</p><div class="c-list" onclick="customDetail(\''+res.rows[i].createTime+'-01\')">'+
+									'<p><span style="font-weight: 600;">'+res.rows[i].createTime.substring(5)+'月份记录</span><span class="c-time">'+res.rows[i].createTime+'</span></p>'+
+									'<p><span class="c-left">金额：'+returnStatus(res.rows[i].cardMoney)+'</span>&nbsp;<span class="c-left">积分：'+returnStatus(res.rows[i].integral)+'</span><span class="c-bold"><img src="img/arrow.png"/></span></p>'+
+									'</div>'
+								)
+							}else{
+								year = res.rows[i].createTime.substring(0,4);
+								$("#showDetail").append(
+									'<p class="ym" style="display:none">'+res.rows[i].createTime.substring(0,4)+'年</p><div class="c-list" onclick="customDetail(\''+res.rows[i].createTime+'-01\')">'+
+									'<p><span style="font-weight: 600;">'+res.rows[i].createTime.substring(5)+'月份记录</span><span class="c-time">'+res.rows[i].createTime+'</span></p>'+
+									'<p><span class="c-left">金额：'+returnStatus(res.rows[i].cardMoney)+'</span>&nbsp;<span class="c-left">积分：'+returnStatus(res.rows[i].integral)+'</span><span class="c-bold"><img src="img/arrow.png"/></span></p>'+
+									'</div>'
+								)
+							}
+						}
+					}
+				}else{
+					$("#showDetail").html("<section class='waitingwrapper'><div style='font-size:5rem'></div><p class='text-center' >暂无消费信息</p></section>")
+				}
+			}
+		}
+	})
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsCustomList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({}),
+		success:function(res){
+			if(res.status == "01"){
+				if(res.rows.length > 0){
+					$("#dleft").html("￥"+res.rows[0].cardMoney)
+					$("#dright").html(res.rows[0].integral)
+				}
+			}
+		}
+	})
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetCustomDetailList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({payType:"0"}),
+		success:function(res){
+			if(res.status == "01"){
+				var ljcz=0,ljxf=0,jflj=0,jfxf=0;
+				if(res.rows.length > 0){
+					for(var i=0;i<res.rows.length;i++){
+						if(res.rows[i].cardMoney/1 > 0){
+							ljcz = ljcz + res.rows[i].cardMoney/1
+						}else{
+							ljxf = ljxf + res.rows[i].cardMoney/1
+						}
+						if(res.rows[i].integral/1 > 0){
+							jflj = jflj + res.rows[i].integral/1
+						}else{
+							jfxf = jfxf + res.rows[i].integral/1
+						}
+					}
+				}
+				$("#ljcz").html("￥"+ljcz.toFixed(2)+"&nbsp;&nbsp;&nbsp;")
+				$("#ljxf").html("￥"+ljxf.toFixed(2).toString().replace("-","")+"&nbsp;&nbsp;&nbsp;")
+				$("#jflj").html(jflj+"&nbsp;&nbsp;&nbsp;")
+				$("#jfxf").html(jfxf.toString().replace("-","")+"&nbsp;&nbsp;&nbsp;")
+			}
+		}
+	})
+})
+function customDetail(time){
+	window.location.href="/frontEndMyVipDetail?createTime="+time;
+}
+function reuruFlag(flag){
+	if(flag == "0"){
+		return "充值"
+	}else{
+		return "消费"
+	}
+}
+function returnStatus(s){
+	if(s.split(".")[1] == "0"){
+		s = s.split(".")[0]
+	}
+	if(s > 0){
+		return '<span style="color:#00ff00">+'+s+'</span>';
+	}else if(s == 0){
+		return s;
+	}else{
+		return '<span style="color:red">'+s+'</span>';
+	}
+}
+</script>
+</body>
+</html>

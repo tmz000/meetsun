@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.MsAdvertDao">
+	<insert id="saveMsAdvert" parameterType="com.meetsun.meetsun.entity.MsAdvert">
+		insert into ms_advert(sys_id,ad_name,sp_id,sp_name,ad_content,type,create_time,update_time,price,discount,amount,to_date,user_name,photo_adrr,free_money)
+			values(#{sysId},#{adName},#{spId},#{spName},#{adContent},#{type},now(),now(),#{price},#{discount},#{amount},#{toDate},#{userName},#{photoAdrr},#{freeMoney})
+	</insert>
+	<select id="getMsAdvertList" parameterType="com.meetsun.meetsun.entity.MsAdvert" resultType="com.meetsun.meetsun.entity.MsAdvert">
+		select * from ms_advert where 1=1 
+		<if test="type != '' and type != null">
+			and type = #{type}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if>
+		 order by status asc,create_time desc
+	</select>
+	<update id="updateMsAdvert" parameterType="com.meetsun.meetsun.entity.MsAdvert">
+		update ms_advert set ad_name = #{adName},status = #{status},ad_content = #{adContent},to_date = #{toDate},price = #{price},discount = #{discount},amount = #{amount},update_time = now() where sys_id = #{sysId}
+	</update>
+	<update id="updateMsAdvertStatus" parameterType="com.meetsun.meetsun.entity.MsAdvert">
+		update ms_advert set
+		<if test="status != '' and status != null">
+			status = #{status}, 
+		</if> 
+		<if test="clickNum != '' and clickNum != null">
+			click_num = click_num + #{clickNum}, 
+		</if> 
+		update_time = now() 
+		where sys_id = #{sysId}
+	</update>
+	<delete id="deleteMsAdvert" parameterType="com.meetsun.meetsun.entity.MsAdvert">
+		delete from ms_advert where sys_id = #{sysId}
+	</delete>
+</mapper>

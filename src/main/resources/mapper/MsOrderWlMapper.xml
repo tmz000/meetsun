@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.MsOrderWlDao">
+	<insert id="saveMsOrderWl" parameterType="com.meetsun.meetsun.entity.MsOrderWl">
+		insert into ms_order_wl(sys_id,order_id,wl_name,wl_no,create_time,update_time)
+			values(#{sysId},#{orderId},#{wlName},#{wlNo},now(),now())
+	</insert>
+	<select id="getMsOrderWlList" parameterType="com.meetsun.meetsun.entity.MsOrderWl" resultType="com.meetsun.meetsun.entity.MsOrderWl">
+		select * from ms_order_wl where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="wlName != '' and wlName != null">
+			and wl_name = #{wlName}
+		</if> 
+		order by create_time desc
+	</select>
+	<update id="updateMsOrderWl" parameterType="com.meetsun.meetsun.entity.MsOrderWl">
+		update ms_order_wl set wl_name = #{wlName},wl_no = #{wlNo},update_time = now() where sys_id = #{sysId}
+	</update>
+	<delete id="deleteMsOrderWl" parameterType="com.meetsun.meetsun.entity.MsOrderWl">
+		delete from ms_order_wl where sys_id = #{sysId}
+	</delete>
+</mapper>

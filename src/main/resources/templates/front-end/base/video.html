@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<link href="css/sweetalert.css" rel="stylesheet">
+<link href="css/application.css" rel="stylesheet">
+<style type="text/css">
+.popbox{
+	margin-bottom:60%;width:80%;margin-left:10%;
+}
+</style>
+<title>视频列表</title>
+</head>
+<body>
+<header>
+	<div class="headerbar">
+		<h1>视频列表</h1>
+		<a class="navbar-toggle" onclick="javascript:history.go(-1)">
+			<span class="icon-m_goback"></span>
+		</a>
+	</div>
+</header>
+<section class="wrapper">
+	<!-- <form class="">
+		<div class="searchview">
+			<i class="icon-finder"></i>
+			<input type="text" id="orderNo" placeholder="请输入订单号" >
+			<a class="btn-search" onclick="searchList()">搜索</a>
+		</div>
+	</form> -->
+</section>
+<div id="showOrder"></div>
+<div id="showComment"></div>
+<footer>
+	<div class="footheight"></div>
+	<div class="row footbar">
+		<a class="col-3 text-center" href="/frontEndIndex" ><span class="icon-home"></span>首页</a>
+		<a class="col-3 text-center active" href="/frontEndMsVideo" ><span class="icon-signature2"></span>视频专区</a>
+		<a class="col-3 text-center" href="/frontEndCart" ><span class="icon-cart2"></span>购物车</a>
+		<a class="col-3 text-center" href="/frontEndMyIndex" ><span class="icon-user2"></span>我的</a>
+	</div>
+</footer>
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/swipeSlide.min.js" type="text/javascript"></script>
+<script src="js/sweetalert.min.js" type="text/javascript"></script>
+<script src="js/jquery.mmenu.min.js" type="text/javascript"></script>
+<script src="js/icheck.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+<script src="js/application.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+	loadData()
+})
+function loadData(){
+	$.ajax({
+		type:"POST",
+		url:"/frontEnd/frontEndGetMsVideoList?time="+new Date().getTime(),
+		contentType:'application/json',
+		data:JSON.stringify({}),
+		success:function(res){
+			if(res.status=="01"){
+				if(res.rows.length > 0){
+					$("#showOrder").html("")
+					for(var i=0;i<res.rows.length;i++){
+						$("#showOrder").append(
+							'<div class="describe cart">'+
+							'<div class="shelves">'+
+							'<div class="media clearfix">'+
+							'<video poster="img/poster.jpg" src="'+res.rows[i].videoAddr+'" height="218.48px" width="388.41px" controls="controls"></video>'+
+							'<div class="shop-title clearfix">'+
+							'<span class="pull-left" style="margin-top:20px;word-wrap:break-word;word-break:break-all;width:90%">'+res.rows[i].name+'</span>'+
+							'<span class="pull-right">'+
+							'<p style="font-size:14px;text-align:center" id="'+res.rows[i].sysId+'2">'+res.rows[i].clickNumber+'</p><p style="font-size:1.7rem;" id="'+res.rows[i].sysId+'1" onclick="addClickNumber(\''+res.rows[i].sysId+'\')"><img id="'+res.rows[i].sysId+'5" src="img/heartgray.jpg"></p>'+
+							'</div></div>'+
+							'</div>'			
+						)
+						loadStatus(res.rows[i].sysId)
+					}
+				}else{
+					$("#showOrder").html("<section class='waitingwrapper'><div class='text-center purple' style='font-size:5rem'><span class='icon-order'></span></div><p class='text-center' >暂无视频信息</p></section>")
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+}
+function loadStatus(sysId){
+	$.ajax({
+		type:"POST",
+		url:"/frontEnd/frontEndGetVideoCustomList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({videoSysId:sysId}),
+		success:function(res){
+			if(res.status=="01"){
+				if(res.rows.length > 0){
+					$("#"+sysId+"5").attr("src","img/heart.jpg");
+				}else{
+					$("#"+sysId+"5").attr("src","img/heartgray.jpg");
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+}
+function addClickNumber(sysId){
+	$.ajax({
+		type:"POST",
+		url:"/frontEnd/frontEndUpdateMsVideo?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({sysId:sysId}),
+		success:function(res){
+			if(res.status=="01"){
+				if($("#"+sysId+"5").attr("src") == "img/heart.jpg"){
+					$("#"+sysId+"5").attr("src","img/heartgray.jpg");
+					$("#"+sysId+"2").html($("#"+sysId+"2").html()/1-1)
+				}else{
+					$("#"+sysId+"5").attr("src","img/heart.jpg");
+					$("#"+sysId+"2").html($("#"+sysId+"2").html()/1+1)
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+}
+</script>
+</body>
+</html>

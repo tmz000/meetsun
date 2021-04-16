@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.MsOrderLogDao">
+	<insert id="saveMsOrderLog" parameterType="com.meetsun.meetsun.entity.MsOrderLog">
+		insert into ms_order_log(sys_id,order_no,content,status,create_time,update_time)
+			values(#{sysId},#{orderNo},#{content},#{status},now(),now())
+	</insert>
+	<select id="getMsOrderLogList" parameterType="com.meetsun.meetsun.entity.MsOrderLog" resultType="com.meetsun.meetsun.entity.MsOrderLog">
+		select * from ms_order_log where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		order by create_time desc
+	</select>
+	<update id="updateMsOrderLog" parameterType="com.meetsun.meetsun.entity.MsOrderLog">
+		update ms_order_log set update_time = now() where sys_id = #{sysId}
+	</update>
+	<delete id="deleteMsOrderLog" parameterType="com.meetsun.meetsun.entity.MsOrderLog">
+		delete from ms_order_log where sys_id = #{sysId}
+	</delete>
+	<delete id="deleteMsOrderLogByDay" parameterType="com.meetsun.meetsun.entity.LogInfo">
+		delete from ms_order_log where create_time &lt; DATE(DATE_SUB(NOW(),INTERVAL 180 DAY))
+	</delete>
+</mapper>

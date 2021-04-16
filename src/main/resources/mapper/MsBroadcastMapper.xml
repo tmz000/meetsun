@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.MsBroadcastDao">
+	<insert id="saveMsBroadcast" parameterType="com.meetsun.meetsun.entity.MsBroadcast">
+		insert into ms_broadcast(sys_id,user_name,name,create_time,update_time,status,photo_adrr,sp_name,sp_id)
+			values(#{sysId},#{userName},#{name},now(),now(),#{status},#{photoAdrr},#{spName},#{spId})
+	</insert>
+	<select id="getMsBroadcastList" parameterType="com.meetsun.meetsun.entity.MsBroadcast" resultType="com.meetsun.meetsun.entity.MsBroadcast">
+		select * from ms_broadcast where 1=1 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if>
+		 order by create_time desc
+	</select>
+	<update id="updateMsBroadcast" parameterType="com.meetsun.meetsun.entity.MsBroadcast">
+		update ms_broadcast set 
+		<if test="name != '' and name != null">
+			name = #{name},
+		</if>
+		<if test="status != '' and status != null">
+			status = #{status},
+		</if>
+		<if test="spName != '' and spName != null">
+			sp_name = #{spName},
+		</if>
+		<if test="spId != '' and spId != null">
+			sp_id = #{spId},
+		</if>
+		<if test="clickNum != '' and clickNum != null">
+			click_num = click_num + #{clickNum},
+		</if>
+		update_time = now()
+		where sys_id = #{sysId}
+	</update>
+	<delete id="deleteMsBroadcast" parameterType="com.meetsun.meetsun.entity.MsBroadcast">
+		delete from ms_broadcast where sys_id = #{sysId}
+	</delete>
+</mapper>

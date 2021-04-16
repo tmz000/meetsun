@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<link href="css/sweetalert.css" rel="stylesheet">
+<link href="css/application.css" rel="stylesheet">
+<style type="text/css">
+   .addresslists ul,li{
+        list-style: none;;
+    }
+    .slide-box{
+        margin-top:200px;
+        display: -webkit-box;
+        overflow-x: auto;
+        /*适应苹果*/
+        -webkit-overflow-scrolling:touch;
+    }
+    .slide-item{
+        width: 300px;
+        height: 300px;
+        border:1px solid #ccc;
+        margin-right: 30px;
+        background: pink;
+    }
+    /*隐藏掉滚动条*/
+    .slide-box::-webkit-scrollbar {
+        display: none;
+    }
+</style>
+<title>反馈列表</title>
+</head>
+<body>
+<header>
+	<div class="headerbar">
+		<h1>我的反馈</h1>
+		<a class="navbar-toggle"  onclick="javascript:history.go(-1)">
+			<span class="icon-m_goback"></span>
+		</a>
+	</div>
+</header>
+<div class="addresslists">
+</div>
+<footer>
+	<div class="footheight"></div>
+	<div class="footbar" style="padding:0;">
+		<a class="btn btn-block"  href="/frontEndQuestion" >+  新增反馈</a>
+	</div>
+</footer>
+
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/swipeSlide.min.js" type="text/javascript"></script>
+<script src="js/sweetalert.min.js" type="text/javascript"></script>
+<script src="js/jquery.mmenu.min.js" type="text/javascript"></script>
+<script src="js/icheck.min.js" type="text/javascript"></script>
+<script src="js/jquery.touchSwipe.min.js"  type="text/javascript" ></script>
+<script src="js/cityinit.js" type="text/javascript"></script>
+<script src="js/application.js" type="text/javascript"></script>
+<script>
+$(function(){
+	showAddress();
+})
+function showAddress(){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsQuestionList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({flag:"0"}),
+		success:function(res){
+			$(".addresslists").html("")
+			if(res.status == "01"){
+				if(res.rows.length > 0){
+					var adid = null;
+					for(var i=0;i<res.rows.length;i++){
+						$(".addresslists").append(
+							'<div id="'+res.rows[i].sysId+'" onclick="showEdit(\''+res.rows[i].sysId+'\')">'+
+							'<ul style="transform: translateX(0px);">'+
+							'<li><label>用户账号：</label>'+res.rows[i].userName+'</li>'+
+							'<li><label>反馈内容：</label>'+res.rows[i].content+'</li>'+
+							'<li><label>是否采纳：</label>'+loadStatus(res.rows[i].isUse)+'</li>'+
+							'<li><label>采纳结果：</label>'+loadResult(res.rows[i].result)+'</li>'+
+							//'<li><label>处理结果：</label>'+res.rows[i].reward+'</li>'+
+							'</ul>'+
+							'<div id="'+res.rows[i].sysId+'1" class="hidebtn-group" style="height: 127px;">'+
+							'<a class="btn-del" onclick="delAddress(\''+res.rows[i].sysId+'\')"><i>删除</i></a>'+
+							'</div>'+
+							'</div>'	
+						)
+					}
+				}else{
+					$(".addresslists").html("<section class='waitingwrapper'><div class='text-center purple' style='font-size:5rem'><span class='icon-order'></span></div><p class='text-center' >暂无反馈信息</p></section>")
+				}
+			}
+		}
+	})
+}
+
+function showEdit(id){
+	var idul = $("#"+id+" ul");
+	var div = $("#"+id+"1");
+	if(idul.css("transform") == "matrix(1, 0, 0, 1, -64, 0)"){
+		idul.css("transform","translateX(0px)")
+		div.css("transform","translateX(0px)");
+	}else{
+		idul.css("transform","translateX(-64px)")
+		div.css("transform","translateX(-64px)");
+	}
+}
+
+function delAddress(id){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndUpdateMsQuestion?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({sysId:id,flag:"1"}),
+		success:function(res){
+			if(res.status == "01"){
+				showAddress();
+			}
+		}
+	})
+}
+
+function loadStatus(isUse){
+	if(isUse == "0"){
+		return '<span style="color:red">否</span>';
+	}else if(isUse == "1"){
+		return '<span style="color:#00ff00">是</span>';
+	}else{
+		return '<span style="color:#79CDCD">未处理</span>';
+	}
+}
+function loadResult(result){
+	if(result == null || result == ""){
+		return "暂无处理结果";
+	}else{
+		return result;
+	}
+}
+</script>
+</body>
+</html>

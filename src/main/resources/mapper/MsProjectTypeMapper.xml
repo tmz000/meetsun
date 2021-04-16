@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.MsProjectTypeDao">
+	<insert id="saveMsProjectType" parameterType="com.meetsun.meetsun.entity.MsProjectType">
+		insert into ms_project_type(sys_id,user_name,name,create_time,update_time,status,remark,type,order_by)
+			values(#{sysId},#{userName},#{name},now(),now(),#{status},#{remark},#{type},#{orderBy})
+	</insert>
+	<select id="getMsProjectTypeList" parameterType="com.meetsun.meetsun.entity.MsProjectType" resultType="com.meetsun.meetsun.entity.MsProjectType">
+		select * from ms_project_type where 1=1 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if>
+		<if test="name != '' and name != null">
+			and name = #{name}
+		</if>
+		 order by order_by asc
+	</select>
+	<update id="updateMsProjectType" parameterType="com.meetsun.meetsun.entity.MsProjectType">
+		update ms_project_type set 
+		<if test="name != '' and name != null">
+			name = #{name},
+		</if>
+		<if test="status != '' and status != null">
+			status = #{status},
+		</if>
+		<if test="remark != '' and remark != null">
+			remark= #{remark},
+		</if>
+		<if test="orderBy != '' and orderBy != null">
+			order_by= #{orderBy},
+		</if>
+		update_time=now() where sys_id = #{sysId}
+	</update>
+	<delete id="deleteMsProjectType" parameterType="com.meetsun.meetsun.entity.MsProjectType">
+		delete from ms_project_type where sys_id = #{sysId}
+	</delete>
+</mapper>

@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<link href="css/sweetalert.css" rel="stylesheet">
+<link href="css/application.css" rel="stylesheet">
+<title>购物车</title>
+</head>
+<body>
+<header>
+	<div class="headerbar">
+		<h1>购物车</h1>
+		<a class="navbar-toggle" onclick="javascript:history.go(-1)">
+			<span class="icon-m_goback"></span>
+		</a>
+	</div>
+</header>
+<div class="medialist" id="content">
+	<div class="medialist-header clearfix">
+		<div class="icheck pull-left"><input type="checkbox" name="checkall" class="iradio checkall" id="checkall"></div>&nbsp;&nbsp;<label for="checkall">全选</label>
+		<a class="pull-right" onclick="emptycart()">清空</a>
+	</div>
+  	<!-- <div class="media">
+      	<div class="icheck"><input type="checkbox" name="iCheck" class="iradio"></div>
+      	<a class="productimg thumbnail"><img src="project\1606622219574.png" width="128" ></a>
+        <div class="media-body">
+			<h4><span>产品名称名称产品22</span></h4>
+			<div class="spinnersbox">
+					<input type="number" class="spinners" value="0"/>
+			</div>
+			<p><span class="prices" data-value="200">￥200</span></p>
+        </div>
+		<div class="showbtn-group">
+			<a class="btn-del"><i class="icon-delete"></i></a>
+		</div>
+  	</div> -->
+</div>
+<footer>
+	<div class="footheight"></div>
+	<div class="row footbar">
+		<div class="col-12 billing" id="shoujs">
+			<div class="icheck pull-left"><input type="checkbox" name="checkall" class="iradio checkall" id="checkall2"></div>&nbsp;&nbsp;<label for="checkall2">全选</label>&nbsp;&nbsp;
+			<div style="display:none"><div class="icheck pull-left"><input type="checkbox" name="checkall" class="iradio checkall" id="checkall"></div>&nbsp;&nbsp;<label for="checkall">全选</label></div>
+			<label>合计：<span class="prices total"> </span></label>
+			<a class="pull-right btn" onclick="jiesuan()">结算</a>
+		</div>
+		<a class="col-3 text-center" href="/frontEndIndex" ><span class="icon-home"></span>首页</a>
+		<a class="col-3 text-center" href="/frontEndMsVideo" ><span class="icon-signature2"></span>视频专区</a>
+		<a class="col-3 text-center active" href="/frontEndCart" ><span class="icon-cart2"></span>购物车</a>
+		<a class="col-3 text-center" href="/frontEndMyIndex" ><span class="icon-user2"></span>我的</a>
+	</div>
+</footer>
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/swipeSlide.min.js" type="text/javascript"></script>
+<script src="js/sweetalert.min.js" type="text/javascript"></script>
+<script src="js/jquery.mmenu.min.js" type="text/javascript"></script>
+<script src="js/icheck.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+<script src="js/application.js" type="text/javascript"></script>
+<script type="text/javascript">
+var sysidString=[];
+var checkSysId=[];//被选中的产品
+$(function(){
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndGetMsCartListByOpendId?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({status:""}),
+		success:function(res){
+			if(res.status=="01"){
+				if(res.rows.length > 0){
+					for(var i=0;i<res.rows.length;i++){
+						$("#content").append(
+							'<div class="media" id="'+res.rows[i].sysId+'4">'+
+					      	'<div class="icheck"><div id="'+res.rows[i].sysId+'" onclick="type(\''+res.rows[i].sysId+'\')" class="iradio_square-purple" aria-checked="false" aria-disabled="false" style="position: relative;"><input type="checkbox" name="iCheck" class="iradio" style="position: absolute; visibility: hidden;"><ins class="iCheck-helper" style="position: absolute; top: -50%; left: -50%; display: block; width: 200%; height: 200%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></div>'+
+					      	'<a class="productimg thumbnail"><img src="'+res.rows[i].handPhoto.split(",")[0]+'" width="128"></a>'+
+					        '<div class="media-body" style="margin-left:20px;">'+
+							'<h4><span>'+res.rows[i].spName+'</span></h4>'+
+							'<div class="spinnersbox">'+
+							'<div class="spinner"><button class="decrease icon-reduce" type="button" onclick="decrease(\''+res.rows[i].sysId+'1\')"></button>'+
+							'<input id="'+res.rows[i].sysId.substring(0,29)+'" type="number" class="spinners" value="'+res.rows[i].count+'" readonly="readonly" maxlength="2"><button class="increase icon-add" type="button"  onclick="increase(\''+res.rows[i].sysId+'2\')"></button></div>'+
+							'</div>'+
+							'<p>单价：<span class="prices" data-value="'+res.rows[i].price+'">￥'+res.rows[i].price+'</span></p>'+
+					        '</div>'+
+							'<div class="showbtn-group">'+
+							'<a class="btn-del" onclick="btnDel(\''+res.rows[i].sysId+'3\')"><i class="icon-delete"></i></a>'+
+							'</div>'+
+					  		'</div>'
+						)
+						sysidString.push(res.rows[i].sysId);
+					}
+				}else{
+					$("#shoujs").hide()
+					$("#content").html("<section class='waitingwrapper'><div class='text-center purple' style='font-size:5rem'><span class='icon-order'></span></div><p class='text-center' >暂无产品信息<br><a href='/frontEndIndex' style='color:blue'>选购</a></p></section>")
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+})
+//全选事件
+$("#checkall2").on('ifChanged',function(event){
+	if(event.target.checked){
+		for(var i=0;i<sysidString.length;i++){
+			var sid = $('#'+sysidString[i]);
+			sid.removeClass('iradio_square-purple');
+			sid.addClass('iradio_square-purple checked');
+			checkSysId.push(sysidString[i]);
+		}
+	}else{
+		for(var i=0;i<sysidString.length;i++){
+			var sid = $('#'+sysidString[i]);
+			sid.removeClass('iradio_square-purple checked');
+			sid.addClass('iradio_square-purple');
+			checkSysId.splice(getArrayIndex(sysidString[i]),1)
+		}
+	}
+});
+//删除购物车
+function btnDel(id){
+	if($(".media").length==1){
+		emptycart();
+	}else{
+		$("#"+id.substring(0,32)+"4").remove();
+		price();
+		$.ajax({
+			type:"post",
+			url:"/frontEnd/frontEndDeleteMsCart",
+			contentType:'application/json',
+			data:JSON.stringify({sysId:id.substring(0,32)}),
+			success:function(res){
+			}
+		})
+	}
+}
+//勾选产品
+function type(id){
+	var sid = $('#'+id);
+	if('iradio_square-purple' == sid.attr('class')){
+		sid.removeClass('iradio_square-purple');
+		sid.addClass('iradio_square-purple checked');
+		sid.removeAttr('aria-checked');
+		sid.attr('aria-checked', true);
+		$("#"+id+" :checkbox").iCheck('check');
+		checkSysId.push(id);
+	}else{
+		sid.removeClass('iradio_square-purple checked');
+		sid.addClass('iradio_square-purple');
+		sid.removeAttr('aria-checked');
+		sid.attr('aria-checked', false);
+		$("#"+id+" :checkbox").iCheck('uncheck');
+		checkSysId.splice(getArrayIndex(id),1)
+	}
+	price();
+}
+//获取数组下标
+function getArrayIndex(obj) {
+    var i = checkSysId.length;
+    while (i--) {
+        if (checkSysId[i] === obj) {
+            return i;
+        }
+    }
+    return -1;
+}
+//减1
+function decrease(id){
+	var addval = $(".spinnersbox input[id='"+id.substring(0,29)+"']");
+	if(addval.val()==1){
+		alert("数量至少为1")
+	}else{
+		addval.val(addval.val()/1-1)
+		$.ajax({
+			type:"post",
+			url:"/frontEnd/frontEndUpdateMsCart?opendId="+localStorage.getItem("opendId"),
+			contentType:'application/json',
+			data:JSON.stringify({sysId:id.substring(0,32),type:"decrease"}),
+			success:function(res){
+			}
+		})
+	}
+	price();
+}
+//加1
+function increase(id){
+	var addval = $(".spinnersbox input[id='"+id.substring(0,29)+"']");
+	addval.val(addval.val()/1+1)
+	price();
+	$.ajax({
+		type:"post",
+		url:"/frontEnd/frontEndUpdateMsCart?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({sysId:id.substring(0,32),type:"increase"}),
+		success:function(res){
+		}
+	})
+}
+</script>
+<script type="text/javascript">
+function jiesuan(){
+	if(checkSysId.length>0){
+		window.location.href="/frontEndOrder?checkSysId="+checkSysId;
+	}else{
+		alert("请选择要结算的产品！")
+	}
+}
+</script>
+<script>
+var price = function(){
+	var sp = 0;
+	$(".media").each(function(){
+		var obj = $(this);
+		var state = obj.find(":checkbox")[0].checked;
+		if(state)
+		{
+			sp = sp + parseFloat(obj.find(".spinners").val())*parseFloat(obj.find(".prices").attr("data-value")).toFixed(2)
+		}
+	})
+	$(".total").html("￥"+sp)
+}
+
+//空的购物车
+var emptycart = function(){
+	$(".billing").remove();
+	$(".medialist").html("<section class='waitingwrapper'><div class='text-center purple' style='font-size:5rem'><span class='icon-cart'></span></div><p class='text-center' >购物车为空</p></section>")
+	if(sysidString.length>0){
+		for(var i=0;i<sysidString.length;i++){
+			$.ajax({
+				type:"post",
+				url:"/frontEnd/frontEndDeleteMsCart",
+				contentType:'application/json',
+				data:JSON.stringify({sysId:sysidString[i]}),
+				success:function(res){
+				}
+			})
+		}
+	}
+}
+
+$(function(){
+	$('input:checkbox').iCheck({
+		checkboxClass: 'iradio_square-purple',
+    increaseArea: '50%' // optional
+  });
+	//设置增加的最大值
+	$('.spinners').spinner({max:5});
+
+	//全选
+	$("#checkall2,#checkall").on('ifChanged',function(event){
+		$(":checkbox").iCheck(event.target.checked?"check":"uncheck");
+	});
+
+	//计价触发
+	$(":checkbox").on('ifToggled',function(event){
+		price();
+	});
+	$("button.increase,button.decrease").on("click",function(){
+		price();
+	})
+
+	$(".btn-del").on('click',function(){
+		if($(".media").length==1)
+		{
+			emptycart();
+		}else{
+			$(this).closest(".media").remove();
+			price();
+		}
+	})
+
+})
+
+</script>
+</body>
+</html>

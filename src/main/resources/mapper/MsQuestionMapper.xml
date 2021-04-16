@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.MsQuestionDao">
+	<insert id="saveMsQuestion" parameterType="com.meetsun.meetsun.entity.MsQuestion">
+		insert into ms_question(sys_id,custom_id,content,contact,create_time,update_time)
+			values(#{sysId},#{customId},#{content},#{contact},now(),now())
+	</insert>
+	<select id="getMsQuestionList" parameterType="com.meetsun.meetsun.entity.MsQuestion" resultType="com.meetsun.meetsun.entity.MsQuestion">
+		select * from ms_question where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="customId != '' and customId != null">
+			and custom_id = #{customId}
+		</if> 
+		<if test="flag != '' and flag != null">
+			and flag = #{flag}
+		</if> 
+		order by create_time desc
+	</select>
+	<update id="updateMsQuestion" parameterType="com.meetsun.meetsun.entity.MsQuestion">
+		update ms_question set 
+		<if test="status != '' and status != null">
+			status = #{status},
+		</if> 
+		<if test="result != '' and result != null">
+			result = #{result},
+		</if>
+		<if test="flag != '' and flag != null">
+			flag = #{flag},
+		</if>
+		<if test="isUse != '' and isUse != null">
+			is_use = #{isUse},
+		</if>
+		update_time = now() where sys_id = #{sysId}
+	</update>
+	<delete id="deleteMsQuestion" parameterType="com.meetsun.meetsun.entity.MsQuestion">
+		delete from ms_question where sys_id = #{sysId}
+	</delete>
+</mapper>

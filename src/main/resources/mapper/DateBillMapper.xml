@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetsun.meetsun.dao.DateBillDao">
+	<insert id="saveDateBill" parameterType="com.meetsun.meetsun.entity.DateBill">
+		insert into date_bill(sys_id,bill_date,bill_money,bill_type,bill_remark,status,count_money,create_time,update_time)
+			values(#{sysId},#{billDate},#{billMoney},#{billType},#{billRemark},#{status},#{countMoney},now(),now())
+	</insert>
+	<select id="getDateBillList" parameterType="com.meetsun.meetsun.entity.DateBill" resultType="com.meetsun.meetsun.entity.DateBill">
+		select * from date_bill where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if> 
+		order by create_time desc
+	</select>
+	<select id="getDateBillListByType" parameterType="com.meetsun.meetsun.entity.DateBill" resultType="com.meetsun.meetsun.entity.DateBill">
+		select bill_type,round(sum(bill_money),2) as sum from date_bill where 1=1 
+		<if test="billDate != '' and billDate != null">
+			<if test="billDate.length() == 4">
+				and left(bill_date,4) = #{billDate} 
+			</if>
+			<if test="billDate.length() == 7">
+				and left(bill_date,7) = #{billDate} 
+			</if>
+		</if>
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if>  
+		group by bill_type order by bill_type desc
+	</select>
+	<select id="getDateBillListByYear" parameterType="com.meetsun.meetsun.entity.DateBill" resultType="com.meetsun.meetsun.entity.DateBill">
+		select month,count,sum from (SELECT DATE_FORMAT(#{billDate}, '%Y-%m') AS `month`,count(*) as count,round(sum(bill_money),2) as sum from date_bill where <if test="status != '' and status != null">status = #{status} and </if> DATE_FORMAT(bill_date,'%Y-%m')=DATE_FORMAT((#{billDate} - INTERVAL 0 MONTH), '%Y-%m') 
+		UNION SELECT DATE_FORMAT((#{billDate} - INTERVAL 1 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(bill_money),2) as sum from date_bill where <if test="status != '' and status != null">status = #{status} and </if> DATE_FORMAT(bill_date,'%Y-%m')=DATE_FORMAT((#{billDate} - INTERVAL 1 MONTH), '%Y-%m') 
+		UNION SELECT DATE_FORMAT((#{billDate} - INTERVAL 2 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(bill_money),2) as sum from date_bill where <if test="status != '' and status != null">status = #{status} and </if> DATE_FORMAT(bill_date,'%Y-%m')=DATE_FORMAT((#{billDate} - INTERVAL 2 MONTH), '%Y-%m') 
+		UNION SELECT DATE_FORMAT((#{billDate} - INTERVAL 3 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(bill_money),2) as sum from date_bill where <if test="status != '' and status != null">status = #{status} and </if> DATE_FORMAT(bill_date,'%Y-%m')=DATE_FORMAT((#{billDate} - INTERVAL 3 MONTH), '%Y-%m') 
+		UNION SELECT DATE_FORMAT((#{billDate} - INTERVAL 4 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(bill_money),2) as sum from date_bill where <if test="status != '' and status != null">status = #{status} and </if> DATE_FORMAT(bill_date,'%Y-%m')=DATE_FORMAT((#{billDate} - INTERVAL 4 MONTH), '%Y-%m') 
+		UNION SELECT DATE_FORMAT((#{billDate} - INTERVAL 5 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(bill_money),2) as sum from date_bill where <if test="status != '' and status != null">status = #{status} and </if> DATE_FORMAT(bill_date,'%Y-%m')=DATE_FORMAT((#{billDate} - INTERVAL 5 MONTH), '%Y-%m') 
+		UNION SELECT DATE_FORMAT((#{billDate} - INTERVAL 6 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(bill_money),2) as sum from date_bill where <if test="status != '' and status != null">status = #{status} and </if> DATE_FORMAT(bill_date,'%Y-%m')=DATE_FORMAT((#{billDate} - INTERVAL 6 MONTH), '%Y-%m') 
+		UNION SELECT DATE_FORMAT((#{billDate} - INTERVAL 7 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(bill_money),2) as sum from date_bill where <if test="status != '' and status != null">status = #{status} and </if> DATE_FORMAT(bill_date,'%Y-%m')=DATE_FORMAT((#{billDate} - INTERVAL 7 MONTH), '%Y-%m') 
+		UNION SELECT DATE_FORMAT((#{billDate} - INTERVAL 8 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(bill_money),2) as sum from date_bill where <if test="status != '' and status != null">status = #{status} and </if> DATE_FORMAT(bill_date,'%Y-%m')=DATE_FORMAT((#{billDate} - INTERVAL 8 MONTH), '%Y-%m') 
+		UNION SELECT DATE_FORMAT((#{billDate} - INTERVAL 9 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(bill_money),2) as sum from date_bill where <if test="status != '' and status != null">status = #{status} and </if> DATE_FORMAT(bill_date,'%Y-%m')=DATE_FORMAT((#{billDate} - INTERVAL 9 MONTH), '%Y-%m') 
+		UNION SELECT DATE_FORMAT((#{billDate} - INTERVAL 10 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(bill_money),2) as sum from date_bill where <if test="status != '' and status != null">status = #{status} and </if> DATE_FORMAT(bill_date,'%Y-%m')=DATE_FORMAT((#{billDate} - INTERVAL 10 MONTH), '%Y-%m') 
+		UNION SELECT DATE_FORMAT((#{billDate} - INTERVAL 11 MONTH), '%Y-%m') AS `month`,count(*) as count,round(sum(bill_money),2) as sum from date_bill where <if test="status != '' and status != null">status = #{status} and </if> DATE_FORMAT(bill_date,'%Y-%m')=DATE_FORMAT((#{billDate} - INTERVAL 11 MONTH), '%Y-%m')) as newTable order by month asc
+	</select>
+	<update id="updateDateBill" parameterType="com.meetsun.meetsun.entity.DateBill">
+		update date_bill set 
+		<if test="billDate != '' and billDate != null">
+			bill_date = #{billDate}, 
+		</if> 
+		<if test="billType != '' and billType != null">
+			bill_type = #{billType}, 
+		</if> 
+		<if test="billRemark != '' and billRemark != null">
+			bill_remark = #{billRemark}, 
+		</if> 
+		<if test="billMoney != '' and billMoney != null">
+			bill_money = #{billMoney}, 
+		</if> 
+		<if test="countMoney != '' and countMoney != null">
+			count_money = #{countMoney}, 
+		</if> 
+		update_time = now() where 1=1 
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+	</update>
+	<delete id="deleteDateBill" parameterType="com.meetsun.meetsun.entity.DateBill">
+		delete from date_bill where sys_id = #{sysId}
+	</delete>
+</mapper>
