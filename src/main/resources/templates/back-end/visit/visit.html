@@ -267,12 +267,6 @@ function formatTableUnit(value, row, index) {
     }
 }        
 
-$("#discount").keyup(function(){
-	if($("#price").val() != null){
-		$("#amount").val(($("#price").val()*$("#discount").val()/10).toFixed(2))
-	}
-})
-
 function queryParams(){
 	var params = {
 		type:"1"	
