@@ -15,6 +15,7 @@ public interface MsOrderDao {
 	 * @return
 	 */
 	List<MsOrder> getMsOrderList(MsOrderVo vo);
+	int getMsOrderListTotal(MsOrderVo vo);
 	/**
 	 * 新增订单信息
 	 * @param vo

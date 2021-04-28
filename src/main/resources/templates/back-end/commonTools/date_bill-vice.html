@@ -29,11 +29,46 @@
       <div class="span12">
         <div class="widget-box">
           <div class="widget-content">
+       		<button class="btn btn-info" id="saveButton" data-toggle="modal" data-target="#myModal" style="float:right">新增</button>
           	<ul class="nav nav-tabs" role="tablist">
 				<li role="presentation" class="active" data-id="tabContent1"><a href="#">支出</a></li>
 				<li role="presentation" data-id="tabContent2"><a href="#">收入</a></li>
 			</ul>
-       		<button class="btn btn-info" id="saveButton" data-toggle="modal" data-target="#myModal" style="float:right">新增</button>
+			<div id="toolbar" style="width:100%;padding-top:10px;">
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		账单类型：
+	          		</div>
+	          		<div style="float:left;">
+			     		<input type="text" id="queryBillType" placeholder="请输入账单类型"/>&nbsp;&nbsp;&nbsp;
+	          		</div>
+          		</div>
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		账单说明：
+	          		</div>
+	          		<div style="float:left;">
+			     		<input type="text" id="queryBillRemark" placeholder="请输入账单说明"/>&nbsp;&nbsp;&nbsp;
+	          		</div>
+          		</div>
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		账单日期：
+	          		</div>
+	          		<div style="float:left;">
+			     		<input type="text" class="form-control form_datetime" id="queryBillDate" placeholder="请选择账单日期" autocomplete="off" onFocus="this.blur()">
+	          		</div>
+          		</div>
+          		<div style="float:left">
+			        <div style="float:left;">
+			        	&nbsp;&nbsp;&nbsp;<button class="btn btn-info" id="queryTable">查询</button>
+			        </div>
+			        <div style="float:left;">
+			        	&nbsp;<button class="btn btn-danger" id="clearTable">清空</button>
+			        </div>
+			    </div>
+            	<div style="clear:both;"></div>
+            </div>
           	<table id="table" style="white-space:nowrap;overflow: hidden"></table>
           </div>
           <div style="background-color:#D4F2E7;height:50px;text-align:right;line-height:60px;">
@@ -117,19 +152,20 @@
 </div>
 <input type="hidden" id="billStatus">
 <script type="text/javascript">
-$("#myModal").hide();
-$.ajax({
-	type:"post",
-	url:"/common/getBillType?token="+localStorage.getItem("token"),
-	success:function(res){
-		if(res.status=="01"){
-			for(var i=0;i<res.rows.length;i++){
-				$("#billType").append("<option>"+res.rows[i]+"</option>")
+var queryS="3";
+$(function(){
+	$("#myModal").hide();
+	$.ajax({
+		type:"post",
+		url:"/common/getBillType?token="+localStorage.getItem("token"),
+		success:function(res){
+			if(res.status=="01"){
+				for(var i=0;i<res.rows.length;i++){
+					$("#billType").append("<option>"+res.rows[i]+"</option>")
+				}
 			}
 		}
-	}
-})
-$(function(){
+	})
 	getTabContent("3");
 	$("#billStatus").val("3")
 	showDateByYear($("#chooseType").val())
@@ -143,36 +179,54 @@ $('.nav-tabs li').click(function(){
 　　　　case "tabContent1":
 　　　　　　getTabContent("3");
 		$("#billStatus").val("3")
+		queryS="3"
 		showDateByYear($("#chooseType").val())
 　　　　　　break;
 　　　　case "tabContent2":
 　　　　　　getTabContent("4");
 		$("#billStatus").val("4")
+		queryS="4"
 		showDateByYear($("#chooseType").val())
 　　　　　　break;
 　　　　default:
 　　　　　　getTabContent("3");
 		$("#billStatus").val("3")
+		queryS="3"
 		showDateByYear($("#chooseType").val())
 　　　　　　break;
 　　}
 });
+
+$("#queryTable").click(function(){
+	getTabContent(queryS);
+})
+$("#clearTable").click(function(){
+	$("#toolbar input").each(function(){
+		 $(this).val('');
+	})
+	$("#toolbar select").each(function(){
+		 $(this).val('');
+	})
+	getTabContent(queryS);
+})
+
 var dialog=null
 function getTabContent(status){
-	$('#table').bootstrapTable('destroy');
-	$('#table').bootstrapTable({
+	$('#table').bootstrapTable('destroy').bootstrapTable({
 	    url: "/dateBill/getDateBillList?token="+localStorage.getItem("token"),
 	    pagination: true,
-	    search:true,
 	    method:"post",
 	    height:"350",
-	    queryParams :queryParams(status),
-	    responseHandler:function(res){
-	    	if(res.status == "01"){
-	    		return res;
-	    	}else{
-	    		return res.message;
-	    	}
+	    queryParams : function(params) {//上传服务器的参数
+	    	var temp = {
+	    		billType:$("#queryBillType").val(),
+	    		billRemark:$("#queryBillRemark").val(),
+	    		billDate:$("#queryBillDate").val(),
+	    		status:status,
+	            offset :params.offset + 0,// SQL语句起始索引
+	            pageNumber : params.limit  // 每页显示数量
+	        };
+	        return temp;
 	    },
 	    columns: [{
 	   	    field: 'id',
@@ -328,12 +382,6 @@ function formatTableUnit(value, row, index) {
     }
 }        
 
-function queryParams(status){
-	var params = {
-		status:status	
-	}
-	return params;
-}
 //echart图
 for(var i=0;i<6;i++){
 	var date = new Date().getFullYear()-i

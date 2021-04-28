@@ -15,6 +15,7 @@ public interface MsProjectTypeDao {
 	 * @return
 	 */
 	List<MsProjectType> getMsProjectTypeList(MsProjectTypeVo vo);
+	int getMsProjectTypeListTotal(MsProjectTypeVo vo);
 	/**
 	 * 添加项目类型
 	 * @param paramMsUserVo

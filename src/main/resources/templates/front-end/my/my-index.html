@@ -74,24 +74,61 @@
 <section class="wrapper cart">
 	<div class="shelves">
 		<p class="tipssmall"> &nbsp;</p>
-		<div>
-			<a class="iconmenu" href="/frontEndMyOrder"><i class="icon-order" ></i>我的订单</a>
+		<div style="height:47px;">
+			<div style="float:left">
+				<a class="iconmenu" href="/frontEndMyOrder"><i class="icon-order" style="color:#FFC125;"></i>我的订单</a>
+			</div>
+			<div style="float:right;color:#CDBA96;">
+				<div style="float:right;"><i class="icon-right_arrow" style="font-size:16px;"></i></div>
+				<div style="float:right;"><span id="myOrderNum"></span>&nbsp;&nbsp;</div>	
+			</div>
 		</div>
-		<div>
-			<a class="iconmenu" href="/frontEndMyVipCard"><i class="icon-signature" ></i>我的会员</a>
+		<div style="height:47px;">
+			<div style="float:left">
+				<a class="iconmenu" href="/frontEndMyVipCard"><i class="icon-signature" style="color:#FF8C00;"></i>我的会员</a>
+			</div>
+			<div style="float:right;color:#CDBA96;">
+				<div style="float:right;"><i class="icon-right_arrow" style="font-size:16px;"></i></div>
+				<div style="float:right;"><span id="myVipCardNum"></span>&nbsp;&nbsp;</div>	
+			</div>
 		</div>
-		<div>
-			<a class="iconmenu" href="/frontEndAddress"><i class="icon-address" ></i>我的地址</a>
-		</div>
-		<div>
-			<a class="iconmenu" href="/frontEndMyDetail"><i class="icon-user" ></i>我的信息</a>
+		<div style="height:47px;">
+			<div style="float:left">
+				<a class="iconmenu" href="/frontEndAddress"><i class="icon-address" style="color:#F08080;"></i>我的地址</a>
+			</div>
+			<div style="float:right;color:#CDBA96;">
+				<div style="float:right;"><i class="icon-right_arrow" style="font-size:16px;"></i></div>
+				<div style="float:right;"><span id="myAddressNum"></span>&nbsp;&nbsp;</div>	
+			</div>
 		</div>
 		<p class="tipssmall"> &nbsp;</p>
-		<div>
-			<a class="iconmenu" href="/frontEndMyQuestion"><i class="icon-qq" ></i>问题反馈</a>
+		<div style="height:47px;">
+			<div style="float:left">
+				<a class="iconmenu" href="/frontEndMyDetail"><i class="icon-user" style="color:#32CD32;"></i>我的资料</a>
+			</div>
+			<div style="float:right;color:#CDBA96;">
+				<div style="float:right;"><i class="icon-right_arrow" style="font-size:16px;"></i></div>
+				<div style="float:right;"><span id="myDetailNum"></span>&nbsp;&nbsp;</div>	
+			</div>
 		</div>
-		<div>
-			<a class="iconmenu" href="/frontEndCustomerservice"><i class="icon-phone" ></i>客服中心</a>
+		<p class="tipssmall"> &nbsp;</p>
+		<div style="height:47px;">
+			<div style="float:left">
+				<a class="iconmenu" href="/frontEndMyQuestion"><i class="icon-suggestion"></i>问题反馈</a>
+			</div>
+			<div style="float:right;color:#CDBA96;">
+				<div style="float:right;"><i class="icon-right_arrow" style="font-size:16px;"></i></div>
+				<div style="float:right;"><span id="myQuestionNum"></span>&nbsp;&nbsp;</div>	
+			</div>
+		</div>
+		<div style="height:47px;">
+			<div style="float:left">
+				<a class="iconmenu" href="/frontEndCustomerservice"><i class="icon-phone" style="color:#76EE00;"></i>客服中心</a>
+			</div>
+			<div style="float:right;color:#CDBA96;">
+				<div style="float:right;"><i class="icon-right_arrow" style="font-size:16px;"></i></div>
+				<div style="float:right;"><span id="customSum"></span>&nbsp;&nbsp;</div>	
+			</div>
 		</div>
 		<!-- <div>
 			<a class="iconmenu" href="password.html"><i class="icon-password" ></i>修改密码
@@ -118,6 +155,82 @@
 <script src="js/application.js" type="text/javascript"></script>
 <script type="text/javascript">
 var file = null;
+$(function() {
+    $('[type=file]').change(function(e) {
+    	file = e.target.files[0];
+      	preview2(file);// 方法2
+    })
+	shouTouxiang();
+    $.ajax({
+		type:'POST',
+		url:"/frontEnd/frontEndGetMsOrderList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({}),
+		success:function(res){
+			if(res.status == '01'){
+				if(res.rows.length > 0){
+					$("#myOrderNum").html(res.rows.length)
+				}else{
+					$("#myOrderNum").html(0)
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+	$("#myVipCardNum").html(1)
+    $.ajax({
+		type:'POST',
+		url:"/frontEnd/frontEndGetMsOrderAddressList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({}),
+		success:function(res){
+			if(res.status == '01'){
+				if(res.rows.length > 0){
+					$("#myAddressNum").html(res.rows.length)
+				}else{
+					$("#myAddressNum").html(0)
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+/*     $.ajax({
+		type:'POST',
+		url:"/frontEnd/frontEndGetMsUserList",
+		contentType:'application/json',
+		data:JSON.stringify({"isCustomer":"1"}),
+		success:function(res){
+			if(res.status == '01'){
+				if(res.rows.length > 0){
+					$("#customSum").html(res.rows.length)
+				}else{
+					$("#customSum").html(0)
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+    $.ajax({
+		type:'POST',
+		url:"/frontEnd/frontEndGetMsQuestionList?opendId="+localStorage.getItem("opendId"),
+		contentType:'application/json',
+		data:JSON.stringify({}),
+		success:function(res){
+			if(res.status == '01'){
+				if(res.rows.length > 0){
+					$("#myQuestionNum").html(res.rows.length)
+				}else{
+					$("#myQuestionNum").html(0)
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+ */})
 function preview2(file) {
 	var reader = new FileReader();
     reader.onload = function(e) {
@@ -147,15 +260,6 @@ function preview2(file) {
     }
     reader.readAsDataURL(file);
 }
-$(function() {
-    $('[type=file]').change(function(e) {
-    	file = e.target.files[0];
-      	preview2(file);// 方法2
-    })
-})
-$(function(){
-	shouTouxiang();
-})
 function shouTouxiang(){
 	$.ajax({
 		type:'POST',

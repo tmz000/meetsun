@@ -77,7 +77,12 @@ public class OrderSpServiceImpl implements OrderSpService{
 			sp.setServiceProject(splist.get(0));
 			list1.add(sp);
 		}
-		return Result.success(list1);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list1);
+		result.setTotal(orderSpDao.getOrderSpListTotal(vo));
+		return result;
 		
 	}
 

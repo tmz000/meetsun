@@ -13,4 +13,7 @@ public class DateBillVo {
 	private String countMoney;
 	private String createTime;
 	private String updateTime;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

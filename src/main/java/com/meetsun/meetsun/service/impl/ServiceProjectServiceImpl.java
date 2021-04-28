@@ -22,7 +22,12 @@ public class ServiceProjectServiceImpl implements ServiceProjectService{
    
 	public Result<Object> getServiceProjectList(ServiceProjectVo vo) {
 		List<ServiceProject> list = serviceProjectDao.getServiceProjectList(vo);
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(serviceProjectDao.getServiceProjectListTotal(vo));
+		return result;
 	}
 	
 	public Result<Object> getServiceProjectListByTypeName(ServiceProjectVo vo) {

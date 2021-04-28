@@ -16,7 +16,34 @@
 		<if test="status != '' and status != null">
 			and status = #{status}
 		</if>
+		<if test="toDate != '' and toDate != null">
+			and to_date = #{toDate}
+		</if>
+		<if test="adName != '' and adName != null">
+			and ad_name like CONCAT('%', #{adName}, '%')
+		</if>
 		 order by status asc,create_time desc
+		 <if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getMsAdvertListTotal" parameterType="com.meetsun.meetsun.entity.MsAdvert" resultType="java.lang.Integer">
+		select count(*) from ms_advert where 1=1 
+		<if test="type != '' and type != null">
+			and type = #{type}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if>
+		<if test="toDate != '' and toDate != null">
+			and to_date = #{toDate}
+		</if>
+		<if test="adName != '' and adName != null">
+			and ad_name  like CONCAT('%', #{adName}, '%')
+		</if>
 	</select>
 	<update id="updateMsAdvert" parameterType="com.meetsun.meetsun.entity.MsAdvert">
 		update ms_advert set ad_name = #{adName},status = #{status},ad_content = #{adContent},to_date = #{toDate},price = #{price},discount = #{discount},amount = #{amount},update_time = now() where sys_id = #{sysId}

@@ -25,8 +25,34 @@
     <div class="row-fluid">
       <div class="span12">
         <div class="widget-box">
-          <div class="widget-content">
-       		<button class="btn btn-info" id="saveButton" data-toggle="modal" data-target="#myModal" style="float:right">新增</button>
+          <div class="widget-content">	
+          	<div style="width:98.5%;height:30px;">
+            	<div style="width:50%;float:left;">&nbsp;</div>
+            	<div style="width:50%;float:left;">
+            		<div style="float:right;">
+			       		<button class="btn btn-info" id="saveButton" data-toggle="modal" data-target="#myModal" style="">新增</button>
+            		</div>
+            	</div>
+            </div>
+          	<div id="toolbar" style="width:100%;border-top:1px solid #CDCDB4;padding-top:10px;">
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		用户姓名：
+	          		</div>
+	          		<div style="float:left;">
+			     		<input type="text" id="queryName" placeholder="请输入用户姓名"/>&nbsp;&nbsp;&nbsp;
+	          		</div>
+          		</div>
+          		<div style="float:left">
+			        <div style="float:left;">
+			        	&nbsp;&nbsp;&nbsp;<button class="btn btn-info" id="queryTable">查询</button>
+			        </div>
+			        <div style="float:left;">
+			        	&nbsp;<button class="btn btn-danger" id="clearTable">清空</button>
+			        </div>
+			    </div>
+            	<div style="clear:both;"></div>
+            </div>
           	<table id="table" style="white-space:nowrap;overflow: hidden"></table>
           </div>
         </div>
@@ -78,116 +104,119 @@
 </div>
 <script type="text/javascript">
 var dialog=null
-$("#myModal").hide();
-$('#table').bootstrapTable('destroy');
-$('#table').bootstrapTable({
-    url: "/msVisit/getMsVisitList?token="+localStorage.getItem("token"),
-    pagination: true,
-    search:true,
-    method:"post",
-    height:"400",
-    queryParams :queryParams,
-    responseHandler:function(res){
-    	if(res.status == "01"){
-    		return res;
-    	}else{
-    		return res.message;
-    	}
-    },
-    columns: [{
-   	    field: 'id',
-   	 	align:'center',
-   	    title: '序号',
-   	    formatter: function (value, row, index) {
-   	        return index+1;
-   	    }
-   	},{
-    	field: 'sysId',
-    	align:'center',
-        title: '主键',
-        visible: false
-    },{
-        field: 'visitNo',
-        align:'center',
-        title: '编号',
-        formatter:function(value,row,index){
-	        return '<a href="/visitDetail?sysId='+row.sysId+'&token='+localStorage.getItem("token")+'">'+row.visitNo+'</a>';
-        }
-    },{
-        field: 'name',
-        align:'center',
-        title: '用户姓名'
-    },{
-        field: 'phone',
-        align:'center',
-        title: '用户电话'
-    },{
-        field: 'remark',
-        align:'left',
-        halign:'center',
-        title: '用户需求',
-        formatter:paramsMatter,
-        cellStyle:formatTableUnit
-    },{
-        field: 'type',
-        align:'center',
-        title: '用户类型',
-        formatter:function(value,row,index){
-        	if(row.type == "2"){
-        		return "<span style='color:#00ff00'>意向客户</span>"
-        	}else if(row.type == "1"){
-        		return "<span style='color:#00BFFF'>待定客户</span>"
-        	}{
-        		return "<span style='color:#FF0000'>无效客户</span>"
-        	}
-        }
-    },{
-        field: 'realName',
-        align:'center',
-        title: '登记人'
-    },{
-        field: 'createTime',
-        align:'center',
-        title: '到访时间'
-    },{
-    	field:'operate',
-    	align:'center',
-    	title:'操作',
-    	events: window.operateEvents = {
-   			'click #editTable': function(e, value, row, index) {
-   				dialog=0
-   				$("#myModalLabel").html("修改");
-   				$("#name").val(row.name);
-   				$("#phone").val(row.phone);
-   				$("#remark").val(row.remark);
-   				$("#type").val(row.type);
-   				$("#sysId").val(row.sysId);
-   			},
-   			'click #deltTable': function(e, value, row, index) {
-   				if(confirm("确定要执行该操作？")){
-   					$.ajax({
-   						type:"post",
-   						url:"/msVisit/deleteMsVisit?token="+localStorage.getItem("token"),
-   						data:JSON.stringify({"sysId":row.sysId}),
-   						contentType:'application/json',
-   						success:function(res){
-   							if(res.status=="01"){
-   								$("#myModal").modal('hide');
-   								$("#table").bootstrapTable('refresh');
-   							}else{
-   								alert(res.message)
-   							}
-   						}
-   					})
-   				}
-   			}
-   		},
-    	formatter:function(value,row,index){
-    		return '<button class="btn btn-info" id="editTable" data-toggle="modal" data-target="#myModal">修改</button>&nbsp;'+
-    		'<button class="btn btn-danger" id="deltTable">删除</button>'
-    	}
-    }]
-});
+$(function(){
+	$("#myModal").hide();
+	init()
+})
+function init(){
+	$('#table').bootstrapTable('destroy').bootstrapTable({
+	    url: "/msVisit/getMsVisitList?token="+localStorage.getItem("token"),
+	    pagination: true,
+	    method:"post",
+	    height:"400",
+	    queryParams : function(params) {//上传服务器的参数
+	    	var temp = {
+	   			name:$("#queryName").val(),
+	            offset :params.offset + 0,// SQL语句起始索引
+	            pageNumber : params.limit  // 每页显示数量
+	        };
+	        return temp;
+	    },
+	    columns: [{
+	   	    field: 'id',
+	   	 	align:'center',
+	   	    title: '序号',
+	   	    formatter: function (value, row, index) {
+	   	        return index+1;
+	   	    }
+	   	},{
+	    	field: 'sysId',
+	    	align:'center',
+	        title: '主键',
+	        visible: false
+	    },{
+	        field: 'visitNo',
+	        align:'center',
+	        title: '编号',
+	        formatter:function(value,row,index){
+		        return '<a href="/visitDetail?sysId='+row.sysId+'&token='+localStorage.getItem("token")+'">'+row.visitNo+'</a>';
+	        }
+	    },{
+	        field: 'name',
+	        align:'center',
+	        title: '用户姓名'
+	    },{
+	        field: 'phone',
+	        align:'center',
+	        title: '用户电话'
+	    },{
+	        field: 'remark',
+	        align:'left',
+	        halign:'center',
+	        title: '用户需求',
+	        formatter:paramsMatter,
+	        cellStyle:formatTableUnit
+	    },{
+	        field: 'type',
+	        align:'center',
+	        title: '用户类型',
+	        formatter:function(value,row,index){
+	        	if(row.type == "2"){
+	        		return "<span style='color:#00ff00'>意向客户</span>"
+	        	}else if(row.type == "1"){
+	        		return "<span style='color:#00BFFF'>待定客户</span>"
+	        	}{
+	        		return "<span style='color:#FF0000'>无效客户</span>"
+	        	}
+	        }
+	    },{
+	        field: 'realName',
+	        align:'center',
+	        title: '登记人'
+	    },{
+	        field: 'createTime',
+	        align:'center',
+	        title: '到访时间'
+	    },{
+	    	field:'operate',
+	    	align:'center',
+	    	title:'操作',
+	    	events: window.operateEvents = {
+	   			'click #editTable': function(e, value, row, index) {
+	   				dialog=0
+	   				$("#myModalLabel").html("修改");
+	   				$("#name").val(row.name);
+	   				$("#phone").val(row.phone);
+	   				$("#remark").val(row.remark);
+	   				$("#type").val(row.type);
+	   				$("#sysId").val(row.sysId);
+	   			},
+	   			'click #deltTable': function(e, value, row, index) {
+	   				if(confirm("确定要执行该操作？")){
+	   					$.ajax({
+	   						type:"post",
+	   						url:"/msVisit/deleteMsVisit?token="+localStorage.getItem("token"),
+	   						data:JSON.stringify({"sysId":row.sysId}),
+	   						contentType:'application/json',
+	   						success:function(res){
+	   							if(res.status=="01"){
+	   								$("#myModal").modal('hide');
+	   								$("#table").bootstrapTable('refresh');
+	   							}else{
+	   								alert(res.message)
+	   							}
+	   						}
+	   					})
+	   				}
+	   			}
+	   		},
+	    	formatter:function(value,row,index){
+	    		return '<button class="btn btn-info" id="editTable" data-toggle="modal" data-target="#myModal">修改</button>&nbsp;'+
+	    		'<button class="btn btn-danger" id="deltTable">删除</button>'
+	    	}
+	    }]
+	});
+}
 function submit(){
 	if($("#name").val() == ""){
 		alert("姓名不能为空！");
@@ -266,13 +295,6 @@ function formatTableUnit(value, row, index) {
         }
     }
 }        
-
-function queryParams(){
-	var params = {
-		type:"1"	
-	}
-	return params;
-}
 </script>
 <script src="getMsUser.js"></script>
 </body>

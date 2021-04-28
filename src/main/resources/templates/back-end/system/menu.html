@@ -133,19 +133,17 @@ $('.nav-tabs li').click(function(){
 var dialog=null
 function getTabContent(flag){
 	if(flag == "0"){
-		$('#table').bootstrapTable('destroy');
-		$('#table').bootstrapTable({
+		$('#table').bootstrapTable('destroy').bootstrapTable({
 		    url: "/aParentMenu/getAParentMenuList?token="+localStorage.getItem("token"),
 		    pagination: true,
 		    method:"post",
 		    height:"400",
-		    queryParams :queryParams,
-		    responseHandler:function(res){
-		    	if(res.status == "01"){
-		    		return res;
-		    	}else{
-		    		return res.message;
-		    	}
+		    queryParams : function(params) {//上传服务器的参数
+		    	var temp = {
+		            offset :params.offset + 0,// SQL语句起始索引
+		            pageNumber : params.limit  // 每页显示数量
+		        };
+		        return temp;
 		    },
 		    columns: [{
 		   	    field: 'id',
@@ -231,20 +229,17 @@ function getTabContent(flag){
 		    }]
 		});
 	}else{
-		$('#table').bootstrapTable('destroy');
-		$('#table').bootstrapTable({
+		$('#table').bootstrapTable('destroy').bootstrapTable({
 		    url: "/aMenu/getAMenuList?token="+localStorage.getItem("token"),
 		    pagination: true,
-		    search:true,
 		    method:"post",
 		    height:"400",
-		    queryParams :queryParams,
-		    responseHandler:function(res){
-		    	if(res.status == "01"){
-		    		return res;
-		    	}else{
-		    		return res.message;
-		    	}
+		    queryParams : function(params) {//上传服务器的参数
+		    	var temp = {
+		            offset :params.offset + 0,// SQL语句起始索引
+		            pageNumber : params.limit  // 每页显示数量
+		        };
+		        return temp;
 		    },
 		    columns: [{
 		   	    field: 'id',

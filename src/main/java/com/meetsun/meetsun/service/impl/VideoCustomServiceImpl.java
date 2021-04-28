@@ -21,7 +21,12 @@ public class VideoCustomServiceImpl implements VideoCustomService{
 	@Override
 	public Result<Object> getVideoCustomList(VideoCustomVo vo) {
 		List<VideoCustom> list = videoCustomDao.getVideoCustomList(vo);
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(videoCustomDao.getVideoCustomListTotal(vo));
+		return result;
 	}
 
 	@Override

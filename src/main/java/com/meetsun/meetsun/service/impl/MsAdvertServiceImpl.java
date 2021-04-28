@@ -35,7 +35,12 @@ public class MsAdvertServiceImpl implements MsAdvertService{
 	@Override
 	public Result<Object> getMsAdvertList(MsAdvertVo vo) {
 		List<MsAdvert> list = msAdvertDao.getMsAdvertList(vo);
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(msAdvertDao.getMsAdvertListTotal(vo));
+		return result;
 	}
 
 	@Override

@@ -39,6 +39,43 @@
 			and to_days(create_time) &lt;= to_days(now())
 		</if> 
 		 order by create_time desc
+		 <if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getMsOrderListTotal" parameterType="com.meetsun.meetsun.entity.MsOrder" resultType="java.lang.Integer">
+		select count(*) from ms_order where 1=1 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if>
+		<if test="flag != '' and flag != null">
+			and flag = #{flag}
+		</if>
+		<if test="opendId != '' and opendId != null">
+			and opend_id = #{opendId}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		<if test="isDel != '' and isDel != null">
+			and is_del = #{isDel}
+		</if>
+		<if test="isPl != '' and isPl != null">
+			and is_pl = #{isPl}
+		</if>
+		<if test="(isUse != '' and isUse != null) or (isShouhuo != '' and isShouhuo != null)">
+			and (is_use = #{isUse}
+			or is_shouhuo = #{isShouhuo})
+		</if>
+		<if test="isSend != '' and isSend != null">
+			and (is_send = #{isSend} or is_send = '2')
+		</if>
+		<if test="orderNo != '' and orderNo != null">
+			and order_no like "%"#{orderNo}"%"
+		</if>
+		<if test="createTime != '' and createTime != null">
+			and to_days(create_time) &lt;= to_days(now())
+		</if> 
 	</select>
 	<update id="updateMsOrder" parameterType="com.meetsun.meetsun.entity.MsOrder">
 		update ms_order set 

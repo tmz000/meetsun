@@ -26,4 +26,7 @@ public class MsSignVo implements Serializable {
 	private String createTime;
 	//更新时间
 	private String updateTime;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

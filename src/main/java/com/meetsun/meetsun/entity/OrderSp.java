@@ -14,4 +14,7 @@ public class OrderSp {
 	
 	private ServiceProject serviceProject;
 	private String orderNo;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

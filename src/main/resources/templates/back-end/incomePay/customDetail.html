@@ -25,13 +25,46 @@
     <div class="row-fluid">
       <div class="span12">
         <div class="widget-box">
-          <ul class="nav nav-tabs" role="tablist">
-			<li role="presentation" data-id="tabContent2" class="active"><a href="#">消费记录</a></li>
-			<li role="presentation" data-id="tabContent1"><a href="#">充值记录</a></li>
-			<li role="presentation" data-id="tabContent3"><a href="#">绑卡记录</a></li>
-			<li role="presentation" data-id="tabContent4"><a href="#">其他记录</a></li>
-		  </ul>
           <div class="widget-content">
+	          <ul class="nav nav-tabs" role="tablist">
+				<li role="presentation" data-id="tabContent2" class="active"><a href="#">消费记录</a></li>
+				<li role="presentation" data-id="tabContent1"><a href="#">充值记录</a></li>
+				<li role="presentation" data-id="tabContent3"><a href="#">绑卡记录</a></li>
+				<li role="presentation" data-id="tabContent4"><a href="#">其他记录</a></li>
+			  </ul>
+			  <div id="toolbar" style="width:100%;border-top:1px solid #CDCDB4;padding-top:10px;">
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		用户账号：
+	          		</div>
+	          		<div style="float:left;">
+			     		<input type="text" id="queryUserName" placeholder="请输入用户账号"/>&nbsp;&nbsp;&nbsp;
+	          		</div>
+          		</div>
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		支付方式：
+	          		</div>
+	          		<div style="float:left;">
+			     		<select id="queryPayType">
+			     			<option value="" disabled selected hidden>请选择支付方式</option>
+			     			<option value="0">会员卡</option>
+			     			<option value="1">微信</option>
+			     			<option value="2">支付宝</option>
+			     			<option value="3">银行转账</option>
+			     		</select>&nbsp;&nbsp;&nbsp;
+	          		</div>
+          		</div>
+          		<div style="float:left">
+			        <div style="float:left;">
+			        	&nbsp;&nbsp;&nbsp;<button class="btn btn-info" id="queryTable">查询</button>
+			        </div>
+			        <div style="float:left;">
+			        	&nbsp;<button class="btn btn-danger" id="clearTable">清空</button>
+			        </div>
+			    </div>
+            	<div style="clear:both;"></div>
+            </div>
           	<table class="tab-content active" id="tabContent1" style="white-space:nowrap;overflow: hidden"></table>
           </div>
         </div>
@@ -41,6 +74,7 @@
 </div>
 </div>
 <script type="text/javascript">
+var queryS="1";
 $(function(){
 	getTabContent("1");
 })
@@ -51,38 +85,55 @@ $('.nav-tabs li').click(function(){
 　　switch(_id){
 　　　　case "tabContent1":
 　　　　　　getTabContent("0");
+		queryS="0"
 　　　　　　break;
 　　　　case "tabContent2":
 　　　　　　getTabContent("1");
+		queryS="1"
 　　　　　　break;
 	 case "tabContent3":
 	　　　getTabContent("2");
+		queryS="2"
 	　　　break;
 	 case "tabContent4":
 	　　　getTabContent("3");
+		queryS="3"
 	　　　break;
 　　　　default:
-　　　　　　getTabContent();
+　　　　　　getTabContent("1");
+		queryS="1"
 　　　　　　break;
 　　}
 });
+
+$("#queryTable").click(function(){
+	getTabContent(queryS);
+})
+$("#clearTable").click(function(){
+	$("#toolbar input").each(function(){
+		 $(this).val('');
+	})
+	$("#toolbar select").each(function(){
+		 $(this).val('');
+	})
+	getTabContent(queryS);
+})
+
 function getTabContent(flag){
-	$("#tabContent1").bootstrapTable('destroy')
-	$('#tabContent1').bootstrapTable({
+	$('#tabContent1').bootstrapTable('destroy').bootstrapTable({
 	    url: '/customDetail/getCustomDetailList?token='+localStorage.getItem("token"),
 	    pagination: true,
-	    pageSize: 20,
-	    pageList:[20,40,60,80],
-	    search:true,
 	    method:"post",
 	    height:"320",
-	    queryParams :queryParams(flag),
-	    responseHandler:function(res){
-	    	if(res.status == "01"){
-	    		return res;
-	    	}else{
-	    		return res.message;
-	    	}
+	    queryParams : function(params) {//上传服务器的参数
+	    	var temp = {
+	    		payType:$("#queryPayType").val(),
+	    		userName:$("#queryUserName").val(),
+	    		flag:flag,
+	            offset :params.offset + 0,// SQL语句起始索引
+	            pageNumber : params.limit  // 每页显示数量
+	        };
+	        return temp;
 	    },
 	    columns: [{
 	   	    field: 'id',
@@ -98,7 +149,7 @@ function getTabContent(flag){
 	    },{
 	        field: 'userName',
 	        align:'center',
-	        title: '用户手机'
+	        title: '用户账号'
 	    },{
 	        field: 'cardNo',
 	        align:'center',
@@ -160,12 +211,6 @@ function getTabContent(flag){
 	        title: '消费时间'
 	    }]
 	});
-	function queryParams(flag){
-		var params = {
-			flag:flag	
-		}
-		return params;
-	}
 }
 </script>
 <script src="getMsUser.js"></script>

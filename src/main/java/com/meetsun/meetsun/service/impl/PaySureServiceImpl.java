@@ -38,7 +38,12 @@ public class PaySureServiceImpl implements PaySureService{
 				list1.add(ps);
 			}
 		}
-		return Result.success(list1);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list1);
+		result.setTotal(paySureDao.getPaySureListTotal(vo));
+		return result;
 	}
 
 	@Override

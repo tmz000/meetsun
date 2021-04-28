@@ -26,7 +26,12 @@ public class MsBroadcastServiceImpl implements MsBroadcastService{
 	@Override
 	public Result<Object> getMsBroadcastList(MsBroadcastVo vo) {
 		List<MsBroadcast> list = msBroadcastDao.getMsBroadcastList(vo);
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(msBroadcastDao.getMsBroadcastListTotal(vo));
+		return result;
 	}
 
 	@Override

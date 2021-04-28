@@ -13,4 +13,7 @@ public class PayPicture {
 	private String remark;
 	private String createTime;
 	private String updateTime;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

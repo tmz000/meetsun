@@ -15,6 +15,7 @@ public interface MsCommentDao {
 	 * @return
 	 */
 	List<MsComment> getMsCommentList(MsCommentVo vo);
+	int getMsCommentListTotal(MsCommentVo vo);
 	/**
 	 * 根据星级获取评论信息
 	 * @param paramMsUserVo

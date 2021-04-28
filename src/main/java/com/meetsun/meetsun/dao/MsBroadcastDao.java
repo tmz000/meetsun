@@ -15,6 +15,7 @@ public interface MsBroadcastDao {
 	 * @return
 	 */
 	List<MsBroadcast> getMsBroadcastList(MsBroadcastVo vo);
+	int getMsBroadcastListTotal(MsBroadcastVo vo);
 	/**
 	 * 添加轮播图信息
 	 * @param paramMsUserVo

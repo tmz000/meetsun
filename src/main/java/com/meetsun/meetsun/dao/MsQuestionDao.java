@@ -15,6 +15,7 @@ public interface MsQuestionDao {
 	 * @return
 	 */
 	List<MsQuestion> getMsQuestionList(MsQuestionVo vo);
+	int getMsQuestionListTotal(MsQuestionVo vo);
 	/**
 	 * 添加反馈信息
 	 * @param paramMsUserVo

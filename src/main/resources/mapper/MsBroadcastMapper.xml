@@ -10,7 +10,22 @@
 		<if test="status != '' and status != null">
 			and status = #{status}
 		</if>
+		<if test="spId != '' and spId != null">
+			and sp_id = #{spId}
+		</if>
 		 order by create_time desc
+		 <if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getMsBroadcastListTotal" parameterType="com.meetsun.meetsun.entity.MsBroadcast" resultType="java.lang.Integer">
+		select count(*) from ms_broadcast where 1=1 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if>
+		<if test="spId != '' and spId != null">
+			and sp_id = #{spId}
+		</if>
 	</select>
 	<update id="updateMsBroadcast" parameterType="com.meetsun.meetsun.entity.MsBroadcast">
 		update ms_broadcast set 

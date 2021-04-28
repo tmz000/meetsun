@@ -44,7 +44,12 @@ public class MsOrderWlServiceImpl implements MsOrderWlService{
 				list1.add(mo);
 			}
 		}
-		return Result.success(list1);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(msOrderWlDao.getMsOrderWlListTotal(vo));
+		return result;
 	}
 
 	@Override

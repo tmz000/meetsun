@@ -23,5 +23,8 @@ public class ServiceProject{
     private String isJoin;
    	private String createTime; 
    	private String updateTime;
+	
+	private Integer offset;
+	private Integer pageNumber;
    
 }

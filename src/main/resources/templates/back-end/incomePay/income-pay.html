@@ -110,13 +110,15 @@ $(function(){
 	    pagination: true,
 	    method:"post",
 	    height:"250",
-	    queryParams :queryParams,
-	    responseHandler:function(res){
-	    	if(res.status == "01"){
-	    		return res;
-	    	}else{
-	    		return res.message;
-	    	}
+	    queryParams : function(params) {//上传服务器的参数
+	    	var temp = {
+    			createTime:"1",
+    			flag : "1",
+    			status:"0",
+	            offset :params.offset + 0,// SQL语句起始索引
+	            pageNumber : params.limit  // 每页显示数量
+	        };
+	        return temp;
 	    },
 	    columns: [{
 	   	    field: 'id',

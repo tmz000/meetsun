@@ -21,7 +21,12 @@ public class VipCardServiceImpl implements VipCardService{
 	@Override
 	public Result<Object> getVipCardList(VipCardVo vo) {
 		List<VipCard> list = vipCardDao.getVipCardList(vo);
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setTotal(vipCardDao.getVipCardListTotal(vo));
+		result.setRows(list);
+		return result;
 	}
 
 	@Override

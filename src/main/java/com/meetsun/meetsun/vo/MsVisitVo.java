@@ -14,4 +14,7 @@ public class MsVisitVo {
 	private String realName;
 	private String createTime;
 	private String updateTime;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

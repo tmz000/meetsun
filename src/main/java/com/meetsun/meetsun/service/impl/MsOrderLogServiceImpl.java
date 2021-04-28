@@ -21,7 +21,12 @@ public class MsOrderLogServiceImpl implements MsOrderLogService{
 	@Override
 	public Result<Object> getMsOrderLogList(MsOrderLogVo vo) {
 		List<MsOrderLog> list = msOrderLogDao.getMsOrderLogList(vo);
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(msOrderLogDao.getMsOrderLogListTotal(vo));
+		return result;
 	}
 
 	@Override

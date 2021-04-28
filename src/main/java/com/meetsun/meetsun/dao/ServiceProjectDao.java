@@ -13,6 +13,7 @@ public interface ServiceProjectDao {
 	 * @return
 	 */
 	List<ServiceProject> getServiceProjectList(ServiceProjectVo paramServiceProjectVo);
+	int getServiceProjectListTotal(ServiceProjectVo paramServiceProjectVo);
 	/**
 	 * 查询每个类别的最近发布的一个项目信息
 	 * @param paramMsUserVo

@@ -16,4 +16,7 @@ public class PaySure {
 	private String updateTime;
 	
 	private String orderNo;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

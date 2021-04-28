@@ -26,7 +26,33 @@
       <div class="span12">
         <div class="widget-box">
           <div class="widget-content">
-       		<button class="btn btn-info" id="saveMsUser" data-toggle="modal" data-target="#myModal" style="float:right">新增</button>
+          	<div style="width:98.5%;height:30px;">
+            	<div style="width:50%;float:left;">&nbsp;</div>
+            	<div style="width:50%;float:left;">
+            		<div style="float:right;">
+			       		<button class="btn btn-info" id="saveButton" data-toggle="modal" data-target="#myModal" style="">新增</button>
+            		</div>
+            	</div>
+            </div>
+          	<div id="toolbar" style="width:100%;border-top:1px solid #CDCDB4;padding-top:10px;">
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		用户账号：
+	          		</div>
+	          		<div style="float:left;">
+			     		<input type="text" id="queryUserName" placeholder="请输入用户账号"/>&nbsp;&nbsp;&nbsp;
+	          		</div>
+          		</div>
+          		<div style="float:left">
+			        <div style="float:left;">
+			        	&nbsp;&nbsp;&nbsp;<button class="btn btn-info" id="queryTable">查询</button>
+			        </div>
+			        <div style="float:left;">
+			        	&nbsp;<button class="btn btn-danger" id="clearTable">清空</button>
+			        </div>
+			    </div>
+            	<div style="clear:both;"></div>
+            </div>
           	<table id="table" style="white-space:nowrap;overflow: hidden"></table>
           </div>
         </div>
@@ -93,6 +119,7 @@
 </div>
 <script type="text/javascript">
 $(function(){
+	$("#myModal").hide();
 	$.ajax({
 		type:"post",
 		url:"/aRole/getARoleList?token="+localStorage.getItem("token"),
@@ -110,128 +137,130 @@ $(function(){
 			}
 		}
 	})
+	init();
 })
 var dialog=null
-$('#table').bootstrapTable('destroy');
-$('#table').bootstrapTable({
-    url: "/msUser/getAllMsUser?token="+localStorage.getItem("token"),
-    pagination: true,
-    sidePagenation:"client",
-    method:"post",
-    height:"400",
-    responseHandler:function(res){
-    	if(res.status == "01"){
-    		return res;
-    	}else{
-    		return res.message;
-    	}
-    },
-    columns: [{
-   	    field: 'id',
-   	    title: '序号',
-   	    formatter: function (value, row, index) {
-   	        return index+1;
-   	    }
-   	},{
-    	field: 'sysId',
-    	align:'center',
-        title: '主键',
-        visible: false
-    }, {
-        field: 'userName',
-        align:'center',
-        title: '用户名'
-    }, {
-        field: 'realName',
-        align:'center',
-        title: '真实姓名'
-    }, {
-        field: 'passWord',
-        align:'center',
-        title: '密码'
-    }, {
-        field: 'email',
-        align:'center',
-        title: '邮箱'
-    }, {
-        field: 'mobile',
-        align:'center',
-        title: '手机号'
-    }, {
-        field: 'isCustomer',
-        align:'center',
-        title: '是否客服',
-        formatter:function(value,row,index){
-        	if(row.isCustomer=='1'){
-        		return '<span style="color:#00ff00">是</span>';
-        	}else{
-        		return '<span style="color:#FF0000">否</span>';
-        	}
-        }
-    }, {
-        field: 'roleName',
-        align:'center',
-        title: '权限'
-    }, {
-        field: 'status',
-        align:'center',
-        title: '状态',
-        formatter:function(value,row,index){
-        	if(row.status=='0'){
-        		return '<span style="color:#00ff00">正常</span>';
-        	}else{
-        		return '<span style="color:#FF0000">禁用</span>';
-        	}
-        }
-    },{
-        field: 'createTime',
-        align:'center',
-        title: '创建时间'
-    },{
-        field: 'updateTime',
-        align:'center',
-        title: '修改时间' 
-    },{
-    	field:'operate',
-    	align:'center',
-    	title:'操作',
-    	events: window.operateEvents = {
-   			'click #editTable': function(e, value, row, index) {
-   				dialog=0
-   				$("#userName").val(row.userName).attr("readOnly","true");
-   				$("#passWord").val(row.passWord).attr("readOnly","true");
-   				$("#email").val(row.email);
-   				$("#status").val(row.status);
-   				$("#realName").val(row.realName);
-   				$("#mobile").val(row.mobile);
-   				$("#isCustomer").val(row.isCustomer);
-   				$("#roleId").val(row.roleId);
-   				$("#sysId").val(row.sysId);
-   			},
-   			'click #deltTable': function(e, value, row, index) {
-   				if(confirm("确定要执行该操作？")){
-   					$.ajax({
-   						type:"post",
-   						url:"/msUser/deleteMsUserBySysId?token="+localStorage.getItem("token"),
-   						data:{"sysId":row.sysId},
-   						success:function(res){
-   							if(res.status=="01"){
-   								$("#myModal").modal('hide');
-   								$("#table").bootstrapTable('refresh');
-   							}else{
-   								alert(res.message)
-   							}
-   						}
-   					})
-   				}
-   			}
-   		},
-    	formatter:function(value,row,index){
-    		return '<button class="btn btn-info" id="editTable" data-toggle="modal" data-target="#myModal">修改</button>&nbsp;'+
-    		'<button class="btn btn-danger" id="deltTable">删除</button>'
-    	}
-    }]
-});
+function init(){
+	$('#table').bootstrapTable('destroy').bootstrapTable({
+	    url: "/msUser/getAllMsUser?token="+localStorage.getItem("token"),
+	    pagination: true,
+	    method:"post",
+	    height:"400",
+	    queryParams : function(params) {//上传服务器的参数
+	    	var temp = {
+	   			userName:$("#queryUserName").val(),
+	            offset :params.offset + 0,// SQL语句起始索引
+	            pageNumber : params.limit  // 每页显示数量
+	        };
+	        return temp;
+	    },
+	    columns: [{
+	   	    field: 'id',
+	   	    title: '序号',
+	   	    formatter: function (value, row, index) {
+	   	        return index+1;
+	   	    }
+	   	},{
+	    	field: 'sysId',
+	    	align:'center',
+	        title: '主键',
+	        visible: false
+	    }, {
+	        field: 'userName',
+	        align:'center',
+	        title: '用户名'
+	    }, {
+	        field: 'realName',
+	        align:'center',
+	        title: '真实姓名'
+	    }, {
+	        field: 'passWord',
+	        align:'center',
+	        title: '密码'
+	    }, {
+	        field: 'email',
+	        align:'center',
+	        title: '邮箱'
+	    }, {
+	        field: 'mobile',
+	        align:'center',
+	        title: '手机号'
+	    }, {
+	        field: 'isCustomer',
+	        align:'center',
+	        title: '是否客服',
+	        formatter:function(value,row,index){
+	        	if(row.isCustomer=='1'){
+	        		return '<span style="color:#00ff00">是</span>';
+	        	}else{
+	        		return '<span style="color:#FF0000">否</span>';
+	        	}
+	        }
+	    }, {
+	        field: 'roleName',
+	        align:'center',
+	        title: '权限'
+	    }, {
+	        field: 'status',
+	        align:'center',
+	        title: '状态',
+	        formatter:function(value,row,index){
+	        	if(row.status=='0'){
+	        		return '<span style="color:#00ff00">正常</span>';
+	        	}else{
+	        		return '<span style="color:#FF0000">禁用</span>';
+	        	}
+	        }
+	    },{
+	        field: 'createTime',
+	        align:'center',
+	        title: '创建时间'
+	    },{
+	        field: 'updateTime',
+	        align:'center',
+	        title: '修改时间' 
+	    },{
+	    	field:'operate',
+	    	align:'center',
+	    	title:'操作',
+	    	events: window.operateEvents = {
+	   			'click #editTable': function(e, value, row, index) {
+	   				dialog=0
+	   				$("#userName").val(row.userName).attr("readOnly","true");
+	   				$("#passWord").val(row.passWord).attr("readOnly","true");
+	   				$("#email").val(row.email);
+	   				$("#status").val(row.status);
+	   				$("#realName").val(row.realName);
+	   				$("#mobile").val(row.mobile);
+	   				$("#isCustomer").val(row.isCustomer);
+	   				$("#roleId").val(row.roleId);
+	   				$("#sysId").val(row.sysId);
+	   			},
+	   			'click #deltTable': function(e, value, row, index) {
+	   				if(confirm("确定要执行该操作？")){
+	   					$.ajax({
+	   						type:"post",
+	   						url:"/msUser/deleteMsUserBySysId?token="+localStorage.getItem("token"),
+	   						data:{"sysId":row.sysId},
+	   						success:function(res){
+	   							if(res.status=="01"){
+	   								$("#myModal").modal('hide');
+	   								$("#table").bootstrapTable('refresh');
+	   							}else{
+	   								alert(res.message)
+	   							}
+	   						}
+	   					})
+	   				}
+	   			}
+	   		},
+	    	formatter:function(value,row,index){
+	    		return '<button class="btn btn-info" id="editTable" data-toggle="modal" data-target="#myModal">修改</button>&nbsp;'+
+	    		'<button class="btn btn-danger" id="deltTable">删除</button>'
+	    	}
+	    }]
+	});
+}
 function updateMsUser(){
 	if(dialog==0){
 		$.ajax({

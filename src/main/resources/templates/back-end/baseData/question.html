@@ -19,14 +19,55 @@
 <div id="body">
 <div id="content">
   <div id="content-header">
-      <h1>产品类型</h1>
+      <h1>客户反馈</h1>
   </div>
   <div class="container-fluid">
     <div class="row-fluid">
       <div class="span12">
         <div class="widget-box">
           <div class="widget-content">
-       		<!-- <button class="btn btn-info" id="saveButton" data-toggle="modal" data-target="#myModal" style="float:right">新增</button> -->
+          	<div style="width:98.5%;height:30px;">
+            	<!-- <div style="width:50%;float:left;">&nbsp;
+            	</div>
+            	<div style="width:50%;float:left;">
+            		<div style="float:right;">
+			       		<button class="btn btn-info" id="saveButton" data-toggle="modal" data-target="#myModal" style="">新增</button>
+            		</div>
+            	</div> -->
+            </div>
+          	<div id="toolbar" style="width:100%;border-top:1px solid #CDCDB4;padding-top:10px;">
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		用户账号：
+	          		</div>
+	          		<div style="float:left;">
+			     		<select id="queryCustomId">
+			     			<option value="" disabled selected hidden>请选择用户账号</option>
+			     		</select>&nbsp;&nbsp;&nbsp;
+	          		</div>
+          		</div>
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		状态：
+	          		</div>
+	          		<div style="float:left;">
+			     		<select id="queryStatus">
+			     			<option value="" disabled selected hidden>请选择状态</option>
+			     			<option value="1">已处理</option>
+			     			<option value="0">未处理</option>
+			     		</select>&nbsp;&nbsp;&nbsp;
+	          		</div>
+          		</div>
+          		<div style="float:left">
+			        <div style="float:left;">
+			        	&nbsp;&nbsp;&nbsp;<button class="btn btn-info" id="queryTable">查询</button>
+			        </div>
+			        <div style="float:left;">
+			        	&nbsp;<button class="btn btn-danger" id="clearTable">清空</button>
+			        </div>
+			    </div>
+            	<div style="clear:both;"></div>
+            </div>
           	<table id="table" style="white-space:nowrap;overflow: hidden"></table>
           </div>
         </div>
@@ -89,122 +130,141 @@
 </div>
 <script type="text/javascript">
 var dialog=null
-$("#myModal").hide();
-$('#table').bootstrapTable('destroy');
-$('#table').bootstrapTable({
-    url: "/msQuestion/getMsQuestionList?token="+localStorage.getItem("token"),
-    pagination: true,
-    search:true,
-    method:"post",
-    height:"400",
-    queryParams :queryParams,
-    responseHandler:function(res){
-    	if(res.status == "01"){
-    		return res;
-    	}else{
-    		return res.message;
-    	}
-    },
-    columns: [{
-   	    field: 'id',
-   	    title: '序号',
-   	    formatter: function (value, row, index) {
-   	        return index+1;
-   	    }
-   	},{
-    	field: 'sysId',
-    	align:'center',
-        title: '主键',
-        visible: false
-    },{
-        field: 'userName',
-        align:'center',
-        halign:"center",
-        title: '用户名'
-    },{
-        field: 'content',
-        align:'left',
-        halign:"center",
-        title: '反馈信息',
-        formatter:paramsMatter,
-        cellStyle:formatTableUnit
-    },{
-        field: 'contact',
-        align:'center',
-        title: '联系方式'
-    },{
-        field: 'status',
-        align:'center',
-        title: '状态',
-        formatter:function(value,row,index){
-        	if(row.status=='1'){
-        		return '<span style="color:#00ff00">已处理</span>';
-        	}else{
-        		return '<span style="color:#FF0000">未处理</span>';
-        	}
-        }
-    },{
-        field: 'isUse',
-        align:'center',
-        title: '是否采纳',
-        formatter:function(value,row,index){
-        	if(row.isUse=='1'){
-        		return '<span style="color:#00ff00">是</span>';
-        	}else{
-        		return '<span style="color:#FF0000">否</span>';
-        	}
-        }
-    },{
-        field: 'result',
-        align:'left',
-        halign:"center",
-        title: '处理结果',
-        formatter:paramsMatter,
-        cellStyle:formatTableUnit
-    },{
-        field: 'createTime',
-        align:'center',
-        title: '提交时间'
-    },{
-    	field:'operate',
-    	align:'center',
-    	title:'操作',
-    	events: window.operateEvents = {
-   			'click #editTable': function(e, value, row, index) {
-   				dialog=0
-   				$("#userName").val(row.userName);
-   				$("#content1").val(row.content);
-   				$("#status").val(row.status);
-   				$("#contact").val(row.contact);
-   				$("#result").val(row.result);
-   				$("#isUse").val(row.isUse);
-   				$("#sysId").val(row.sysId);
-   			},
-   			'click #deltTable': function(e, value, row, index) {
-   				if(confirm("确定要执行该操作？")){
-   					$.ajax({
-   						type:"post",
-   						url:"/msQuestion/deleteMsQuestion?token="+localStorage.getItem("token"),
-   						data:JSON.stringify({"sysId":row.sysId}),
-   						contentType:'application/json',
-   						success:function(res){
-   							if(res.status=="01"){
-   								$("#myModal").modal('hide');
-   								$("#table").bootstrapTable('refresh');
-   							}else{
-   								alert(res.message)
-   							}
-   						}
-   					})
-   				}
-   			}
-   		},
-    	formatter:function(value,row,index){
-    		return '<button class="btn btn-info" id="editTable" data-toggle="modal" data-target="#myModal">修改</button>&nbsp;'+
-    		'<button class="btn btn-danger" id="deltTable">删除</button>'
-    	}
-    }]
-});
+$(function(){
+	$.ajax({
+		type:"POST",
+		url:"/msCustom/getMsCustomList?token="+localStorage.getItem("token"),
+		contentType:'application/json',
+		data:JSON.stringify({sysId:''}),
+		success:function(res){
+			if(res.status=="01"){
+				for(var i=0;i<res.rows.length;i++){
+					$("#queryCustomId").append("<option value='"+res.rows[i].sysId+"'>"+res.rows[i].userName+"</option>")
+				}
+			}else{
+				alert(res.message)
+			}
+		}
+	})
+	$("#myModal").hide();
+	init();
+})
+function init(){
+	$('#table').bootstrapTable('destroy').bootstrapTable({
+	    url: "/msQuestion/getMsQuestionList?token="+localStorage.getItem("token"),
+	    pagination: true,
+	    method:"post",
+	    height:"400",
+	    queryParams : function(params) {//上传服务器的参数
+	    	var temp = {
+	    		customId:$("#queryCustomId").val(),
+	    		status:$("#queryStatus").val(),
+	            offset :params.offset + 0,// SQL语句起始索引
+	            pageNumber : params.limit  // 每页显示数量
+	        };
+	        return temp;
+	    },
+	    columns: [{
+	   	    field: 'id',
+	   	    title: '序号',
+	   	    formatter: function (value, row, index) {
+	   	        return index+1;
+	   	    }
+	   	},{
+	    	field: 'sysId',
+	    	align:'center',
+	        title: '主键',
+	        visible: false
+	    },{
+	        field: 'userName',
+	        align:'center',
+	        halign:"center",
+	        title: '用户账号'
+	    },{
+	        field: 'content',
+	        align:'left',
+	        halign:"center",
+	        title: '反馈信息',
+	        formatter:paramsMatter,
+	        cellStyle:formatTableUnit
+	    },{
+	        field: 'contact',
+	        align:'center',
+	        title: '联系方式'
+	    },{
+	        field: 'status',
+	        align:'center',
+	        title: '状态',
+	        formatter:function(value,row,index){
+	        	if(row.status=='1'){
+	        		return '<span style="color:#00ff00">已处理</span>';
+	        	}else{
+	        		return '<span style="color:#FF0000">未处理</span>';
+	        	}
+	        }
+	    },{
+	        field: 'isUse',
+	        align:'center',
+	        title: '是否采纳',
+	        formatter:function(value,row,index){
+	        	if(row.isUse=='1'){
+	        		return '<span style="color:#00ff00">是</span>';
+	        	}else{
+	        		return '<span style="color:#FF0000">否</span>';
+	        	}
+	        }
+	    },{
+	        field: 'result',
+	        align:'left',
+	        halign:"center",
+	        title: '处理结果',
+	        formatter:paramsMatter,
+	        cellStyle:formatTableUnit
+	    },{
+	        field: 'createTime',
+	        align:'center',
+	        title: '提交时间'
+	    },{
+	    	field:'operate',
+	    	align:'center',
+	    	title:'操作',
+	    	events: window.operateEvents = {
+	   			'click #editTable': function(e, value, row, index) {
+	   				dialog=0
+	   				$("#userName").val(row.userName);
+	   				$("#content1").val(row.content);
+	   				$("#status").val(row.status);
+	   				$("#contact").val(row.contact);
+	   				$("#result").val(row.result);
+	   				$("#isUse").val(row.isUse);
+	   				$("#sysId").val(row.sysId);
+	   			},
+	   			'click #deltTable': function(e, value, row, index) {
+	   				if(confirm("确定要执行该操作？")){
+	   					$.ajax({
+	   						type:"post",
+	   						url:"/msQuestion/deleteMsQuestion?token="+localStorage.getItem("token"),
+	   						data:JSON.stringify({"sysId":row.sysId}),
+	   						contentType:'application/json',
+	   						success:function(res){
+	   							if(res.status=="01"){
+	   								$("#myModal").modal('hide');
+	   								$("#table").bootstrapTable('refresh');
+	   							}else{
+	   								alert(res.message)
+	   							}
+	   						}
+	   					})
+	   				}
+	   			}
+	   		},
+	    	formatter:function(value,row,index){
+	    		return '<button class="btn btn-info" id="editTable" data-toggle="modal" data-target="#myModal">修改</button>&nbsp;'+
+	    		'<button class="btn btn-danger" id="deltTable">删除</button>'
+	    	}
+	    }]
+	});
+}
 function submit(){
 	if($("#name").val() == ""){
 		alert("类型名字不能为空！");
@@ -284,12 +344,6 @@ function formatTableUnit(value, row, index) {
         }
     }
 }        
-
-function queryParams(){
-	var params = {
-	}
-	return params;
-}
 </script>
 <script src="getMsUser.js"></script>
 </body>

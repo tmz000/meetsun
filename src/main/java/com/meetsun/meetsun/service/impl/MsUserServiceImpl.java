@@ -169,7 +169,12 @@ public class MsUserServiceImpl implements MsUserService {
 			} catch (Exception exception) {}
 			list1.add(ms);
 		} 
-		return Result.success(list1);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list1);
+		result.setTotal(msUserDao.getAllMsUserTotal(us));
+		return result;
 	}
    
 	@Override

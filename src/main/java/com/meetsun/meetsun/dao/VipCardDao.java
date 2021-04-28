@@ -15,6 +15,7 @@ public interface VipCardDao {
 	 * @return
 	 */
 	List<VipCard> getVipCardList(VipCardVo vo);
+	int getVipCardListTotal(VipCardVo vo);
 	/**
 	 * 添加会员卡信息
 	 * @param paramMsUserVo

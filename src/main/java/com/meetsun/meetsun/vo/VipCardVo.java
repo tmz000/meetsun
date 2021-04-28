@@ -13,4 +13,7 @@ public class VipCardVo {
 	private String createTime;
    	private String updateTime;
    	private Integer number;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

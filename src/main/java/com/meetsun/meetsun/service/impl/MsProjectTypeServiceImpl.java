@@ -16,19 +16,24 @@ import com.meetsun.meetsun.vo.MsProjectTypeVo;
 public class MsProjectTypeServiceImpl implements MsProjectTypeService{
 	
 	@Autowired
-	private MsProjectTypeDao MsProjectTypeDao;
+	private MsProjectTypeDao msProjectTypeDao;
 	
 	@Override
 	public Result<Object> getMsProjectTypeList(MsProjectTypeVo vo) {
-		List<MsProjectType> list = MsProjectTypeDao.getMsProjectTypeList(vo);
-		return Result.success(list);
+		List<MsProjectType> list = msProjectTypeDao.getMsProjectTypeList(vo);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(msProjectTypeDao.getMsProjectTypeListTotal(vo));
+		return result;
 	}
 
 	@Override
 	public Result<Object> saveMsProjectType(MsProjectTypeVo vo) {
 		vo.setSysId(Tools.getUUID());
 		MsProjectTypeVo vo1 = new MsProjectTypeVo();
-		List<MsProjectType> list = MsProjectTypeDao.getMsProjectTypeList(vo1);
+		List<MsProjectType> list = msProjectTypeDao.getMsProjectTypeList(vo1);
 		int flag = 0;
 		boolean isTrue = true;
 		if(list != null && list.size() > 0) {
@@ -41,12 +46,12 @@ public class MsProjectTypeServiceImpl implements MsProjectTypeService{
 				}
 			}
 			if(isTrue) {
-				flag = MsProjectTypeDao.saveMsProjectType(vo);
+				flag = msProjectTypeDao.saveMsProjectType(vo);
 			}else {
 				return Result.error("已存在相同类别！");
 			}
 		}else {
-			flag = MsProjectTypeDao.saveMsProjectType(vo);
+			flag = msProjectTypeDao.saveMsProjectType(vo);
 		}
 		if (flag > 0) {
 			return Result.success("success");
@@ -56,7 +61,7 @@ public class MsProjectTypeServiceImpl implements MsProjectTypeService{
 
 	@Override
 	public Result<Object> updateMsProjectType(MsProjectTypeVo vo) {
-		int flag = MsProjectTypeDao.updateMsProjectType(vo);
+		int flag = msProjectTypeDao.updateMsProjectType(vo);
      	if (flag > 0) {
      		return Result.success("success");
      	}
@@ -65,7 +70,7 @@ public class MsProjectTypeServiceImpl implements MsProjectTypeService{
 
 	@Override
 	public Result<Object> deleteMsProjectType(MsProjectTypeVo vo) {
-		int flag = MsProjectTypeDao.deleteMsProjectType(vo);
+		int flag = msProjectTypeDao.deleteMsProjectType(vo);
 		if (flag > 0) {
 			return Result.success("success");
 		}

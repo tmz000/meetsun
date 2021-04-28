@@ -23,4 +23,7 @@ public class IncomePay {
    	private String flag;
    	private String month;
    	private String sum;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

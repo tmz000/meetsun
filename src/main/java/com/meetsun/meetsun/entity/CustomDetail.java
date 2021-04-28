@@ -18,4 +18,7 @@ public class CustomDetail {
    	private String updateTime;
    	private String year;
    	private String yearMonth;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

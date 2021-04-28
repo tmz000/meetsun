@@ -17,6 +17,21 @@
 			and sign_date = #{signDate}
 		</if> 
 		order by create_time desc
+		<if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getMsSignListTotal" parameterType="com.meetsun.meetsun.entity.MsSign" resultType="java.lang.Integer">
+		select count(*) from ms_sign where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="userId != '' and userId != null">
+			and user_id = #{userId}
+		</if> 
+		<if test="signDate != '' and signDate != null">
+			and sign_date = #{signDate}
+		</if> 
 	</select>
 	<update id="updateMsSign" parameterType="com.meetsun.meetsun.entity.MsSign">
 		update ms_sign set 

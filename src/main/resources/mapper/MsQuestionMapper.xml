@@ -16,7 +16,28 @@
 		<if test="flag != '' and flag != null">
 			and flag = #{flag}
 		</if> 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if> 
 		order by create_time desc
+		<if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getMsQuestionListTotal" parameterType="com.meetsun.meetsun.entity.MsQuestion" resultType="java.lang.Integer">
+		select count(*) from ms_question where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="customId != '' and customId != null">
+			and custom_id = #{customId}
+		</if> 
+		<if test="flag != '' and flag != null">
+			and flag = #{flag}
+		</if> 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if> 
 	</select>
 	<update id="updateMsQuestion" parameterType="com.meetsun.meetsun.entity.MsQuestion">
 		update ms_question set 

@@ -23,6 +23,27 @@
 			and reset_token = #{resetToken}
 		</if> 
 		order by create_time desc
+		<if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getPmValidateListTotal" parameterType="com.meetsun.meetsun.vo.PmValidateVo" resultType="java.lang.Integer">
+		select count(*) from pm_validate where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="email != '' and email != null">
+			and email = #{email}
+		</if> 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if> 
+		<if test="userId != '' and userId != null">
+			and user_id = #{userId}
+		</if> 
+		<if test="resetToken != '' and resetToken != null">
+			and reset_token = #{resetToken}
+		</if> 
 	</select>
 	<update id="updatePmValidat" parameterType="com.meetsun.meetsun.vo.PmValidateVo">
 		update pm_validate set status = #{status},update_time = now() where sys_id = #{sysId}

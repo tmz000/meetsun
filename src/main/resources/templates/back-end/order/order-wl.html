@@ -26,6 +26,25 @@
       <div class="span12">
         <div class="widget-box">
           <div class="widget-content">
+          	<div id="toolbar" style="width:100%;border-top:1px solid #CDCDB4;padding-top:10px;">
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		订单编号：
+	          		</div>
+	          		<div style="float:left;">
+			     		<input type="text" id="queryOrderNo" placeholder="请输入订单编号"/>&nbsp;&nbsp;&nbsp;
+	          		</div>
+          		</div>
+          		<div style="float:left">
+			        <div style="float:left;">
+			        	&nbsp;&nbsp;&nbsp;<button class="btn btn-info" id="queryTable">查询</button>
+			        </div>
+			        <div style="float:left;">
+			        	&nbsp;<button class="btn btn-danger" id="clearTable">清空</button>
+			        </div>
+			    </div>
+            	<div style="clear:both;"></div>
+            </div>
           	<table id="table" style="white-space:nowrap;overflow: hidden"></table>
           </div>
         </div>
@@ -74,16 +93,15 @@ $('#table').bootstrapTable('destroy');
 $('#table').bootstrapTable({
     url: "/msOrderWl/getMsOrderWlList?token="+localStorage.getItem("token"),
     pagination: true,
-    search:true,
     method:"post",
     height:"400",
-    queryParams :queryParams,
-    responseHandler:function(res){
-    	if(res.status == "01"){
-    		return res;
-    	}else{
-    		return res.message;
-    	}
+    queryParams : function(params) {//上传服务器的参数
+    	var temp = {
+    		//orderNo:$("#queryOrderNo").val(),
+            offset :params.offset + 0,// SQL语句起始索引
+            pageNumber : params.limit  // 每页显示数量
+        };
+        return temp;
     },
     columns: [{
    	    field: 'id',
@@ -146,7 +164,7 @@ $('#table').bootstrapTable({
    		},
     	formatter:function(value,row,index){
     		return '<button class="btn btn-info" id="editTable" data-toggle="modal" data-target="#myModal">修改</button>&nbsp;'
-    		//+'<button class="btn btn-danger" id="deltTable">删除</button>'
+    		+'<button class="btn btn-danger" id="deltTable">删除</button>'
     	}
     }]
 });
@@ -195,37 +213,6 @@ function submit(){
 			})
 		}
 	}
-}
-
-$("#saveButton").click(function(){
-	dialog=1
-	$("#roleName").val("");
-})
-
-//表格超出宽度鼠标悬停显示td内容
-function paramsMatter(value, row, index) {
-    var span = document.createElement("span");
-    span.setAttribute("title", value);
-    span.innerHTML = value;
-    return span.outerHTML;
-}
-//td宽度以及内容超过宽度隐藏
-function formatTableUnit(value, row, index) {
-    return {
-        css: {
-            "white-space": "nowrap",
-            "text-overflow": "ellipsis",
-            "overflow": "hidden",
-            "max-width": "150px"
-        }
-    }
-}        
-
-function queryParams(){
-	var params = {
-		type:"1"	
-	}
-	return params;
 }
 </script>
 <script src="getMsUser.js"></script>

@@ -17,6 +17,21 @@
 			and sys_id = #{sysId}
 		</if> 
 		 order by role_id
+		 <if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getARoleMenuListTotal" parameterType="com.meetsun.meetsun.entity.ARoleMenu" resultType="java.lang.Integer">
+		select count(*) from a_role_menu where 1=1 
+		<if test="roleId != '' and roleId != null">
+			and role_id = #{roleId}
+		</if>
+		<if test="menuId != '' and menuId != null">
+			and menu_id = #{menuId}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
 	</select>
 	<update id="updateARoleMenu" parameterType="com.meetsun.meetsun.entity.ARoleMenu">
 		update a_role_menu set menu_id = #{menuId},role_id = #{roleId},update_time = now() where sys_id = #{sysId}

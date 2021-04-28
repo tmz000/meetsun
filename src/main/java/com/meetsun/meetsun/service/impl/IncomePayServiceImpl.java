@@ -22,7 +22,12 @@ public class IncomePayServiceImpl implements IncomePayService{
 	@Override
 	public Result<Object> getIncomePayList(IncomePayVo vo) {
 		List<IncomePay> list = incomePayDao.getIncomePayList(vo);
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(incomePayDao.getIncomePayListTotal(vo));
+		return result;
 	}
 
 	@Override

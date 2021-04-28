@@ -27,7 +27,12 @@ public class MsSignServiceImpl implements MsSignService{
 	@Override
 	public Result<Object> getMsSignList(MsSignVo vo) {
 		List<MsSign> list = msSignDao.getMsSignList(vo);
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(msSignDao.getMsSignListTotal(vo));
+		return result;
 	}
 
 	@Override

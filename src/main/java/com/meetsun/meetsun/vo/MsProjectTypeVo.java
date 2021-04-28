@@ -13,4 +13,7 @@ public class MsProjectTypeVo {
    	private String orderBy;
    	private String createTime; 
    	private String updateTime;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

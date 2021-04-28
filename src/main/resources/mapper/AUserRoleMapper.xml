@@ -14,6 +14,18 @@
 			and role_id = #{roleId}
 		</if>
 		 order by create_time desc
+		 <if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getAUserRoleListTotal" parameterType="com.meetsun.meetsun.entity.AUserRole" resultType="java.lang.Integer">
+		select count(*) from a_user_role where 1=1 
+		<if test="userId != '' and userId != null">
+			and user_id = #{userId}
+		</if>
+		<if test="roleId != '' and roleId != null">
+			and role_id = #{roleId}
+		</if>
 	</select>
 	<update id="updateAUserRole" parameterType="com.meetsun.meetsun.entity.AUserRole">
 		update a_user_role set role_id = #{roleId},user_id = #{userId},update_time = now() where sys_id = #{sysId}

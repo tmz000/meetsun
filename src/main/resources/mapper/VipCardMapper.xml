@@ -17,6 +17,21 @@
 			and sys_id = #{sysId}
 		</if>
 		 order by create_time desc
+		 <if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getVipCardListTotal" parameterType="com.meetsun.meetsun.entity.VipCard" resultType="java.lang.Integer">
+		select count(*) from vip_card where 1=1 
+		<if test="flag != '' and flag != null">
+			and flag = #{flag}
+		</if>
+		<if test="cardNo != '' and cardNo != null">
+			and card_no = #{cardNo}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
 	</select>
 	<update id="updateVipCard" parameterType="com.meetsun.meetsun.entity.VipCard">
 		update vip_card set 

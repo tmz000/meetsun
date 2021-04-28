@@ -20,6 +20,24 @@
 			and status = #{status}
 		</if> 
 		order by create_time desc
+		<if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getPaySureListTotal" parameterType="com.meetsun.meetsun.entity.PaySure" resultType="java.lang.Integer">
+		select count(*) from pay_sure where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="orderId != '' and orderId != null">
+			and order_id = #{orderId}
+		</if> 
+		<if test="isPayPc != '' and isPayPc != null">
+			and is_pay_pc = #{isPayPc}
+		</if> 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if> 
 	</select>
 	<update id="updatePaySure" parameterType="com.meetsun.meetsun.entity.PaySure">
 		update pay_sure set 

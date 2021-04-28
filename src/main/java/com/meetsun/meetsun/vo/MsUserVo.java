@@ -27,5 +27,8 @@ public class MsUserVo implements  Serializable {
    
    	private String flag;
    	private String token;
+	
+	private Integer offset;
+	private Integer pageNumber;
    
 }

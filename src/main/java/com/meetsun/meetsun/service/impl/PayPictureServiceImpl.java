@@ -21,7 +21,12 @@ public class PayPictureServiceImpl implements PayPictureService{
 	@Override
 	public Result<Object> getPayPictureList(PayPictureVo vo) {
 		List<PayPicture> list = payPictureDao.getPayPictureList(vo);
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(payPictureDao.getPayPictureListTotal(vo));
+		return result;
 	}
 
 	@Override

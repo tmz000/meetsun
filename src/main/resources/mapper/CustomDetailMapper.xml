@@ -20,6 +20,24 @@
 			and pay_type =#{payType}
 		</if>
 		 order by create_time desc
+		 <if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getCustomDetailListTotal" parameterType="com.meetsun.meetsun.entity.CustomDetail" resultType="java.lang.Integer">
+		select count(*) from custom_detail where 1=1 
+		<if test="flag != '' and flag != null">
+			and flag = #{flag}
+		</if>
+		<if test="userName != '' and userName != null">
+			and user_name = #{userName}
+		</if>
+		<if test="createTime != '' and createTime != null">
+			and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(#{createTime},'%Y-%m')
+		</if>
+		<if test="payType != '' and payType != null">
+			and pay_type =#{payType}
+		</if>
 	</select>
 	<select id="getCustomDetailListByMonth" parameterType="com.meetsun.meetsun.entity.CustomDetail" resultType="com.meetsun.meetsun.entity.CustomDetail">
 		select user_name,ROUND(sum(card_money)) as card_money,sum(integral) as integral,create_time from

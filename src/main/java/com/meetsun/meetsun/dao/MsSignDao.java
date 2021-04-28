@@ -15,6 +15,7 @@ public interface MsSignDao {
 	 * @return
 	 */
 	List<MsSign> getMsSignList(MsSignVo vo);
+	int getMsSignListTotal(MsSignVo vo);
 	/**
 	 * 添加签到信息
 	 * @param paramMsUserVo

@@ -26,7 +26,12 @@ public class AParentMenuServiceImpl implements AParentMenuService{
 	@Override
 	public Result<Object> getAParentMenuList(AParentMenuVo vo) {
 		List<AParentMenu> list = aParentMenuDao.getAParentMenuList(vo);
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(aParentMenuDao.getAParentMenuListTotal(vo));
+		return result;
 	}
 
 	@Override

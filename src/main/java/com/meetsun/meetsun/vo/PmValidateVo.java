@@ -12,4 +12,7 @@ public class PmValidateVo {
 	private String status;
 	private String createTime;
 	private String updateTime;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

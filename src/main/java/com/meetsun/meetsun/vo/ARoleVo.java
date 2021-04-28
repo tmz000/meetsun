@@ -9,6 +9,8 @@ public class ARoleVo {
 	private String roleLv;
 	private String createTime;
 	private String updateTime;
-	
+
+	private Integer offset;
+	private Integer pageNumber;
 	private String menuId;
 }

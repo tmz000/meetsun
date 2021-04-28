@@ -31,6 +31,7 @@ public interface MsUserDao {
 	 * @return
 	 */
 	List<MsUser> getAllMsUser(MsUserVo paramMsUserVo);
+	int getAllMsUserTotal(MsUserVo paramMsUserVo);
 	/**
 	 * 修改用户信息
 	 * @param paramMsUserVo

@@ -122,8 +122,6 @@ function showData(){
 						)
 					}
 				}
-			}else{
-				alert(res.message)
 			}
 		}
 	})
@@ -141,8 +139,6 @@ function showData(){
 						'</span> </div><div class="update-date"><span class="update-day">'+res.rows[i].createTime.substr(8,2)+'</span>'+res.rows[i].createTime.substr(5,2)+'月</div></div>'
 					)
 				}
-			}else{
-				alert(res.message)
 			}
 		}
 	})
@@ -168,8 +164,6 @@ $.ajax({
 				count.push(res.rows[i].count);
 				sum.push(res.rows[i].sum);
 			}
-		}else{
-			alert(res.message)
 		}
 	}
 })

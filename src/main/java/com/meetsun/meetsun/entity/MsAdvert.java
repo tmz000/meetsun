@@ -21,4 +21,7 @@ public class MsAdvert {
 	private String userName;
 	private String freeMoney;
 	private String clickNum;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

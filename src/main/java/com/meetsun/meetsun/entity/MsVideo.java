@@ -14,4 +14,7 @@ public class MsVideo {
    	private String spId;
    	private String videoAddr;
    	private String clickNumber;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

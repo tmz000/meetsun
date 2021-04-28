@@ -14,4 +14,7 @@ public class MsOrderAddress {
    	private String isUse;
    	private String createTime;
    	private String updateTime;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

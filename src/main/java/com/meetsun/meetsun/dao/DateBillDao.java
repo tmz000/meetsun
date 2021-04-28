@@ -15,6 +15,7 @@ public interface DateBillDao {
 	 * @return
 	 */
 	List<DateBill> getDateBillList(DateBillVo vo);
+	int getDateBillListTotal(DateBillVo vo);
 	/**
 	 * 根据类型获取日志账单信息
 	 * @param paramMsUserVo

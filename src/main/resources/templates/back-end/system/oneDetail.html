@@ -16,27 +16,13 @@
 <script src="bootstrap-table/bootstrap-dialog.js"></script>
 <script src="bootstrap-table/bootstrap-table-zh-CN.js"></script>
 <style>
-.dh{
-	width:100%;height:50px;
-}
-.bt{
-	width:25%;float:left;text-align:right;
-}
-.mh{
-	width:20%;float:left;text-align:center;
-}
-.nr{
-	width:50%;float:left;text-align:left;
-}
-.nr1{
-	float:left;text-align:left;
-}
-.nr2{
-	width:36%;float:left;text-align:left;
-}
-.jbxx{
-	width:100%;height:50px;line-height:30px;font-weight:bold;font-size:18px;
-}
+.dh{width:100%;height:50px;}
+.bt{width:25%;float:left;text-align:right;}
+.mh{width:20%;float:left;text-align:center;}
+.nr{width:50%;float:left;text-align:left;}
+.nr1{float:left;text-align:left;}
+.nr2{width:36%;float:left;text-align:left;}
+.jbxx{width:100%;height:50px;line-height:30px;font-weight:bold;font-size:18px;}
 </style>
 </head>
 <body>
@@ -49,9 +35,9 @@
     <div class="row-fluid">
       <div class="span12">
         <div class="widget-box">
-          <div class="widget-content" style="height:400px;">
+          <div class="widget-content">
 		    <input type="hidden" class="form-control" name="sysId" id="sysId"/>
-          	<div style="width:70%;float:left; border:1px solid #96c2f1;background:#eff7ff">
+          	<div style="width:70%; border:1px solid #96c2f1;background:#eff7ff">
           		<div class="jbxx">&nbsp;基本信息</div>
           		<div class="dh">
 			     	<div class="bt" style="color:red">登录账号</div>
@@ -112,6 +98,10 @@
 			     	</div>
 		     	</div>
           	</div>
+          	<div style="width:100%;">
+	          	<div class="jbxx" style="border-bottom:1px solid red;height:35px;">&nbsp;操作记录</div>
+	          	<table id="table" style="white-space:nowrap;overflow: hidden"></table>
+          	</div>
           </div>
         </div>
       </div>
@@ -121,7 +111,7 @@
 </div>
 <script type="text/javascript">
 $(function(){
-	showUser()
+	showUser();
 });
 function showUser(){
 	$.ajax({
@@ -142,6 +132,7 @@ function showUser(){
 				$("#yx").html(res.rows.email)
 				$("#passWord").val(res.rows.passWord)
 				$("#mm").html(res.rows.passWord)
+				init();
 			}else{
 				alert(res.message)
 			}
@@ -176,6 +167,99 @@ function save(id){
 function replace(){
 	window.location.reload()
 }
+function init(){
+	$('#table').bootstrapTable('destroy').bootstrapTable({
+	    url: '/logInfo/getLogInfoList',
+	    pagination: true,
+	    method:"post",
+	    height:"400",
+	    queryParams : function(params) {//上传服务器的参数
+	    	var temp = {
+	    		userName:$("#dlzh").html(),
+	    		type:"0",
+	            offset :params.offset + 0,// SQL语句起始索引
+	            pageNumber : params.limit  // 每页显示数量
+	        };
+	        return temp;
+	    },
+	    responseHandler:function(res){
+	    	if(res.status == "01"){
+	    		return res;
+	    	}else{
+	    		return res.message;
+	    	}
+	    },
+	    columns: [{
+	   	    field: 'id',
+	   	    title: '序号',
+	   	    formatter: function (value, row, index) {
+	   	        return index+1;
+	   	    }
+	   	},{
+	    	field: 'sysId',
+	    	align:'center',
+	        title: '主键',
+	        visible: false
+	    }, {
+	        field: 'userName',
+	        align:'center',
+	        title: '操作账号'
+	    }, {
+	        field: 'remark',
+	        align:'left',
+	        halign:"center",
+	        title: '操作说明',
+	        formatter:paramsMatter,
+	        cellStyle:formatTableUnit
+	    }, {
+	        field: 'operation',
+	        align:'center',
+	        title: '操作类型'
+	    }, {
+	        field: 'method',
+	        align:'left',
+	        halign:"center",
+	        title: '请求方法',
+	        formatter:paramsMatter,
+	        cellStyle:formatTableUnit
+	    }, {
+	        field: 'result',
+	        align:'center',
+	        title: '请求结果',
+	        formatter:paramsMatter,
+	        cellStyle:formatTableUnit
+	    }, {
+	        field: 'content',
+	        align:'left',
+	        halign:"center",
+	        title: '内容',
+	        formatter:paramsMatter,
+	        cellStyle:formatTableUnit
+	    }, {
+	        field: 'createTime',
+	        align:'center',
+	        title: '操作时间'
+	    }]
+	});
+}
+//表格超出宽度鼠标悬停显示td内容
+function paramsMatter(value, row, index) {
+    var span = document.createElement("span");
+    span.setAttribute("title", value);
+    span.innerHTML = value;
+    return span.outerHTML;
+}
+//td宽度以及内容超过宽度隐藏
+function formatTableUnit(value, row, index) {
+    return {
+        css: {
+            "white-space": "nowrap",
+            "text-overflow": "ellipsis",
+            "overflow": "hidden",
+            "max-width": "150px"
+        }
+    }
+} 
 </script>
 <script src="getMsUser.js"></script>
 </body>

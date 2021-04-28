@@ -92,7 +92,12 @@ public class MsOrderServiceImpl implements MsOrderService{
 				list1.add(o);
 			}
 		}
-		return Result.success(list1);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(msOrderDao.getMsOrderListTotal(vo));
+		return result;
 	}
 
 	@Override

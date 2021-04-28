@@ -19,4 +19,7 @@ public class MsCustom {
    	private String createTime;
    	private String updateTime;
    	private String picture;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

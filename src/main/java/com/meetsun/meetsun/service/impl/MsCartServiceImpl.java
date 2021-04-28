@@ -74,7 +74,12 @@ public class MsCartServiceImpl implements MsCartService{
 		}else{
 			list = msCartDao.getMsCartList(vo);
 		}
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(msCartDao.getMsCartListTotal(vo));
+		return result;
 	}
 	@Override
 	public Result<Object> getMsCartListBySpId(MsCartVo vo) {

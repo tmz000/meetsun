@@ -15,6 +15,7 @@ public interface MsVisitDao {
 	 * @return
 	 */
 	List<MsVisit> getMsVisitList(MsVisitVo vo);
+	int getMsVisitListTotal(MsVisitVo vo);
 	/**
 	 * 添加到访信息
 	 * @param paramMsUserVo

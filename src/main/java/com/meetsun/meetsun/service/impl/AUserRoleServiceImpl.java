@@ -17,18 +17,23 @@ import com.meetsun.meetsun.vo.AUserRoleVo;
 public class AUserRoleServiceImpl implements AUserRoleService{
 	
 	@Autowired
-	private AUserRoleDao AUserRoleDao;
+	private AUserRoleDao aUserRoleDao;
 	
 	@Override
 	public Result<Object> getAUserRoleList(AUserRoleVo vo) {
-		List<AUserRole> list = AUserRoleDao.getAUserRoleList(vo);
-		return Result.success(list);
+		List<AUserRole> list = aUserRoleDao.getAUserRoleList(vo);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(aUserRoleDao.getAUserRoleListTotal(vo));
+		return result;
 	}
 
 	@Override
 	public Result<Object> saveAUserRole(AUserRoleVo vo) {
 		vo.setSysId(Tools.getUUID());
-		int flag = AUserRoleDao.saveAUserRole(vo);
+		int flag = aUserRoleDao.saveAUserRole(vo);
 		if (flag > 0) {
 			return Result.success("success");
 		}
@@ -37,7 +42,7 @@ public class AUserRoleServiceImpl implements AUserRoleService{
 
 	@Override
 	public Result<Object> updateAUserRole(AUserRoleVo vo) {
-		int flag = AUserRoleDao.updateAUserRole(vo);
+		int flag = aUserRoleDao.updateAUserRole(vo);
      	if (flag > 0) {
      		return Result.success("success");
      	}
@@ -46,7 +51,7 @@ public class AUserRoleServiceImpl implements AUserRoleService{
 
 	@Override
 	public Result<Object> deleteAUserRole(AUserRoleVo vo) {
-		int flag = AUserRoleDao.deleteAUserRole(vo);
+		int flag = aUserRoleDao.deleteAUserRole(vo);
 		if (flag > 0) {
 			return Result.success("success");
 		}

@@ -17,6 +17,21 @@
 			and menu_name = #{menuName}
 		</if> 
 		order by menu_num asc,parent_id asc
+		<if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getAMenuListTotal" parameterType="com.meetsun.meetsun.entity.AMenu" resultType="java.lang.Integer">
+		select count(*) from a_menu where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="parentId != '' and parentId != null">
+			and parent_id = #{parentId}
+		</if> 
+		<if test="menuName != '' and menuName != null">
+			and menu_name = #{menuName}
+		</if> 
 	</select>
 	<update id="updateAMenu" parameterType="com.meetsun.meetsun.entity.AMenu">
 		update a_menu set parent_id = #{parentId},menu_num=#{menuNum},menu_name = #{menuName},menu_icon = #{menuIcon},menu_link = #{menuLink},menu_remark = #{menuRemark},update_time = now() where sys_id = #{sysId}

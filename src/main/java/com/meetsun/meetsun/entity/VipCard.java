@@ -12,4 +12,7 @@ public class VipCard {
 	private String discount;
 	private String createTime;
    	private String updateTime;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

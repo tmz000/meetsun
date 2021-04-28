@@ -25,4 +25,7 @@ public class MsAdvertVo {
 	private String realPath;
 	private String freeMoney;
 	private String clickNum;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

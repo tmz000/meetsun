@@ -12,4 +12,7 @@ public class ARoleMenu {
 	
 	private String roleName;
 	private String menuName;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

@@ -15,6 +15,7 @@ public interface MsCartDao {
 	 * @return
 	 */
 	List<MsCart> getMsCartList(MsCartVo vo);
+	int getMsCartListTotal(MsCartVo vo);
 	/**
 	 * 根据产品ID获取购物车信息
 	 * @param paramMsUserVo

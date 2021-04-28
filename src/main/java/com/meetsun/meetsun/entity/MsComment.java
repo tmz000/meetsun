@@ -18,4 +18,7 @@ public class MsComment {
 	
 	private String count;
 	private String spName;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

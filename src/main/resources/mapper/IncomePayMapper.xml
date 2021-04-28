@@ -20,6 +20,24 @@
 			and YEAR(create_time) = YEAR( now())
 		</if>
 		order by create_time desc
+		<if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getIncomePayListTotal" parameterType="com.meetsun.meetsun.entity.IncomePay" resultType="java.lang.Integer">
+		select count(*) from income_pay where 1=1 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if> 
+		<if test="flag == 'byDay'">
+			and to_days(create_time) = to_days(now())
+		</if> 
+		<if test="flag == 'byMonth'">
+			and DATE_FORMAT(create_time,'%Y%m') = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+		</if> 
+		<if test="flag == 'byYear'">
+			and YEAR(create_time) = YEAR( now())
+		</if>
 	</select>
 	<update id="updateIncomePay" parameterType="com.meetsun.meetsun.entity.IncomePay">
 		update income_pay set sp_name = #{spName},price = #{price},discount = #{discount},amount = #{amount},update_time = now() where sys_id = #{sysId}	

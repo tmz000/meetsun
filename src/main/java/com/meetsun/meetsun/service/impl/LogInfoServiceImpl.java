@@ -25,7 +25,12 @@ public class LogInfoServiceImpl implements LogInfoService{
 	@Override
 	public Result<Object> getLogInfoList(LogInfo vo) {
 		List<LogInfo> list = logInfoDao.getLogInfoList(vo);
-		return  Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(logInfoDao.getLogInfoListTotal(vo));
+		return result;
 	}
 
 }

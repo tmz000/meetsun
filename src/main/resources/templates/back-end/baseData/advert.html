@@ -31,7 +31,54 @@
       <div class="span12">
         <div class="widget-box">
           <div class="widget-content">
-       		<button class="btn btn-info" id="saveButton" data-toggle="modal" data-target="#myModal" style="float:right">新增</button>
+          	<div style="width:98.5%;height:30px;">
+            	<div style="width:50%;float:left;">&nbsp;</div>
+            	<div style="width:50%;float:left;">
+            		<div style="float:right;">
+			       		<button class="btn btn-info" id="saveButton" data-toggle="modal" data-target="#myModal" style="">新增</button>
+            		</div>
+            	</div>
+            </div>
+          	<div id="toolbar" style="width:100%;border-top:1px solid #CDCDB4;padding-top:10px;">
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		活动名称：
+	          		</div>
+	          		<div style="float:left;">
+			     		<input type="text" id="queryAdName" placeholder="请输入活动名称"/>&nbsp;&nbsp;&nbsp;
+	          		</div>
+          		</div>
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		类型：
+	          		</div>
+	          		<div style="float:left;">
+			     		<select id="queryType">
+			     			<option value="" disabled selected hidden>请选择类型</option>
+			     			<option value="0">项目活动</option>
+			     			<option value="1">充值活动</option>
+			     			<option value="2">积分抵现</option>
+			     		</select>&nbsp;&nbsp;&nbsp;
+	          		</div>
+          		</div>
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		有效日期：
+	          		</div>
+	          		<div style="float:left;">
+			     		<input type="text" class="form-control form_datetime" id="queryToDate" placeholder="请选择有效日期" autocomplete="off" onFocus="this.blur()">
+	          		</div>
+          		</div>
+          		<div style="float:left">
+			        <div style="float:left;">
+			        	&nbsp;&nbsp;&nbsp;<button class="btn btn-info" id="queryTable">查询</button>
+			        </div>
+			        <div style="float:left;">
+			        	&nbsp;<button class="btn btn-danger" id="clearTable">清空</button>
+			        </div>
+			    </div>
+            	<div style="clear:both;"></div>
+            </div>
           	<table id="table" style="white-space:nowrap;overflow: hidden"></table>
           </div>
         </div>
@@ -267,6 +314,7 @@ $(document).ready(function(){
 			}
 		}
 	})
+	init();
 });
 //产品活动返回相应价格
 $("#spName").change(function(){
@@ -321,204 +369,195 @@ $("#discount").keyup(function(){
 		}
 	}
 })
-$('#table').bootstrapTable('destroy');
-$('#table').bootstrapTable({
-    url: "/msAdvert/getMsAdvertList?token="+localStorage.getItem("token"),
-    pagination: true,
-    search:true,
-    method:"post",
-    height:"400",
-    queryParams :queryParams,
-    responseHandler:function(res){
-    	if(res.status == "01"){
-    		return res;
-    	}else{
-    		return res.message;
-    	}
-    },
-    columns: [{
-   	    field: 'id',
-   	    title: '序号',
-   	    formatter: function (value, row, index) {
-   	        return index+1;
-   	    }
-   	},{
-    	field: 'sysId',
-    	align:'center',
-        title: '主键',
-        visible: false
-    },{
-        field: 'adName',
-        align:'left',
-        halign:"center",
-        title: '活动名称',
-        sortable : true
-    },{
-        field: 'adContent',
-        align:'left',
-        halign:"center",
-        title: '活动介绍',
-        formatter:paramsMatter,
-        cellStyle:formatTableUnit,
-        sortable : true
-    },{
-        field: 'spName',
-        align:'left',
-        halign:"center",
-        title: '活动项目',
-        sortable : true
-    },{
-        field: 'clickNum',
-        align:'center',
-        title: '点击次数',
-        sortable : true
-    },{
-        field: 'price',
-        align:'center',
-        title: '价格',
-        sortable : true
-    },{
-        field: 'discount',
-        align:'center',
-        title: '折扣数',
-        sortable : true
-    },{
-        field: 'freeMoney',
-        align:'center',
-        title: '优惠金额',
-        sortable : true
-    },{
-        field: 'amount',
-        align:'center',
-        title: '成交金额',
-        sortable : true
-    },{
-        field: 'toDate',
-        align:'center',
-        title: '有效期',
-        sortable : true
-    },{
-        field: 'type',
-        align:'center',
-        title: '类型',
-        formatter:function(value,row,index){
-        	if(row.type=='0'){
-        		return '项目活动';
-        	}else if(row.type=='1'){
-        		return '充值活动';
-        	}else{
-        		return "积分抵现";
-        	}
-        }
-    },{
-    	field: 'photoAdrr',
-    	title: '活动图片',
-       	formatter:function(value,row,index){
-            var s = '<a  data-toggle="modal" data-target="#myModal1"  id="showPhoto"  href="javascript:void(0)"><img style="width:70;height:20px;"  src="'+row.photoAdrr+'" /></a>';
-            return s;
-        },
-        events: 'operateEvents'
-    },{
-        field: 'status',
-        align:'center',
-        title: '状态',
-        formatter:function(value,row,index){
-        	if(row.status=='0'){
-        		return '<span style="color:#00ff00">正常</span>';
-        	}else{
-        		return '<span style="color:#FF0000">过期</span>';
-        	}
-        }
-    },{
-        field: 'userName',
-        align:'center',
-        title: '发布人',
-        sortable : true
-    },{
-        field: 'createTime',
-        align:'center',
-        title: '发布时间',
-        sortable : true
-    },{
-    	field:'operate',
-    	align:'center',
-    	title:'操作',
-    	events: window.operateEvents = {
-   			'click #editTable': function(e, value, row, index) {
-   				$("#hdtp").hide()
-   				$("#hdtp1").hide()
-   				dialog=0
-   				if(row.type=="0"){
-   					$("#xmhd").trigger('click');
-	   				$("#xmhd").show();
-	   				$("#czhd").hide();
-	   				$("#jfhd").hide();
-	   				$("#dialog1").show();
-	   				$("#dialog2").hide();
-	   				$("#adName").val(row.adName);
-	   				$("#price").val(row.price);
-	   				$("#remark").val(row.remark);
-	   				$("#toDate").val(row.toDate);
-	   				$("#spName").val(row.spId).attr("disabled","disabled");
-	   				$("#freeMoney").val(row.freeMoney);
-	   				$("#adContent").val(row.adContent);
-	   				$("#discount").val(row.discount);
-	   				$("#amount").val(row.amount);
-	   				$("#sysId").val(row.sysId);
-	   				$("#status").val(row.status);
-   				}else if(row.type=="1"){
-   					$("#czhd").trigger('click');
-   					$("#xmhd").hide();
-   					$("#jfhd").hide();
-	   				$("#czhd").show();
-	   				$("#dialog2").show();
-	   				$("#dialog1").hide();
-   					$("#adName1").val(row.adName);
-	   				$("#toDate1").val(row.toDate);
-	   				$("#adContent1").val(row.adContent);
-	   				$("#freeMoney1").val(row.freeMoney);
-	   				$("#price1").val(row.price);
-	   				$("#sysId1").val(row.sysId);
-	   				$("#status1").val(row.status);
-   				}else{
-   					$("#jfhd").trigger('click');
-   					$("#xmhd").hide();
-   					$("#czhd").hide();
-	   				$("#jfhd").show();
-	   				$("#dialog2").show();
-	   				$("#dialog1").hide();
-   					$("#adName1").val(row.adName);
-	   				$("#toDate1").val(row.toDate);
-	   				$("#adContent1").val(row.adContent);
-	   				$("#sysId1").val(row.sysId);
-	   				$("#status1").val(row.status);
-   				}
-   			},
-   			'click #deltTable': function(e, value, row, index) {
-   				if(confirm("确定要执行该操作？")){
-   					$.ajax({
-   						type:"post",
-   						url:"/msAdvert/deleteMsAdvert?token="+localStorage.getItem("token"),
-   						data:JSON.stringify({"sysId":row.sysId}),
-   						contentType:'application/json',
-   						success:function(res){
-   							if(res.status=="01"){
-   								$("#myModal").modal('hide');
-   								$("#table").bootstrapTable('refresh');
-   							}else{
-   								alert(res.message)
-   							}
-   						}
-   					})
-   				}
-   			}
-   		},
-    	formatter:function(value,row,index){
-    		return '<button class="btn" id="showTable"><a href="/detail?sysId='+row.sysId+'&token='+localStorage.getItem("token")+'" style="text-decoration:none">查看</a></button>&nbsp;<button class="btn btn-info" id="editTable" data-toggle="modal" data-target="#myModal">修改</button>&nbsp;'+
-    		'<button class="btn btn-danger" id="deltTable">删除</button>'
-    	}
-    }]
-});
+function init(){
+	$('#table').bootstrapTable('destroy').bootstrapTable({
+	    url: "/msAdvert/getMsAdvertList?token="+localStorage.getItem("token"),
+	    pagination: true,
+	    method:"post",
+	    height:"400",
+	    queryParams : function(params) {//上传服务器的参数
+	    	var temp = {
+	    		adName:$("#queryAdName").val(),
+	    		type:$("#queryType").val(),
+	    		toDate:$("#queryToDate").val(),
+	            offset :params.offset + 0,// SQL语句起始索引
+	            pageNumber : params.limit  // 每页显示数量
+	        };
+	        return temp;
+	    },
+	    columns: [{
+	   	    field: 'id',
+	   	    title: '序号',
+	   	    formatter: function (value, row, index) {
+	   	        return index+1;
+	   	    }
+	   	},{
+	    	field: 'sysId',
+	    	align:'center',
+	        title: '主键',
+	        visible: false
+	    },{
+	        field: 'adName',
+	        align:'left',
+	        halign:"center",
+	        title: '活动名称',
+	    },{
+	        field: 'adContent',
+	        align:'left',
+	        halign:"center",
+	        title: '活动介绍',
+	        formatter:paramsMatter,
+	        cellStyle:formatTableUnit,
+	    },{
+	        field: 'spName',
+	        align:'left',
+	        halign:"center",
+	        title: '活动项目',
+	    },{
+	        field: 'clickNum',
+	        align:'center',
+	        title: '点击次数',
+	    },{
+	        field: 'price',
+	        align:'center',
+	        title: '价格',
+	    },{
+	        field: 'discount',
+	        align:'center',
+	        title: '折扣数',
+	    },{
+	        field: 'freeMoney',
+	        align:'center',
+	        title: '优惠金额',
+	    },{
+	        field: 'amount',
+	        align:'center',
+	        title: '成交金额',
+	    },{
+	        field: 'toDate',
+	        align:'center',
+	        title: '有效期',
+	    },{
+	        field: 'type',
+	        align:'center',
+	        title: '类型',
+	        formatter:function(value,row,index){
+	        	if(row.type=='0'){
+	        		return '项目活动';
+	        	}else if(row.type=='1'){
+	        		return '充值活动';
+	        	}else{
+	        		return "积分抵现";
+	        	}
+	        }
+	    },{
+	    	field: 'photoAdrr',
+	    	title: '活动图片',
+	       	formatter:function(value,row,index){
+	            var s = '<a  data-toggle="modal" data-target="#myModal1"  id="showPhoto"  href="javascript:void(0)"><img style="width:70;height:20px;"  src="'+row.photoAdrr+'" /></a>';
+	            return s;
+	        },
+	        events: 'operateEvents'
+	    },{
+	        field: 'status',
+	        align:'center',
+	        title: '状态',
+	        formatter:function(value,row,index){
+	        	if(row.status=='0'){
+	        		return '<span style="color:#00ff00">正常</span>';
+	        	}else{
+	        		return '<span style="color:#FF0000">过期</span>';
+	        	}
+	        }
+	    },{
+	        field: 'userName',
+	        align:'center',
+	        title: '发布人',
+	    },{
+	        field: 'createTime',
+	        align:'center',
+	        title: '发布时间',
+	    },{
+	    	field:'operate',
+	    	align:'center',
+	    	title:'操作',
+	    	events: window.operateEvents = {
+	   			'click #editTable': function(e, value, row, index) {
+	   				$("#hdtp").hide()
+	   				$("#hdtp1").hide()
+	   				dialog=0
+	   				if(row.type=="0"){
+	   					$("#xmhd").trigger('click');
+		   				$("#xmhd").show();
+		   				$("#czhd").hide();
+		   				$("#jfhd").hide();
+		   				$("#dialog1").show();
+		   				$("#dialog2").hide();
+		   				$("#adName").val(row.adName);
+		   				$("#price").val(row.price);
+		   				$("#remark").val(row.remark);
+		   				$("#toDate").val(row.toDate);
+		   				$("#spName").val(row.spId).attr("disabled","disabled");
+		   				$("#freeMoney").val(row.freeMoney);
+		   				$("#adContent").val(row.adContent);
+		   				$("#discount").val(row.discount);
+		   				$("#amount").val(row.amount);
+		   				$("#sysId").val(row.sysId);
+		   				$("#status").val(row.status);
+	   				}else if(row.type=="1"){
+	   					$("#czhd").trigger('click');
+	   					$("#xmhd").hide();
+	   					$("#jfhd").hide();
+		   				$("#czhd").show();
+		   				$("#dialog2").show();
+		   				$("#dialog1").hide();
+	   					$("#adName1").val(row.adName);
+		   				$("#toDate1").val(row.toDate);
+		   				$("#adContent1").val(row.adContent);
+		   				$("#freeMoney1").val(row.freeMoney);
+		   				$("#price1").val(row.price);
+		   				$("#sysId1").val(row.sysId);
+		   				$("#status1").val(row.status);
+	   				}else{
+	   					$("#jfhd").trigger('click');
+	   					$("#xmhd").hide();
+	   					$("#czhd").hide();
+		   				$("#jfhd").show();
+		   				$("#dialog2").show();
+		   				$("#dialog1").hide();
+	   					$("#adName1").val(row.adName);
+		   				$("#toDate1").val(row.toDate);
+		   				$("#adContent1").val(row.adContent);
+		   				$("#sysId1").val(row.sysId);
+		   				$("#status1").val(row.status);
+	   				}
+	   			},
+	   			'click #deltTable': function(e, value, row, index) {
+	   				if(confirm("确定要执行该操作？")){
+	   					$.ajax({
+	   						type:"post",
+	   						url:"/msAdvert/deleteMsAdvert?token="+localStorage.getItem("token"),
+	   						data:JSON.stringify({"sysId":row.sysId}),
+	   						contentType:'application/json',
+	   						success:function(res){
+	   							if(res.status=="01"){
+	   								$("#myModal").modal('hide');
+	   								$("#table").bootstrapTable('refresh');
+	   							}else{
+	   								alert(res.message)
+	   							}
+	   						}
+	   					})
+	   				}
+	   			}
+	   		},
+	    	formatter:function(value,row,index){
+	    		return '<button class="btn" id="showTable"><a href="/detail?sysId='+row.sysId+'&token='+localStorage.getItem("token")+'" style="text-decoration:none">查看</a></button>&nbsp;<button class="btn btn-info" id="editTable" data-toggle="modal" data-target="#myModal">修改</button>&nbsp;'+
+	    		'<button class="btn btn-danger" id="deltTable">删除</button>'
+	    	}
+	    }]
+	});
+}
 
 window.operateEvents = {
     'click #showPhoto': function (e, value, row, index) {
@@ -674,12 +713,6 @@ $("#discount").keyup(function(){
 	}
 })
 
-function queryParams(){
-	var params = {
-		type:""	
-	}
-	return params;
-}
 function checkParmas(type){
 	if(type=="0"){
 		if($("#adName").val() == ""){

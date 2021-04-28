@@ -25,7 +25,37 @@
 		<if test="opendId != '' and opendId != null">
 			and opend_id = #{opendId}
 		</if>
+		<if test="realName != '' and realName != null">
+			and real_name  like CONCAT('%', #{realName}, '%')
+		</if>
 		 order by create_time desc
+		 <if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getMsCustomListTotal" parameterType="com.meetsun.meetsun.entity.MsCustom" resultType="java.lang.Integer">
+		select count(*) from ms_custom where 1=1 
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		<if test="cardNo != '' and cardNo != null">
+			and card_no = #{cardNo}
+		</if>
+		<if test="userName != '' and userName != null">
+			and user_name = #{userName}
+		</if>
+		<if test="passWord != '' and passWord != null">
+			and pass_word = #{passWord}
+		</if>
+		<if test="idCard != '' and idCard != null">
+			and id_card = #{idCard}
+		</if>
+		<if test="opendId != '' and opendId != null">
+			and opend_id = #{opendId}
+		</if>
+		<if test="realName != '' and realName != null">
+			and real_name  like CONCAT('%', #{realName}, '%')
+		</if>
 	</select>
 	<select id="getMsCustomByName" parameterType="com.meetsun.meetsun.entity.MsCustom" resultType="com.meetsun.meetsun.entity.MsCustom">
 		select * from ms_custom where 1=1 

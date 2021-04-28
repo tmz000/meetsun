@@ -31,7 +31,12 @@ public class MsVideoServiceImpl implements MsVideoService{
 	@Override
 	public Result<Object> getMsVideoList(MsVideoVo vo) {
 		List<MsVideo> list = msVideoDao.getMsVideoList(vo);
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(msVideoDao.getMsVideoListTotal(vo));
+		return result;
 	}
 
 	@Override

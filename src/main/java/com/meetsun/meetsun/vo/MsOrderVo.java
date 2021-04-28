@@ -42,4 +42,7 @@ public class MsOrderVo {
 	private String starLv;
 	private String userTx;
 	private String customSysId;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

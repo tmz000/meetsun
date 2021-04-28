@@ -30,6 +30,25 @@
         <div class="widget-box">
           <div class="widget-content">
        		<!-- <button class="btn btn-info" id="saveButton" data-toggle="modal" data-target="#myModal" style="float:right">手工录入</button> -->
+          	<div id="toolbar" style="width:100%;border-top:1px solid #CDCDB4;padding-top:10px;">
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		订单编号：
+	          		</div>
+	          		<div style="float:left;">
+			     		<input type="text" id="queryOrderNo" placeholder="请输入订单编号"/>&nbsp;&nbsp;&nbsp;
+	          		</div>
+          		</div>
+          		<div style="float:left">
+			        <div style="float:left;">
+			        	&nbsp;&nbsp;&nbsp;<button class="btn btn-info" id="queryTable">查询</button>
+			        </div>
+			        <div style="float:left;">
+			        	&nbsp;<button class="btn btn-danger" id="clearTable">清空</button>
+			        </div>
+			    </div>
+            	<div style="clear:both;"></div>
+            </div>
           	<table id="table" style="white-space:nowrap;overflow: hidden"></table>
           </div>
         </div>
@@ -204,265 +223,245 @@ $(document).ready(function(){
 			}
 		}
 	})
+	init()
 });
-$('#table').bootstrapTable('destroy');
-$('#table').bootstrapTable({
-    url: "/msOrder/getMsOrderList?token="+localStorage.getItem("token"),
-    pagination: true,
-    search:true,
-    method:"post",
-    height:"400",
-    queryParams :queryParams,
-    responseHandler:function(res){
-    	if(res.status == "01"){
-    		return res;
-    	}else{
-    		return res.message;
-    	}
-    },
-    columns: [{
-   	    field: 'id',
-   	    title: '序号',
-   	    formatter: function (value, row, index) {
-   	        return index+1;
-   	    }
-   	},{
-    	field: 'sysId',
-    	align:'center',
-        title: '主键',
-        visible: false
-    },{
-        field: 'orderNo',
-        align:'center',
-        title: '订单号',
-        formatter:function(value,row,index){
-	        return '<a href="/orderDetail?sysId='+row.sysId+'&token='+localStorage.getItem("token")+'">'+row.orderNo+'</a>';
-        }
-    },{
-        field: 'status',
-        align:'center',
-        title: '是否支付',
-        formatter:function(value,row,index){
-        	if(row.status=='0'){
-        		return '<span style="color:#00ff00">是</span>';
-        	}else{
-        		return '<span style="color:#FF0000">否</span>';
-        	}
-        }
-    },{
-        field: 'payType',
-        align:'center',
-        title: '支付方式',
-        formatter:function(value,row,index){
-        	if(row.payType=='0'){
-        		return '会员余额';
-        	}else if(row.payType=='1'){
-        		return '微信';
-        	}else if(row.payType=='2'){
-        		return '支付宝';
-        	}else{
-        		return '其他方式';
-        	}
-        }
-    },{
-        field: 'trueMoney',
-        align:'center',
-        title: '会员支付金额'
-    },{
-        field: 'integral',
-        align:'center',
-        title: '会员积分抵扣'
-    },{
-        field: 'payMoney',
-        align:'center',
-        title: '网络支付金额'
-    },{
-        field: 'discount',
-        align:'center',
-        title: '折扣数'
-    },{
-        field: 'freeMoney',
-        align:'center',
-        title: '优惠金额'
-    },{
-        field: 'isSend',
-        align:'center',
-        title: '是否支持发货',
-        formatter:function(value,row,index){
-        	if(row.isSend=='1'){
-        		return '<span style="color:#FF0000">否</span>';
-        	}else if(row.isSend=='0'){
-        		return '<span style="color:#00ff00">是</span>';
-        	}else{
-        		return '收货或使用';
-        	}
-        }
-    },{
-        field: 'isFh',
-        align:'center',
-        title: '是否发货',
-        formatter:function(value,row,index){
-        	if(row.isSend == "0" || row.isSend == "2"){
-	        	if(row.isFh=='1'){
-	        		return '<span style="color:#00ff00">已发货</span>';
-	        	}else{
-	        		return '<span style="color:#FF0000">未发货</span>';
-	        	}
-        	}else{
-        		return '不支持发货';
-        	}
-        }
-    },{
-        field: 'isShouhuo',
-        align:'center',
-        title: '是否收货',
-        formatter:function(value,row,index){
-        	if(row.isSend == "0" || row.isSend == "2"){
-	        	if(row.isUse=='1'){
+function init(){
+	$('#table').bootstrapTable('destroy').bootstrapTable({
+	    url: "/msOrder/getMsOrderList?token="+localStorage.getItem("token"),
+	    pagination: true,
+	    method:"post",
+	    height:"400",
+	    queryParams : function(params) {//上传服务器的参数
+	    	var temp = {
+	    		orderNo:$("#queryOrderNo").val(),
+	            offset :params.offset + 0,// SQL语句起始索引
+	            pageNumber : params.limit  // 每页显示数量
+	        };
+	        return temp;
+	    },
+	    responseHandler:function(res){
+	    	if(res.status == "01"){
+	    		return res;
+	    	}else{
+	    		return res.message;
+	    	}
+	    },
+	    columns: [{
+	   	    field: 'id',
+	   	    title: '序号',
+	   	    formatter: function (value, row, index) {
+	   	        return index+1;
+	   	    }
+	   	},{
+	    	field: 'sysId',
+	    	align:'center',
+	        title: '主键',
+	        visible: false
+	    },{
+	        field: 'orderNo',
+	        align:'center',
+	        title: '订单编号',
+	        formatter:function(value,row,index){
+		        return '<a href="/orderDetail?sysId='+row.sysId+'&token='+localStorage.getItem("token")+'">'+row.orderNo+'</a>';
+	        }
+	    },{
+	        field: 'status',
+	        align:'center',
+	        title: '是否支付',
+	        formatter:function(value,row,index){
+	        	if(row.status=='0'){
 	        		return '<span style="color:#00ff00">是</span>';
 	        	}else{
 	        		return '<span style="color:#FF0000">否</span>';
 	        	}
-        	}else{
-        		return '仅到店使用';
-        	}
-        }
-    },{
-        field: 'isUse',
-        align:'center',
-        title: '是否到店使用',
-        formatter:function(value,row,index){
-        	if(row.isSend == "1" || row.isSend == "2"){
-	        	if(row.isUse=='1'){
-	        		return '<span style="color:#00ff00">已使用</span>';
+	        }
+	    },{
+	        field: 'payType',
+	        align:'center',
+	        title: '支付方式',
+	        formatter:function(value,row,index){
+	        	if(row.payType=='0'){
+	        		return '会员余额';
+	        	}else if(row.payType=='1'){
+	        		return '微信';
+	        	}else if(row.payType=='2'){
+	        		return '支付宝';
 	        	}else{
-	        		return '<span style="color:#FF0000">未使用</span>';
+	        		return '其他方式';
 	        	}
-        	}else{
-        		return "仅发货";
-        	}
-        }
-    },{
-        field: 'userName',
-        align:'center',
-        title: '用户'
-    },{
-        field: 'flag',
-        align:'center',
-        title: '入账',
-        formatter:function(value,row,index){
-        	if(row.flag=='0'){
-        		return '<span style="color:#00ff00">已入账</span>';
-        	}else{
-        		return '<span style="color:#FF0000">未入账</span>';
-        	}
-        }
-    },{
-        field: 'createTime',
-        align:'center',
-        title: '创建时间'
-   /*  },{
-        field: 'updateTime',
-        align:'center',
-        title: '入账时间'  */
-    },{
-    	field:'operate',
-    	align:'center',
-    	title:'操作',
-    	events: window.operateEvents = {
-   			'click #editTable': function(e, value, row, index) {
-   				dialog=0
-   				/* $("#price").val(row.price);
-   				$("#spName").val(row.spId);
-   				$("#toDate").val(row.toDate);
-   				$("#count").val(row.count);
-   				$("#freeMoney").val(row.freeMoney);
-   				$("#discount").val(row.discount); */
-   				$("#trueMoney1").val(row.trueMoney);
-   				$("#amount1").val(row.amount);
-   				$("#orderNo1").val(row.orderNo);
-   				$("#status1").val(row.status);
-   				$("#sysId1").val(row.sysId);
-   			},
-   			'click #deltTable': function(e, value, row, index) {
-   				if(confirm("确定要执行该操作？")){
-   					$.ajax({
-   						type:"post",
-   						url:"/msOrder/deleteMsOrder?token="+localStorage.getItem("token"),
-   						data:JSON.stringify({"sysId":row.sysId}),
-   						contentType:'application/json',
-   						success:function(res){
-   							if(res.status=="01"){
-   								$("#myModal").modal('hide');
-   								$("#table").bootstrapTable('refresh');
-   							}else{
-   								alert(res.message)
-   							}
-   						}
-   					})
-   				}
-   			},
-   			'click #idUseOrder': function(e, value, row, index) {
-				doSure(row);   				
-   			},
-   			'click #idShOrder': function(e, value, row, index) {
-   				doSure(row)
-   				/* if(confirm("确认收货？")){
-   					$.ajax({
-   						type:"post",
-   						url:"/msOrder/updateMsOrderByIsShouhuo?token="+localStorage.getItem("token"),
-   						data:JSON.stringify({"sysId":row.sysId}),
-   						contentType:'application/json',
-   						success:function(res){
-   							if(res.status=="01"){
-   								alert(res.message)
-   								$("#myModal").modal('hide');
-   								$("#table").bootstrapTable('refresh');
-   							}else{
-   								alert(res.message)
-   							}
-   						}
-   					})
-   				} */
-   			},
-   			'click #idFhOrder': function(e, value, row, index) {
-   				$("#sysId2").val(row.sysId);
-   				$("#orderId").html("").append("<option selected value='"+row.sysId+"'>"+row.orderNo+"</option>")
-   			}
-   		},
-    	formatter:function(value,row,index){
-    		if(row.status == "0"){
-    			if(row.isPayPc == "1"){
-	    			if(row.isSend=="1"){
-		    			if(row.isUse == "0"){
-							return'<button class="btn btn-danger" class="btn btn-warning" data-toggle="modal" data-target="#myModal3" id="idUseOrder">使用</button>'
-			    		}else{
-			    			if(row.flag == "1"){
-				    			return '<span style="color:#8A2BE2;font-weight:600;">待入账</span>'
-			    			}else{
-			    				return '<span style="color:green;font-weight:600;">已完成</span>'
-			    			}
-			    		}
-		    		 }else if(row.isSend=="0"){
-	    				if(row.isFh == "1"){
-			    			if(row.isShouhuo == "0"){
-								return '<button class="btn btn-success" data-toggle="modal" data-target="#myModal3" id="idShOrder">收货</button>'
-				    		}else{
-				    			if(row.flag == "1"){
-					    			return '<span style="color:#8A2BE2;font-weight:600;">待入账</span>'
-				    			}else{
-				    				return '<span style="color:green;font-weight:600;">已完成</span>'
-				    			}
-				    		}
-	    				}else{
-	    					return'<button class="btn btn-warning" data-toggle="modal" data-target="#myModal2" id="idFhOrder">发货</button>'
-	    				}
-		    		}else{
-	    				if(row.isFh == "1"){
+	        }
+	    },{
+	        field: 'trueMoney',
+	        align:'center',
+	        title: '会员支付金额'
+	    },{
+	        field: 'integral',
+	        align:'center',
+	        title: '会员积分抵扣'
+	    },{
+	        field: 'payMoney',
+	        align:'center',
+	        title: '网络支付金额'
+	    },{
+	        field: 'discount',
+	        align:'center',
+	        title: '折扣数'
+	    },{
+	        field: 'freeMoney',
+	        align:'center',
+	        title: '优惠金额'
+	    },{
+	        field: 'isSend',
+	        align:'center',
+	        title: '是否支持发货',
+	        formatter:function(value,row,index){
+	        	if(row.isSend=='1'){
+	        		return '<span style="color:#FF0000">否</span>';
+	        	}else if(row.isSend=='0'){
+	        		return '<span style="color:#00ff00">是</span>';
+	        	}else{
+	        		return '收货或使用';
+	        	}
+	        }
+	    },{
+	        field: 'isFh',
+	        align:'center',
+	        title: '是否发货',
+	        formatter:function(value,row,index){
+	        	if(row.isSend == "0" || row.isSend == "2"){
+		        	if(row.isFh=='1'){
+		        		return '<span style="color:#00ff00">已发货</span>';
+		        	}else{
+		        		return '<span style="color:#FF0000">未发货</span>';
+		        	}
+	        	}else{
+	        		return '不支持发货';
+	        	}
+	        }
+	    },{
+	        field: 'isShouhuo',
+	        align:'center',
+	        title: '是否收货',
+	        formatter:function(value,row,index){
+	        	if(row.isSend == "0" || row.isSend == "2"){
+		        	if(row.isUse=='1'){
+		        		return '<span style="color:#00ff00">是</span>';
+		        	}else{
+		        		return '<span style="color:#FF0000">否</span>';
+		        	}
+	        	}else{
+	        		return '仅到店使用';
+	        	}
+	        }
+	    },{
+	        field: 'isUse',
+	        align:'center',
+	        title: '是否到店使用',
+	        formatter:function(value,row,index){
+	        	if(row.isSend == "1" || row.isSend == "2"){
+		        	if(row.isUse=='1'){
+		        		return '<span style="color:#00ff00">已使用</span>';
+		        	}else{
+		        		return '<span style="color:#FF0000">未使用</span>';
+		        	}
+	        	}else{
+	        		return "仅发货";
+	        	}
+	        }
+	    },{
+	        field: 'userName',
+	        align:'center',
+	        title: '用户'
+	    },{
+	        field: 'flag',
+	        align:'center',
+	        title: '入账',
+	        formatter:function(value,row,index){
+	        	if(row.flag=='0'){
+	        		return '<span style="color:#00ff00">已入账</span>';
+	        	}else{
+	        		return '<span style="color:#FF0000">未入账</span>';
+	        	}
+	        }
+	    },{
+	        field: 'createTime',
+	        align:'center',
+	        title: '创建时间'
+	   /*  },{
+	        field: 'updateTime',
+	        align:'center',
+	        title: '入账时间'  */
+	    },{
+	    	field:'operate',
+	    	align:'center',
+	    	title:'操作',
+	    	events: window.operateEvents = {
+	   			'click #editTable': function(e, value, row, index) {
+	   				dialog=0
+	   				/* $("#price").val(row.price);
+	   				$("#spName").val(row.spId);
+	   				$("#toDate").val(row.toDate);
+	   				$("#count").val(row.count);
+	   				$("#freeMoney").val(row.freeMoney);
+	   				$("#discount").val(row.discount); */
+	   				$("#trueMoney1").val(row.trueMoney);
+	   				$("#amount1").val(row.amount);
+	   				$("#orderNo1").val(row.orderNo);
+	   				$("#status1").val(row.status);
+	   				$("#sysId1").val(row.sysId);
+	   			},
+	   			'click #deltTable': function(e, value, row, index) {
+	   				if(confirm("确定要执行该操作？")){
+	   					$.ajax({
+	   						type:"post",
+	   						url:"/msOrder/deleteMsOrder?token="+localStorage.getItem("token"),
+	   						data:JSON.stringify({"sysId":row.sysId}),
+	   						contentType:'application/json',
+	   						success:function(res){
+	   							if(res.status=="01"){
+	   								$("#myModal").modal('hide');
+	   								$("#table").bootstrapTable('refresh');
+	   							}else{
+	   								alert(res.message)
+	   							}
+	   						}
+	   					})
+	   				}
+	   			},
+	   			'click #idUseOrder': function(e, value, row, index) {
+					doSure(row);   				
+	   			},
+	   			'click #idShOrder': function(e, value, row, index) {
+	   				doSure(row)
+	   				/* if(confirm("确认收货？")){
+	   					$.ajax({
+	   						type:"post",
+	   						url:"/msOrder/updateMsOrderByIsShouhuo?token="+localStorage.getItem("token"),
+	   						data:JSON.stringify({"sysId":row.sysId}),
+	   						contentType:'application/json',
+	   						success:function(res){
+	   							if(res.status=="01"){
+	   								alert(res.message)
+	   								$("#myModal").modal('hide');
+	   								$("#table").bootstrapTable('refresh');
+	   							}else{
+	   								alert(res.message)
+	   							}
+	   						}
+	   					})
+	   				} */
+	   			},
+	   			'click #idFhOrder': function(e, value, row, index) {
+	   				$("#sysId2").val(row.sysId);
+	   				$("#orderId").html("").append("<option selected value='"+row.sysId+"'>"+row.orderNo+"</option>")
+	   			}
+	   		},
+	    	formatter:function(value,row,index){
+	    		if(row.status == "0"){
+	    			if(row.isPayPc == "1"){
+		    			if(row.isSend=="1"){
 			    			if(row.isUse == "0"){
 								return'<button class="btn btn-danger" class="btn btn-warning" data-toggle="modal" data-target="#myModal3" id="idUseOrder">使用</button>'
-				    		}else if(row.isShouhuo == "0"){
-				    			return '<button class="btn btn-success" data-toggle="modal" data-target="#myModal3" id="idShOrder">收货</button>'
 				    		}else{
 				    			if(row.flag == "1"){
 					    			return '<span style="color:#8A2BE2;font-weight:600;">待入账</span>'
@@ -470,19 +469,47 @@ $('#table').bootstrapTable({
 				    				return '<span style="color:green;font-weight:600;">已完成</span>'
 				    			}
 				    		}
-	    				}else{
-	    					return'<button class="btn btn-warning" data-toggle="modal" data-target="#myModal2" id="idFhOrder">发货</button>'
-	    				}
+			    		 }else if(row.isSend=="0"){
+		    				if(row.isFh == "1"){
+				    			if(row.isShouhuo == "0"){
+									return '<button class="btn btn-success" data-toggle="modal" data-target="#myModal3" id="idShOrder">收货</button>'
+					    		}else{
+					    			if(row.flag == "1"){
+						    			return '<span style="color:#8A2BE2;font-weight:600;">待入账</span>'
+					    			}else{
+					    				return '<span style="color:green;font-weight:600;">已完成</span>'
+					    			}
+					    		}
+		    				}else{
+		    					return'<button class="btn btn-warning" data-toggle="modal" data-target="#myModal2" id="idFhOrder">发货</button>'
+		    				}
+			    		}else{
+		    				if(row.isFh == "1"){
+				    			if(row.isUse == "0"){
+									return'<button class="btn btn-danger" class="btn btn-warning" data-toggle="modal" data-target="#myModal3" id="idUseOrder">使用</button>'
+					    		}else if(row.isShouhuo == "0"){
+					    			return '<button class="btn btn-success" data-toggle="modal" data-target="#myModal3" id="idShOrder">收货</button>'
+					    		}else{
+					    			if(row.flag == "1"){
+						    			return '<span style="color:#8A2BE2;font-weight:600;">待入账</span>'
+					    			}else{
+					    				return '<span style="color:green;font-weight:600;">已完成</span>'
+					    			}
+					    		}
+		    				}else{
+		    					return'<button class="btn btn-warning" data-toggle="modal" data-target="#myModal2" id="idFhOrder">发货</button>'
+		    				}
+		    			}
+	    			}else{
+	    				return '<span style="color:#CD950C;font-weight:600;">待确认</span>'
 	    			}
-    			}else{
-    				return '<span style="color:#CD950C;font-weight:600;">待确认</span>'
-    			}
-    		}else{
-				return '<button class="btn btn-info" id="editTable" data-toggle="modal" data-target="#myModal1">修改</button>'
-    		}
-    	}
-    }]
-});
+	    		}else{
+					return '<button class="btn btn-info" id="editTable" data-toggle="modal" data-target="#myModal1">修改</button>'
+	    		}
+	    	}
+	    }]
+	});
+}
 function submit(){
 	var data=JSON.stringify({
 		/* "spId":$("#spName").val(),
@@ -569,13 +596,6 @@ $("#saveButton").click(function(){
 	$("#sysId").val("");
 	$("#freeMoney").val("");
 })     
-
-function queryParams(){
-	var params = {
-		type:""	
-	}
-	return params;
-}
 function queryParams1(orderId){
 	var params = {
 		orderId:orderId	

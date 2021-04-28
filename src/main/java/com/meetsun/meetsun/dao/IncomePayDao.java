@@ -15,6 +15,7 @@ public interface IncomePayDao {
 	 * @return
 	 */
 	List<IncomePay> getIncomePayList(IncomePayVo vo);
+	int getIncomePayListTotal(IncomePayVo vo);
 	/**
 	 * 新增收支信息
 	 * @param vo

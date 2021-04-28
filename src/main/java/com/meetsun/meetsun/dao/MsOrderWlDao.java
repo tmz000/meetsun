@@ -15,6 +15,7 @@ public interface MsOrderWlDao {
 	 * @return
 	 */
 	List<MsOrderWl> getMsOrderWlList(MsOrderWlVo vo);
+	int getMsOrderWlListTotal(MsOrderWlVo vo);
 	/**
 	 * 添加订单物流信息
 	 * @param paramMsUserVo

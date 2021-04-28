@@ -14,6 +14,18 @@
 			and status = #{status}
 		</if>
 		 order by create_time desc
+		 <if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getMsCartListTotal" parameterType="com.meetsun.meetsun.entity.MsCart" resultType="java.lang.Integer">
+		select count(*) from ms_cart where 1=1 
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if>
 	</select>
 	<select id="getMsCartListBySpId" parameterType="com.meetsun.meetsun.entity.MsCart" resultType="com.meetsun.meetsun.entity.MsCart">
 		select * from ms_cart where 1=1 

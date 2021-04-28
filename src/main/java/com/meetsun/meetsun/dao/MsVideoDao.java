@@ -15,6 +15,7 @@ public interface MsVideoDao {
 	 * @return
 	 */
 	List<MsVideo> getMsVideoList(MsVideoVo vo);
+	int getMsVideoListTotal(MsVideoVo vo);
 	/**
 	 * 添加视频信息
 	 * @param paramMsUserVo

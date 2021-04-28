@@ -15,6 +15,7 @@ public interface PaySureDao {
 	 * @return
 	 */
 	List<PaySure> getPaySureList(PaySureVo vo);
+	int getPaySureListTotal(PaySureVo vo);
 	/**
 	 * 添加支付确认信息
 	 * @param paramMsUserVo

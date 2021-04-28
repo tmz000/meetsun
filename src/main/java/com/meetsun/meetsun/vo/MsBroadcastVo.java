@@ -17,4 +17,7 @@ public class MsBroadcastVo {
 	private String updateTime;
 	private MultipartFile file;
 	private String clickNum;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

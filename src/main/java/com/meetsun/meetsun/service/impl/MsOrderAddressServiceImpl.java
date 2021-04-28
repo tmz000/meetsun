@@ -48,7 +48,12 @@ public class MsOrderAddressServiceImpl implements MsOrderAddressService{
 		}else {
 			list = msOrderAddressDao.getMsOrderAddressList(vo);
 		}
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(msOrderAddressDao.getMsOrderAddressListTotal(vo));
+		return result;
 	}
 	
 	@Override

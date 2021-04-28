@@ -15,6 +15,7 @@ public interface PayPictureDao {
 	 * @return
 	 */
 	List<PayPicture> getPayPictureList(PayPictureVo vo);
+	int getPayPictureListTotal(PayPictureVo vo);
 	/**
 	 * 添加支付图片信息
 	 * @param paramMsUserVo

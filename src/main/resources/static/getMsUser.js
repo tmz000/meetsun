@@ -21,9 +21,9 @@ function getMsUser(){
 $(function(){
 	getMsUser();
 })
-body.onclick=function(){
+/*body.onclick=function(){
 	getMsUser();
-}
+}*/
 $('a').click(function(){
 	if(realName == "" || realName==null){
 		$(this).each(function(){
@@ -37,6 +37,19 @@ $('a').click(function(){
 			}
 		})
 	}
+})
+
+$("#queryTable").click(function(){
+	init();
+})
+$("#clearTable").click(function(){
+	$("#toolbar input").each(function(){
+		 $(this).val('');
+	})
+	$("#toolbar select").each(function(){
+		 $(this).val('');
+	})
+	init();
 })
 
 String.prototype.startWith=function(str){  

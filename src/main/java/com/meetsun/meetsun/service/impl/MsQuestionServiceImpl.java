@@ -36,7 +36,12 @@ public class MsQuestionServiceImpl implements MsQuestionService{
 			mq.setUserName(mc.getUserName());
 			list1.add(mq);
 		}
-		return Result.success(list1);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list1);
+		result.setTotal(msQuestionDao.getMsQuestionListTotal(vo));
+		return result;
 	}
 
 	@Override

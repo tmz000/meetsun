@@ -22,6 +22,27 @@
 		<if test="type != '' and type != null">
 			and type = #{type}
 		</if> 
+		<if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getOrderSpListTotal" parameterType="com.meetsun.meetsun.entity.OrderSp" resultType="java.lang.Integer">
+		select count(*) from order_sp where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="orderId != '' and orderId != null">
+			and order_id = #{orderId}
+		</if> 
+		<if test="spId != '' and spId != null">
+			and sp_id = #{spId}
+		</if> 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if> 
+		<if test="type != '' and type != null">
+			and type = #{type}
+		</if> 
 	</select>
 	<update id="updateOrderSp" parameterType="com.meetsun.meetsun.entity.OrderSp">
 		update order_sp set 

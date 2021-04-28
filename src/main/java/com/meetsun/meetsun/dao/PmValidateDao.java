@@ -17,4 +17,5 @@ public interface PmValidateDao {
     int savePmValidat(PmValidateVo validate);
     int updatePmValidat(PmValidateVo validate);
     List<PmValidate> getPmValidateList(PmValidateVo vo);
+    int getPmValidateListTotal(PmValidateVo vo);
 }

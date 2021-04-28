@@ -35,7 +35,12 @@ public class MsCommentServiceImpl implements MsCommentService{
 				list1.add(ms);
 			}
 		}
-		return Result.success(list1);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(msCommentDao.getMsCommentListTotal(vo));
+		return result;
 	}
 	
 	@Override

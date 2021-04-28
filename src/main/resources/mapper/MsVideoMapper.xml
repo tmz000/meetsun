@@ -13,7 +13,31 @@
 		<if test="sysId != '' and sysId != null">
 			and sys_id = #{sysId}
 		</if>
+		<if test="spId != '' and spId != null">
+			and sp_id = #{spId}
+		</if>
+		<if test="name != '' and name != null">
+			and name like CONCAT('%', #{name}, '%')
+		</if>
 		 order by create_time desc
+		 <if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getMsVideoListTotal" parameterType="com.meetsun.meetsun.entity.MsVideo" resultType="java.lang.Integer">
+		select count(*) from ms_video where 1=1 
+		<if test="userName != '' and userName != null">
+			and user_name = #{userName}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		<if test="spId != '' and spId != null">
+			and sp_id = #{spId}
+		</if>
+		<if test="name != '' and name != null">
+			and name like CONCAT('%', #{name}, '%')
+		</if>
 	</select>
 	<update id="updateMsVideo" parameterType="com.meetsun.meetsun.entity.MsVideo">
 		update ms_video set click_number = #{clickNumber} where sys_id = #{sysId}

@@ -18,4 +18,7 @@ public class PaySureVo {
 	private String updateTime;
 
 	private String integralTrue;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

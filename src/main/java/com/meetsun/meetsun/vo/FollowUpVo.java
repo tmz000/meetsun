@@ -10,4 +10,7 @@ public class FollowUpVo {
 	private String visitId;
 	private String createTime;
 	private String updateTime;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

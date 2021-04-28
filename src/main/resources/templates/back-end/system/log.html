@@ -30,6 +30,25 @@
 				<li role="presentation" class="active" data-id="tabContent1"><a href="#">后台</a></li>
 				<li role="presentation" data-id="tabContent2"><a href="#">前台</a></li>
 			</ul>
+			<div id="toolbar" style="width:100%;border-top:1px solid #CDCDB4;padding-top:10px;">
+          		<div style="float:left">
+	          		<div style="float:left;margin-top:5px;">
+			     		用户账号：
+	          		</div>
+	          		<div style="float:left;">
+			     		<input type="text" id="queryUserName" placeholder="请输入用户账号"/>&nbsp;&nbsp;&nbsp;
+	          		</div>
+          		</div>
+          		<div style="float:left">
+			        <div style="float:left;">
+			        	&nbsp;&nbsp;&nbsp;<button class="btn btn-info" id="queryTable">查询</button>
+			        </div>
+			        <div style="float:left;">
+			        	&nbsp;<button class="btn btn-danger" id="clearTable">清空</button>
+			        </div>
+			    </div>
+            	<div style="clear:both;"></div>
+            </div>
           	<table id="table" style="white-space:nowrap;overflow: hidden"></table>
           </div>
         </div>
@@ -39,6 +58,7 @@
 </div>
 </div>
 <script type="text/javascript">
+var queryS="0";
 $(function(){
 	getTabContent("0");
 })
@@ -50,32 +70,46 @@ $('.nav-tabs li').click(function(){
 　　switch(_id){
 　　　　case "tabContent1":
 　　　　　　getTabContent("0");
+		queryS="0";
 　　　　　　break;
 　　　　case "tabContent2":
 　　　　　　getTabContent("1");
+		queryS="1";
 　　　　　　break;
 　　　　default:
 　　　　　　getTabContent("0");
+		queryS="0";
 　　　　　　break;
 　　}
 });
+$("#queryTable").click(function(){
+	getTabContent(queryS);
+})
+$("#clearTable").click(function(){
+	$("#toolbar input").each(function(){
+		 $(this).val('');
+	})
+	$("#toolbar select").each(function(){
+		 $(this).val('');
+	})
+	getTabContent(queryS);
+})
 var dialog=null
 function getTabContent(flag){
 	$('#table').bootstrapTable('destroy');
 	$('#table').bootstrapTable({
 	    url: '/logInfo/getLogInfoList',
 	    pagination: true,
-	    sidePagenation:"client",
-	    search:true,
 	    method:"post",
 	    height:"400",
-	    queryParams :queryParams(flag),
-	    responseHandler:function(res){
-	    	if(res.status == "01"){
-	    		return res;
-	    	}else{
-	    		return res.message;
-	    	}
+	    queryParams : function(params) {//上传服务器的参数
+	    	var temp = {
+	   			userName:$("#queryUserName").val(),
+	   			type:flag,
+	            offset :params.offset + 0,// SQL语句起始索引
+	            pageNumber : params.limit  // 每页显示数量
+	        };
+	        return temp;
 	    },
 	    columns: [{
 	   	    field: 'id',

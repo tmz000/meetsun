@@ -67,20 +67,18 @@
 </div>
 <script type="text/javascript">
 var dialog=null
-$('#table').bootstrapTable('destroy');
-$('#table').bootstrapTable({
+$("#myModal").hide();
+$('#table').bootstrapTable('destroy').bootstrapTable({
     url: "/aRole/getARoleList?token="+localStorage.getItem("token"),
     pagination: true,
-    search:true,
     method:"post",
     height:"400",
-    queryParams :queryParams,
-    responseHandler:function(res){
-    	if(res.status == "01"){
-    		return res;
-    	}else{
-    		return res.message;
-    	}
+    queryParams : function(params) {//上传服务器的参数
+    	var temp = {
+            offset :params.offset + 0,// SQL语句起始索引
+            pageNumber : params.limit  // 每页显示数量
+        };
+        return temp;
     },
     columns: [{
    	    field: 'id',
@@ -194,31 +192,6 @@ $("#saveButton").click(function(){
 	$("#roleName").val("");
 })
 
-//表格超出宽度鼠标悬停显示td内容
-function paramsMatter(value, row, index) {
-    var span = document.createElement("span");
-    span.setAttribute("title", value);
-    span.innerHTML = value;
-    return span.outerHTML;
-}
-//td宽度以及内容超过宽度隐藏
-function formatTableUnit(value, row, index) {
-    return {
-        css: {
-            "white-space": "nowrap",
-            "text-overflow": "ellipsis",
-            "overflow": "hidden",
-            "max-width": "150px"
-        }
-    }
-}        
-
-function queryParams(){
-	var params = {
-		type:"1"	
-	}
-	return params;
-}
 </script>
 <script src="getMsUser.js"></script>
 </body>

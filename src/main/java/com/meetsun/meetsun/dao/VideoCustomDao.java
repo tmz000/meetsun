@@ -15,6 +15,7 @@ public interface VideoCustomDao {
 	 * @return
 	 */
 	List<VideoCustom> getVideoCustomList(VideoCustomVo vo);
+	int getVideoCustomListTotal(VideoCustomVo vo);
 	/**
 	 * 新增收支信息
 	 * @param vo

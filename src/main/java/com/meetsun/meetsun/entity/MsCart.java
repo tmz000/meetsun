@@ -20,4 +20,7 @@ public class MsCart {
    	private String typeName;
    	
    	private OrderSp orderSp;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

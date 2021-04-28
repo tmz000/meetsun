@@ -16,5 +16,7 @@ public class CustomDetailVo {
    	private String integral;
    	private String flag;
    	private String payType;
-   	
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

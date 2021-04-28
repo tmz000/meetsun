@@ -18,4 +18,7 @@ public class MsVideoVo {
    	private String clickNumber;
    	private MultipartFile file;
    	private String customSysId;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

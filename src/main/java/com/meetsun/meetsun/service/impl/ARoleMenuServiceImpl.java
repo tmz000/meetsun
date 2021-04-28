@@ -32,7 +32,6 @@ public class ARoleMenuServiceImpl implements ARoleMenuService{
 	@Override
 	public Result<Object> getARoleMenuList(ARoleMenuVo vo) {
 		List<ARoleMenu> list = aRoleMenuDao.getARoleMenuList(vo);
-		List<ARoleMenu> list1  = new ArrayList<ARoleMenu>();
 		if(list != null && list.size() > 0){
 			for(ARoleMenu am : list) {
 				ARoleVo vo1 = new ARoleVo();
@@ -46,10 +45,14 @@ public class ARoleMenuServiceImpl implements ARoleMenuService{
 					menuId.add(ll.get(0).getMenuName());
 				}
 				am.setMenuName(menuId.toString().replace("[","").replace("]",""));
-				list1.add(am);
 			}
 		}
-		return Result.success(list1);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(aRoleMenuDao.getARoleMenuListTotal(vo));
+		return result;
 	}
 
 	@Override

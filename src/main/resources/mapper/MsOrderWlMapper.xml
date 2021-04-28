@@ -14,6 +14,18 @@
 			and wl_name = #{wlName}
 		</if> 
 		order by create_time desc
+		<if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getMsOrderWlListTotal" parameterType="com.meetsun.meetsun.entity.MsOrderWl" resultType="java.lang.Integer">
+		select count(*) from ms_order_wl where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="wlName != '' and wlName != null">
+			and wl_name = #{wlName}
+		</if> 
 	</select>
 	<update id="updateMsOrderWl" parameterType="com.meetsun.meetsun.entity.MsOrderWl">
 		update ms_order_wl set wl_name = #{wlName},wl_no = #{wlNo},update_time = now() where sys_id = #{sysId}

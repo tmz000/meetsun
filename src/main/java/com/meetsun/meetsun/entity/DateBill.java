@@ -19,4 +19,6 @@ public class DateBill {
 	private String sum;
 	private String countSum;
 	
+	private Integer offset;
+	private Integer pageNumber;
 }

@@ -15,6 +15,7 @@ public interface AParentMenuDao {
 	 * @return
 	 */
 	List<AParentMenu> getAParentMenuList(AParentMenuVo vo);
+	int getAParentMenuListTotal(AParentMenuVo vo);
 	/**
 	 * 添加父类菜单信息
 	 * @param paramMsUserVo

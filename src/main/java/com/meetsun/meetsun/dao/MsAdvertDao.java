@@ -15,6 +15,7 @@ public interface MsAdvertDao {
 	 * @return
 	 */
 	List<MsAdvert> getMsAdvertList(MsAdvertVo vo);
+	int getMsAdvertListTotal(MsAdvertVo vo);
 	/**
 	 * 添加广告信息
 	 * @param paramMsUserVo

@@ -33,7 +33,20 @@
 		select * from ms_user where sys_id = #{sysId}
 	</select>
 	<select id="getAllMsUser" parameterType="com.meetsun.meetsun.entity.MsUser" resultType="com.meetsun.meetsun.entity.MsUser">
-		select * from ms_user order by create_time desc
+		select * from ms_user where 1=1
+		<if test="userName != '' and userName != null">
+			and user_name  like CONCAT('%', #{userName}, '%')
+		</if>
+		order by create_time desc 
+		<if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getAllMsUserTotal" parameterType="com.meetsun.meetsun.entity.MsUser" resultType="java.lang.Integer">
+		select count(*) from ms_user where 1=1 
+		<if test="userName != '' and userName != null">
+			and user_name  like CONCAT('%', #{userName}, '%')
+		</if> 
 	</select>
 	<update id="updateMsUserBySysId" parameterType="com.meetsun.meetsun.entity.MsUser">
 		update ms_user set update_time = now()

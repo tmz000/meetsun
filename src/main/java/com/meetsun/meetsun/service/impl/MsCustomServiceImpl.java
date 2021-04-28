@@ -72,7 +72,12 @@ public class MsCustomServiceImpl implements MsCustomService{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Result.success(list1);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(msCustomDao.getMsCustomListTotal(vo));
+		return result;
 	}
 	@Override
 	public Result<Object> getMsCustomByName(MsCustomVo vo) {

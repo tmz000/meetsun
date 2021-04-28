@@ -15,4 +15,7 @@ public class MsOrderAddressVo {
    	private String createTime;
    	private String updateTime;
    	private String flag;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

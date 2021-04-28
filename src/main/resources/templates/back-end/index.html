@@ -187,12 +187,6 @@ $(function(){
 											$("#"+resss.rows[i].menuLink.replace("/","")+" a").html("").append('<i class="'+resss.rows[i].menuIcon+'"></i>'+resss.rows[i].menuName)
 											$("#"+resss.rows[i].parentMenuName).show()
 										}
-									}else{
-										if(res.message == undefined || res.message == "undefined"){
-											
-										}else{
-											alert(res.message)
-										}
 									}
 								}
 							})
@@ -221,8 +215,6 @@ function checkNewOrder(){
 		success:function(res){
 			if(res.status == '01'){
 				if(res.rows.length > 0){
-					for(var i=0;i<res.rows.length;i++){
-					}
 					(function(i) {
 						//10秒循环执行一次
 				        setTimeout(function() {
@@ -231,12 +223,6 @@ function checkNewOrder(){
 							speckText('您有新的支付确认订单，单号为：'+res.rows[i].orderNo+'，<br/>请确认')
 				        }, (i + 1) * 10000);
 				    })(i)
-				}
-			}else{
-				if(res.message == undefined || res.message == "undefined"){
-					
-				}else{
-					alert(res.message)
 				}
 			}
 		}

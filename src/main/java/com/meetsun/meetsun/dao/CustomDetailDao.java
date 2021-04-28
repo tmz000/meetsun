@@ -15,6 +15,7 @@ public interface CustomDetailDao {
 	 * @return
 	 */
 	List<CustomDetail> getCustomDetailList(CustomDetailVo vo);
+	int getCustomDetailListTotal(CustomDetailVo vo);
 	/**
 	 * 根据月份获取会员卡消费信息
 	 * @param paramMsUserVo

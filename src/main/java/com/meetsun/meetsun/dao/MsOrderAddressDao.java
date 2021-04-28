@@ -15,6 +15,7 @@ public interface MsOrderAddressDao {
 	 * @return
 	 */
 	List<MsOrderAddress> getMsOrderAddressList(MsOrderAddressVo vo);
+	int getMsOrderAddressListTotal(MsOrderAddressVo vo);
 	/**
 	 * 添加地址信息
 	 * @param paramMsUserVo

@@ -15,4 +15,7 @@ public class MsCommentVo {
 	private String adminName;
 	private String userTx;
 	private String customSysId;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

@@ -77,38 +77,37 @@ $(function(){
 	getTabContent("0");
 })
 $('.nav-tabs li').click(function(){
-	　　$(this).addClass('active').siblings().removeClass('active');
-	　　var _id = $(this).attr('data-id');
-	　　$('.tabs-contents').find('#'+_id).addClass('active').siblings().removeClass('active');
+　　$(this).addClass('active').siblings().removeClass('active');
+　　var _id = $(this).attr('data-id');
+　　$('.tabs-contents').find('#'+_id).addClass('active').siblings().removeClass('active');
 
-	　　switch(_id){
-	　　　　case "tabContent1":
-	　　　　　　getTabContent("0");
-	　　　　　　break;
-	　　　　case "tabContent2":
-	　　　　　　getTabContent("");
-	　　　　　　break;
-	　　　　default:
-	　　　　　　getTabContent("0");
-	　　　　　　break;
-	　　}
-	});
+　　switch(_id){
+　　　　case "tabContent1":
+　　　　　　getTabContent("0");
+　　　　　　break;
+　　　　case "tabContent2":
+　　　　　　getTabContent("");
+　　　　　　break;
+　　　　default:
+　　　　　　getTabContent("0");
+　　　　　　break;
+　　}
+});
 var dialog=null
 function getTabContent(status){
-	$('#table').bootstrapTable('destroy');
-	$('#table').bootstrapTable({
+	$('#table').bootstrapTable('destroy').bootstrapTable({
 	    url: "/paySure/getPaySureList?token="+localStorage.getItem("token"),
 	    pagination: true,
-	    search:true,
 	    method:"post",
 	    height:"400",
-	    queryParams :queryParams(status),
-	    responseHandler:function(res){
-	    	if(res.status == "01"){
-	    		return res;
-	    	}else{
-	    		return res.message;
-	    	}
+	    queryParams : function(params) {//上传服务器的参数
+	    	var temp = {
+    			isPayPc:status,
+	    		orderNo:$("#queryOrderNo").val(),
+	            offset :params.offset + 0,// SQL语句起始索引
+	            pageNumber : params.limit  // 每页显示数量
+	        };
+	        return temp;
 	    },
 	    columns: [{
 	   	    field: 'id',
@@ -307,36 +306,6 @@ function getTabContent(status){
 	}
 }
 
-$("#saveButton").click(function(){
-	dialog=1
-	$("#roleName").val("");
-})
-
-//表格超出宽度鼠标悬停显示td内容
-function paramsMatter(value, row, index) {
-    var span = document.createElement("span");
-    span.setAttribute("title", value);
-    span.innerHTML = value;
-    return span.outerHTML;
-}
-//td宽度以及内容超过宽度隐藏
-function formatTableUnit(value, row, index) {
-    return {
-        css: {
-            "white-space": "nowrap",
-            "text-overflow": "ellipsis",
-            "overflow": "hidden",
-            "max-width": "150px"
-        }
-    }
-}        
-
-function queryParams(status){
-	var params = {
-		isPayPc:status
-	}
-	return params;
-}
 </script>
 <script src="getMsUser.js"></script>
 </body>

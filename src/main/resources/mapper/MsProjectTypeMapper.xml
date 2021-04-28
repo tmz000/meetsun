@@ -14,6 +14,18 @@
 			and name = #{name}
 		</if>
 		 order by order_by asc
+		 <if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getMsProjectTypeListTotal" parameterType="com.meetsun.meetsun.entity.MsProjectType" resultType="java.lang.Integer">
+		select count(*) from ms_project_type where 1=1 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if>
+		<if test="name != '' and name != null">
+			and name = #{name}
+		</if>
 	</select>
 	<update id="updateMsProjectType" parameterType="com.meetsun.meetsun.entity.MsProjectType">
 		update ms_project_type set 

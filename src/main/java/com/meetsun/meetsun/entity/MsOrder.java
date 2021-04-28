@@ -42,4 +42,7 @@ public class MsOrder {
 	private String mobile;
    	private String address;
    	private String isPayPc;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

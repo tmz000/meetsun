@@ -22,7 +22,12 @@ public class CustomDetailServiceImpl implements CustomDetailService{
 	@Override
 	public Result<Object> getCustomDetailList(CustomDetailVo vo) {
 		List<CustomDetail> list = customDetailDao.getCustomDetailList(vo);
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(customDetailDao.getCustomDetailListTotal(vo));
+		return result;
 	}
 	
 	@Override

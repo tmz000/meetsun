@@ -23,4 +23,7 @@ public class ServiceProjectVo{
    private String isJoin;
    private MultipartFile detailFile;
    private MultipartFile handFile;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

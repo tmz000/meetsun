@@ -10,7 +10,22 @@
 		<if test="sysId != '' and sysId != null">
 			and sys_id = #{sysId}
 		</if> 
+		<if test="orderNo != '' and orderNo != null">
+			and order_no like "%"#{orderNo}"%"
+		</if>
 		order by create_time desc
+		<if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getMsOrderLogListTotal" parameterType="com.meetsun.meetsun.entity.MsOrderLog" resultType="java.lang.Integer">
+		select count(*) from ms_order_log where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="orderNo != '' and orderNo != null">
+			and order_no like "%"#{orderNo}"%"
+		</if>
 	</select>
 	<update id="updateMsOrderLog" parameterType="com.meetsun.meetsun.entity.MsOrderLog">
 		update ms_order_log set update_time = now() where sys_id = #{sysId}

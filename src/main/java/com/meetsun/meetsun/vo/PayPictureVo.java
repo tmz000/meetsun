@@ -17,4 +17,7 @@ public class PayPictureVo {
 	private String updateTime;
 	
 	private MultipartFile file;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

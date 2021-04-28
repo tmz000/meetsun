@@ -14,4 +14,7 @@ public class MsBroadcast {
 	private String createTime; 
 	private String updateTime;
 	private String clickNum;
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

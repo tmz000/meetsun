@@ -13,6 +13,18 @@
 		<if test="videoSysId != '' and videoSysId != null">
 			and video_sys_id = #{videoSysId}
 		</if>
+		<if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getVideoCustomListTotal" parameterType="com.meetsun.meetsun.entity.VideoCustom" resultType="java.lang.Integer">
+		select count(*) from video_custom where 1=1 
+		<if test="customSysId != '' and customSysId != null">
+			and custom_sys_id = #{customSysId}
+		</if>
+		<if test="videoSysId != '' and videoSysId != null">
+			and video_sys_id = #{videoSysId}
+		</if>
 	</select>
 	<update id="updateVideoCustom" parameterType="com.meetsun.meetsun.entity.VideoCustom">
 		update video_custom set update_time = now() where sys_id = #{sysId}

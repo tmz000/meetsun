@@ -16,4 +16,7 @@ public class AMenu {
 	
 	private String parentMenuName;
 	
+	private Integer offset;
+	private Integer pageNumber;
+	
 }

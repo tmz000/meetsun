@@ -20,6 +20,24 @@
 			and star_lv = #{starLv}
 		</if>
 		 order by create_time desc
+		 <if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getMsCommentListTotal" parameterType="com.meetsun.meetsun.entity.MsComment" resultType="java.lang.Integer">
+		select count(*) from ms_comment where 1=1 
+		<if test="userName != '' and userName != null">
+			and user_name = #{userName}
+		</if>
+		<if test="projectSysId != '' and projectSysId != null">
+			and project_sys_id = #{projectSysId}
+		</if>
+		<if test="toExamine != '' and toExamine != null">
+			and to_examine = #{toExamine}
+		</if>
+		<if test="starLv != '' and starLv != null">
+			and star_lv = #{starLv}
+		</if>
 	</select>
 	<select id="getMsCommentListByStarLv" parameterType="com.meetsun.meetsun.entity.MsComment" resultType="com.meetsun.meetsun.entity.MsComment">
 		select star_lv,count(*) as count from ms_comment where 1=1 

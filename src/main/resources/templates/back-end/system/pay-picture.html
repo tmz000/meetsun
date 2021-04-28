@@ -127,20 +127,17 @@ $("#myModal").hide()
 $("#closeImg").click(function(){
 	$("#myModal1").hide()
 })
-$('#table').bootstrapTable('destroy');
-$('#table').bootstrapTable({
+$('#table').bootstrapTable('destroy').bootstrapTable({
     url: "/payPicture/getPayPictureList?token="+localStorage.getItem("token"),
     pagination: true,
-    search:true,
     method:"post",
     height:"400",
-    queryParams :queryParams,
-    responseHandler:function(res){
-    	if(res.status == "01"){
-    		return res;
-    	}else{
-    		return res.message;
-    	}
+    queryParams : function(params) {//上传服务器的参数
+    	var temp = {
+            offset :params.offset + 0,// SQL语句起始索引
+            pageNumber : params.limit  // 每页显示数量
+        };
+        return temp;
     },
     columns: [{
    	    field: 'id',
@@ -158,12 +155,10 @@ $('#table').bootstrapTable({
     	field: 'payAccount',
     	align:'center',
         title: '支付账号',
-        sortable : true
    	},{
     	field: 'payName',
     	align:'center',
         title: '支付名称',
-        sortable : true,
         formatter:function formatStr(str) {
         	return str.substring(0,1) + new Array(str.length).join('*')
         }
@@ -182,7 +177,6 @@ $('#table').bootstrapTable({
         		return '其他方式';
         	}
         },
-        sortable : true
     },{
         field: 'payPic',
         align:'center',
@@ -196,7 +190,6 @@ $('#table').bootstrapTable({
         field: 'remark',
         align:'center',
         title: '说明',
-        sortable : true
     },{
         field: 'status',
         align:'center',
@@ -208,12 +201,10 @@ $('#table').bootstrapTable({
         		return '<span style="color:#FF0000">禁用</span>';
         	}
         },
-        sortable : true
     },{
         field: 'createTime',
         align:'center',
         title: '新增时间',
-        sortable : true
     },{
     	field:'operate',
     	align:'center',
@@ -326,34 +317,11 @@ $("#saveButton").click(function(){
 	$("#showFile").show();
 })
 
-//表格超出宽度鼠标悬停显示td内容
-function paramsMatter(value, row, index) {
-    var span = document.createElement("span");
-    span.setAttribute("title", value);
-    span.innerHTML = value;
-    return span.outerHTML;
-}
-//td宽度以及内容超过宽度隐藏
-function formatTableUnit(value, row, index) {
-    return {
-        css: {
-            "white-space": "nowrap",
-            "text-overflow": "ellipsis",
-            "overflow": "hidden",
-            "max-width": "150px"
-        }
-    }
-}        
 window.operateEvents = {
     'click #showPhoto': function (e, value, row, index) {
     	$("#imgAdrr").attr('src', row.photoAdrr)
     },
 };
-function queryParams(){
-	var params = {
-	}
-	return params;
-}
 </script>
 <script src="getMsUser.js"></script>
 </body>

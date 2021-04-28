@@ -21,7 +21,12 @@ public class FollowUpServiceImpl implements FollowUpService{
 	@Override
 	public Result<Object> getFollowUpList(FollowUpVo vo) {
 		List<FollowUp> list = followUpDao.getFollowUpList(vo);
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(followUpDao.getFollowUpListTotal(vo));
+		return result;
 	}
 
 	@Override

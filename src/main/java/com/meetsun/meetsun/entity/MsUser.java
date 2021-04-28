@@ -28,5 +28,8 @@ public class MsUser implements  Serializable {
    	private String roleName;
    	private String mobile;
    	private String isCustomer;
+	
+	private Integer offset;
+	private Integer pageNumber;
    	
 }

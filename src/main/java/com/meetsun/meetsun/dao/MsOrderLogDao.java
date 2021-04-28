@@ -15,6 +15,7 @@ public interface MsOrderLogDao {
 	 * @return
 	 */
 	List<MsOrderLog> getMsOrderLogList(MsOrderLogVo vo);
+	int getMsOrderLogListTotal(MsOrderLogVo vo);
 	/**
 	 * 添加订单日志信息
 	 * @param paramMsUserVo

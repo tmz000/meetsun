@@ -22,7 +22,12 @@ public class MsVisitServiceImpl implements MsVisitService{
 	@Override
 	public Result<Object> getMsVisitList(MsVisitVo vo) {
 		List<MsVisit> list = msVisitDao.getMsVisitList(vo);
-		return Result.success(list);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list);
+		result.setTotal(msVisitDao.getMsVisitListTotal(vo));
+		return result;
 	}
 
 	@Override

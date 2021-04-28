@@ -15,6 +15,7 @@ public interface ARoleDao {
 	 * @return
 	 */
 	List<ARole> getARoleList(ARoleVo vo);
+	int getARoleListTotal(ARoleVo vo);
 	/**
 	 * 添加角色信息
 	 * @param paramMsUserVo

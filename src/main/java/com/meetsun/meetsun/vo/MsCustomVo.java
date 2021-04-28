@@ -40,4 +40,7 @@ public class MsCustomVo {
 		}
 		return false;
 	}
+	
+	private Integer offset;
+	private Integer pageNumber;
 }

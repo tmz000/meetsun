@@ -15,6 +15,7 @@ public interface OrderSpDao {
 	 * @return
 	 */
 	List<OrderSp> getOrderSpList(OrderSpVo vo);
+	int getOrderSpListTotal(OrderSpVo vo);
 	/**
 	 * 添加订单产品关联信息
 	 * @param paramMsUserVo

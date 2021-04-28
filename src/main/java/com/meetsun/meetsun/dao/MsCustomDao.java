@@ -15,6 +15,7 @@ public interface MsCustomDao {
 	 * @return
 	 */
 	List<MsCustom> getMsCustomList(MsCustomVo vo);
+	int getMsCustomListTotal(MsCustomVo vo);
 	/**
 	 * 登录会员用户信息
 	 * @param paramMsUserVo

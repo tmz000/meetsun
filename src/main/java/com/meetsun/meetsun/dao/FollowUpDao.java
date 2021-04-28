@@ -15,6 +15,7 @@ public interface FollowUpDao {
 	 * @return
 	 */
 	List<FollowUp> getFollowUpList(FollowUpVo vo);
+	int getFollowUpListTotal(FollowUpVo vo);
 	/**
 	 * 添加跟进信息
 	 * @param paramMsUserVo

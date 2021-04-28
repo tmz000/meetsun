@@ -15,6 +15,7 @@ public interface AMenuDao {
 	 * @return
 	 */
 	List<AMenu> getAMenuList(AMenuVo vo);
+	int getAMenuListTotal(AMenuVo vo);
 	/**
 	 * 添加菜单信息
 	 * @param paramMsUserVo

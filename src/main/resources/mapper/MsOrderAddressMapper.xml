@@ -17,6 +17,21 @@
 			and is_use = #{isUse}
 		</if>
 		 order by create_time desc
+		 <if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getMsOrderAddressListTotal" parameterType="com.meetsun.meetsun.entity.MsOrderAddress" resultType="java.lang.Integer">
+		select count(*) from ms_order_address where 1=1 
+		<if test="opendId != '' and opendId != null">
+			and opend_id = #{opendId}
+		</if>
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if>
+		<if test="isUse != '' and isUse != null">
+			and is_use = #{isUse}
+		</if>
 	</select>
 	<update id="updateMsOrderAddress" parameterType="com.meetsun.meetsun.entity.MsOrderAddress">
 		update ms_order_address set name = #{name},mobile = #{mobile},post_code = #{postCode},address = #{address},update_time = now() where sys_id = #{sysId}

@@ -26,5 +26,7 @@ public class MsCartVo {
    	private String typeName;
    	
    	private String orderId;
+	private Integer offset;
+	private Integer pageNumber;
    	
 }

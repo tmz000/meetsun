@@ -15,6 +15,7 @@ public interface AUserRoleDao {
 	 * @return
 	 */
 	List<AUserRole> getAUserRoleList(AUserRoleVo vo);
+	int getAUserRoleListTotal(AUserRoleVo vo);
 	/**
 	 * 根据月份获取用户角色信息
 	 * @param paramMsUserVo

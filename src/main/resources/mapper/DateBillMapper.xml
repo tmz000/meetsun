@@ -13,7 +13,37 @@
 		<if test="status != '' and status != null">
 			and status = #{status}
 		</if> 
+		<if test="billDate != '' and billDate != null">
+			and bill_date = #{billDate}
+		</if> 
+		<if test="billType != '' and billType != null">
+			and bill_type  like CONCAT('%', #{billType}, '%')
+		</if>
+		<if test="billRemark != '' and billRemark != null">
+			and bill_remark  like CONCAT('%', #{billRemark}, '%')
+		</if>
 		order by create_time desc
+		<if test="offset != null">
+			limit #{offset},#{pageNumber}
+		</if>
+	</select>
+	<select id="getDateBillListTotal" parameterType="com.meetsun.meetsun.entity.DateBill" resultType="java.lang.Integer">
+		select count(*) from date_bill where 1=1
+		<if test="sysId != '' and sysId != null">
+			and sys_id = #{sysId}
+		</if> 
+		<if test="status != '' and status != null">
+			and status = #{status}
+		</if>
+		<if test="billDate != '' and billDate != null">
+			and bill_date = #{billDate}
+		</if> 
+		<if test="billType != '' and billType != null">
+			and bill_type  like CONCAT('%', #{billType}, '%')
+		</if> 
+		<if test="billRemark != '' and billRemark != null">
+			and bill_remark  like CONCAT('%', #{billRemark}, '%')
+		</if> 
 	</select>
 	<select id="getDateBillListByType" parameterType="com.meetsun.meetsun.entity.DateBill" resultType="com.meetsun.meetsun.entity.DateBill">
 		select bill_type,round(sum(bill_money),2) as sum from date_bill where 1=1 

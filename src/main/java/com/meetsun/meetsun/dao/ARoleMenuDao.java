@@ -15,6 +15,7 @@ public interface ARoleMenuDao {
 	 * @return
 	 */
 	List<ARoleMenu> getARoleMenuList(ARoleMenuVo vo);
+	int getARoleMenuListTotal(ARoleMenuVo vo);
 	/**
 	 * 根据月份获取角色菜单信息
 	 * @param paramMsUserVo

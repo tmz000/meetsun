@@ -58,7 +58,12 @@ public class AMenuServiceImpl implements AMenuService{
 				}
 			}
 		}
-		return Result.success(list1);
+		Result result = new Result();
+		result.setStatus("01");
+		result.setMessage("success");
+		result.setRows(list1);
+		result.setTotal(aMenuDao.getAMenuListTotal(vo));
+		return result;
 		
 	}
 	
